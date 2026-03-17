@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
 
         <Link
           to="/login"
-          className="inline-flex items-center gap-2 text-sm font-medium text-clay/80 transition hover:text-clay"
+          className="inline-flex items-center gap-2 text-sm font-bold text-[#35505a] transition hover:text-[#087f98]"
         >
           <ArrowLeftIcon />
           Back to login
@@ -92,4 +92,3 @@ export default function ForgotPasswordPage() {
     </AuthLayout>
   );
 }
-

@@ -208,7 +208,7 @@ export default function ResetPasswordPage() {
             </Link>
             <Link
               to="/forgot-password"
-              className="inline-flex items-center gap-2 text-sm font-medium text-clay/80 transition hover:text-clay"
+              className="inline-flex items-center gap-2 text-sm font-bold text-[#35505a] transition hover:text-[#087f98]"
             >
               <ArrowLeftIcon />
               Send another reset email
@@ -254,12 +254,12 @@ export default function ResetPasswordPage() {
             <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2 font-medium text-clay/80 transition hover:text-clay"
+                className="inline-flex items-center gap-2 font-bold text-[#35505a] transition hover:text-[#087f98]"
               >
                 <ArrowLeftIcon />
                 Back to login
               </Link>
-              <Link to="/forgot-password" className="font-medium text-teal transition hover:text-clay">
+              <Link to="/forgot-password" className="font-bold text-[#087f98] transition hover:text-[#d8881f]">
                 Need a new reset email?
               </Link>
             </div>

@@ -107,7 +107,7 @@ export default function LoginPage() {
           action={
             <Link
               to="/forgot-password"
-              className="text-sm font-medium text-teal transition hover:text-clay"
+              className="text-sm font-bold text-[#087f98] transition hover:text-[#d8881f]"
             >
               Forgot password?
             </Link>
@@ -121,4 +121,3 @@ export default function LoginPage() {
     </AuthLayout>
   );
 }
-

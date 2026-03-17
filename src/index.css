@@ -22,11 +22,11 @@ body {
   margin: 0;
   font-family: 'Andika', sans-serif;
   background:
-    radial-gradient(circle at 10% 12%, rgba(215, 207, 230, 0.82), transparent 30%),
-    radial-gradient(circle at 86% 16%, rgba(147, 172, 186, 0.42), transparent 24%),
-    radial-gradient(circle at 22% 82%, rgba(117, 153, 113, 0.18), transparent 18%),
-    radial-gradient(circle at 82% 76%, rgba(215, 207, 230, 0.18), transparent 18%),
-    linear-gradient(160deg, #fdf9f6 0%, #f6f6f1 44%, #edf5f6 100%);
+    radial-gradient(circle at 16% 14%, rgba(91, 241, 219, 0.2), transparent 22%),
+    radial-gradient(circle at 84% 18%, rgba(53, 217, 239, 0.14), transparent 18%),
+    radial-gradient(circle at 72% 76%, rgba(255, 212, 90, 0.08), transparent 14%),
+    linear-gradient(180deg, #131718 0%, #072a33 48%, #121718 100%);
+  color: #19333b;
 }
 
 a {
@@ -40,5 +40,5 @@ input {
 }
 
 ::selection {
-  background: rgba(76, 138, 145, 0.24);
+  background: rgba(53, 217, 239, 0.28);
 }

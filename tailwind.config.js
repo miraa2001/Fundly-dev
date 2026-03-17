@@ -14,11 +14,10 @@ export default {
         soft: '0 30px 80px rgba(116, 98, 88, 0.18)',
       },
       fontFamily: {
-        sans: ['Aptos', 'Segoe UI', 'Helvetica Neue', 'sans-serif'],
-        serif: ['Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Georgia', 'serif'],
+        sans: ['Andika', 'sans-serif'],
+        serif: ['Andika', 'sans-serif'],
       },
     },
   },
   plugins: [],
 };
-

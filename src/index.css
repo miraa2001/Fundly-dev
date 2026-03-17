@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +20,7 @@ body,
 
 body {
   margin: 0;
-  font-family: Aptos, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-family: 'Andika', sans-serif;
   background:
     radial-gradient(circle at 10% 12%, rgba(215, 207, 230, 0.82), transparent 30%),
     radial-gradient(circle at 86% 16%, rgba(147, 172, 186, 0.42), transparent 24%),

@@ -34,7 +34,7 @@ export default function AuthField({
           inputProps.disabled ? 'opacity-70' : '',
         ].join(' ')}
       >
-        <span className="flex min-h-[3.75rem] w-[3.7rem] shrink-0 items-center justify-center self-stretch rounded-l-[1.35rem] bg-[linear-gradient(180deg,#ffe37d_0%,#f7c236_100%)] text-[#8d4d03] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_-1px_0_0_rgba(255,255,255,0.22)]">
+        <span className="flex min-h-[3.35rem] w-[3.15rem] shrink-0 items-center justify-center self-stretch rounded-l-[1.35rem] bg-[linear-gradient(180deg,#ffe37d_0%,#f7c236_100%)] text-[#8d4d03] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_-1px_0_0_rgba(255,255,255,0.22)]">
           <Icon />
         </span>
 
@@ -43,7 +43,7 @@ export default function AuthField({
           type={inputType}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
-          className="w-full bg-transparent px-4 py-3.5 text-[15px] text-[#19333b] outline-none placeholder:text-[#6d8791]"
+          className="w-full bg-transparent px-4 py-2.5 text-[15px] text-[#19333b] outline-none placeholder:text-[#6d8791]"
           {...inputProps}
         />
 

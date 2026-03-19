@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import fundlyLogo from '../../../fundly-logo.png';
-import { SparkIcon } from './icons';
 
 export default function AuthLayout({ eyebrow, title, description, children }) {
   return (
@@ -49,10 +48,6 @@ export default function AuthLayout({ eyebrow, title, description, children }) {
             </div>
 
             <div className="relative z-10 mt-auto max-w-md">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] px-4 py-2 text-sm text-white/86 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-md">
-                <SparkIcon />
-                Your Budget Better, Save Smarter
-              </div>
               <h2 className="mt-7 max-w-lg text-[3.35rem] font-bold leading-[0.92] tracking-[-0.04em] text-white drop-shadow-[0_18px_36px_rgba(0,0,0,0.18)]">
                 Track spending. Build budgets. Hit your goals.
               </h2>

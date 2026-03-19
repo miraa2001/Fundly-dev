@@ -74,7 +74,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      eyebrow="Your Money, Simplified"
+      eyebrow="Budget Better, Save Smarter"
       title="Welcome back to Fundly"
       description="Track spending, set budgets, and reach your savings goals — all in one place."
     >

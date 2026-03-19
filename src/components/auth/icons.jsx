@@ -14,6 +14,9 @@ export function BrandMark({ inverse = false }) {
   );
 }
 
+const mailIconUrl = 'https://img.icons8.com/deco-glyph/48/8d4d03/new-post.png';
+const passwordIconUrl = 'https://img.icons8.com/ios-filled/50/8d4d03/password.png';
+
 function IconBase({ children }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
@@ -23,22 +26,11 @@ function IconBase({ children }) {
 }
 
 export function MailIcon() {
-  return (
-    <IconBase>
-      <path d="M4 7.75A1.75 1.75 0 0 1 5.75 6h12.5A1.75 1.75 0 0 1 20 7.75v8.5A1.75 1.75 0 0 1 18.25 18H5.75A1.75 1.75 0 0 1 4 16.25Z" />
-      <path d="m5 8 6.02 4.67a1.65 1.65 0 0 0 1.96 0L19 8" />
-    </IconBase>
-  );
+  return <img src={mailIconUrl} alt="" aria-hidden="true" className="h-5 w-5 object-contain" />;
 }
 
 export function LockIcon() {
-  return (
-    <IconBase>
-      <rect x="4.5" y="10" width="15" height="9.5" rx="2.5" />
-      <path d="M8 10V7.75A4 4 0 0 1 12 4a4 4 0 0 1 4 3.75V10" />
-      <path d="M12 13.5v2.5" />
-    </IconBase>
-  );
+  return <img src={passwordIconUrl} alt="" aria-hidden="true" className="h-5 w-5 object-contain" />;
 }
 
 export function EyeIcon() {
@@ -77,4 +69,3 @@ export function SparkIcon() {
     </IconBase>
   );
 }
-

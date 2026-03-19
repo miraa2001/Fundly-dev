@@ -35,7 +35,6 @@ export default function AuthLayout({ eyebrow, title, description, children }) {
               <div className="relative w-full max-w-[26rem]">
                 <div className="absolute left-1/2 top-12 h-40 w-40 -translate-x-1/2 rounded-full bg-[#5af0dc]/40 blur-[85px]" />
                 <div className="absolute left-8 top-24 h-14 w-14 rounded-full bg-[radial-gradient(circle_at_30%_30%,#ffe488_0%,#f7bf36_64%,#d98117_100%)] shadow-[0_0_0_6px_rgba(0,0,0,0.12),0_14px_26px_rgba(0,0,0,0.24)]" />
-                <div className="absolute right-8 top-16 h-12 w-12 rounded-full border border-white/16 bg-white/12 backdrop-blur-md" />
                 <div className="absolute right-14 bottom-12 h-24 w-24 rounded-[2rem] border border-white/14 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(255,255,255,0.03))] backdrop-blur-md" />
                 <div className="relative overflow-hidden rounded-[2.4rem] border border-white/12 bg-[linear-gradient(180deg,rgba(2,32,44,0.68),rgba(5,62,78,0.28))] px-8 py-10 shadow-[0_22px_70px_rgba(0,0,0,0.3)] backdrop-blur-2xl">
                   <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
@@ -52,26 +51,26 @@ export default function AuthLayout({ eyebrow, title, description, children }) {
             <div className="relative z-10 mt-auto max-w-md">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] px-4 py-2 text-sm text-white/86 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-md">
                 <SparkIcon />
-                Playful wallet energy
+                Your Budget Better, Save Smarter
               </div>
               <h2 className="mt-7 max-w-lg text-[3.35rem] font-bold leading-[0.92] tracking-[-0.04em] text-white drop-shadow-[0_18px_36px_rgba(0,0,0,0.18)]">
-                Friendly money access with a brighter personality.
+                Track spending. Build budgets. Hit your goals.
               </h2>
               <p className="mt-5 max-w-sm text-[15px] leading-7 text-white/78">
-                Same focused auth flow, now tuned to the Fundly logo with glow, contrast, and a more illustrated fintech feel.
+                Fundly gives you a clear view of every shekel — without the spreadsheet headache.
               </p>
             </div>
 
             <div className="relative z-10 mt-10 grid gap-4 sm:grid-cols-2">
               <div className="rounded-[1.7rem] border border-white/14 bg-[linear-gradient(180deg,rgba(4,40,52,0.44),rgba(255,255,255,0.08))] p-5 shadow-[0_18px_50px_rgba(8,22,31,0.22)] backdrop-blur-md">
-                <p className="text-sm text-white/66">Brand</p>
-                <p className="mt-2 text-2xl font-bold tracking-[-0.03em]">Wallet-like depth</p>
-                <p className="mt-3 text-sm leading-6 text-white/74">Glow, dark outlines, and rounded surfaces that feel closer to the logo art.</p>
+                <p className="text-sm text-white/66">Budget</p>
+                <p className="mt-2 text-2xl font-bold tracking-[-0.03em]">Built to budget</p>
+                <p className="mt-3 text-sm leading-6 text-white/74">See where your money goes, set limits per category, and get nudged when you're close to the edge.</p>
               </div>
               <div className="rounded-[1.7rem] border border-white/14 bg-[linear-gradient(180deg,rgba(4,40,52,0.44),rgba(255,255,255,0.08))] p-5 shadow-[0_18px_50px_rgba(8,22,31,0.22)] backdrop-blur-md">
-                <p className="text-sm text-white/66">Flow</p>
-                <p className="mt-2 text-2xl font-bold tracking-[-0.03em]">Same auth path</p>
-                <p className="mt-3 text-sm leading-6 text-white/74">Login, reset link, and password update stay exactly where users expect them.</p>
+                <p className="text-sm text-white/66">Goals</p>
+                <p className="mt-2 text-2xl font-bold tracking-[-0.03em]">Goals you'll reach</p>
+                <p className="mt-3 text-sm leading-6 text-white/74">Set a savings target, track progress visually, and celebrate every milestone along the way.</p>
               </div>
             </div>
           </section>

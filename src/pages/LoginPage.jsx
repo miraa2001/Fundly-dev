@@ -60,7 +60,7 @@ export default function LoginPage() {
 
       setStatus({
         tone: 'success',
-        message: 'Welcome back. Your Fundly session is active.',
+        message: 'Welcome back! Taking you to your dashboard...',
       });
     } catch (error) {
       setStatus({
@@ -74,9 +74,9 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      eyebrow="Account Access"
+      eyebrow="Your Money, Simplified"
       title="Welcome back to Fundly"
-      description="Sign in with your email and password"
+      description="Track spending, set budgets, and reach your savings goals — all in one place."
     >
       <form className="space-y-5" onSubmit={handleSubmit} noValidate>
         <StatusMessage tone={status?.tone} message={status?.message} />

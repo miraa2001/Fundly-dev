@@ -61,8 +61,6 @@ export default function AuthLayout({ eyebrow, title, description, children }) {
             <div className="absolute right-0 top-0 h-48 w-48 translate-x-10 -translate-y-10 rounded-full bg-[#4cefd9]/18 blur-[95px]" />
             <div className="absolute bottom-8 left-0 h-44 w-44 -translate-x-12 rounded-full bg-[#35d9ef]/12 blur-[95px]" />
             <div className="absolute right-12 top-14 h-10 w-10 rounded-full bg-[radial-gradient(circle_at_30%_30%,#ffe488_0%,#f6c53d_62%,#da851a_100%)] shadow-[0_10px_22px_rgba(204,126,24,0.24)]" />
-            <div className="absolute left-8 top-20 h-px w-24 bg-gradient-to-r from-[#35d9ef]/50 to-transparent" />
-
             <Link to="/login" className="relative z-10 flex items-center lg:hidden">
               <img
                 src={fundlyLogo}

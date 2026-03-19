@@ -27,14 +27,14 @@ export default function AuthField({
 
       <div
         className={[
-          'flex items-center rounded-[1.35rem] border bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(233,249,246,0.92))] transition duration-200 backdrop-blur-sm',
+          'flex items-center overflow-hidden rounded-[1.35rem] border bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(233,249,246,0.92))] transition duration-200 backdrop-blur-sm',
           error
             ? 'border-[#e3a28a] shadow-[0_0_0_4px_rgba(227,162,138,0.14),0_14px_34px_rgba(161,77,87,0.08)]'
             : 'border-[#d3efed] shadow-[0_14px_34px_rgba(3,41,53,0.08)] focus-within:border-[#35d9ef]/60 focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(53,217,239,0.14),0_18px_42px_rgba(10,111,135,0.14)]',
           inputProps.disabled ? 'opacity-70' : '',
         ].join(' ')}
       >
-        <span className="ml-3 flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(180deg,#ffe37d_0%,#f7c236_100%)] text-[#8d4d03] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_8px_18px_rgba(217,132,26,0.2)]">
+        <span className="flex min-h-[3.75rem] w-[4.4rem] shrink-0 items-center justify-center self-stretch rounded-l-[1.35rem] bg-[linear-gradient(180deg,#ffe37d_0%,#f7c236_100%)] text-[#8d4d03] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_-1px_0_0_rgba(255,255,255,0.22)]">
           <Icon />
         </span>
 
@@ -43,7 +43,7 @@ export default function AuthField({
           type={inputType}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
-          className="w-full rounded-[1.35rem] bg-transparent px-3 py-3.5 text-[15px] text-[#19333b] outline-none placeholder:text-[#6d8791]"
+          className="w-full bg-transparent px-4 py-3.5 text-[15px] text-[#19333b] outline-none placeholder:text-[#6d8791]"
           {...inputProps}
         />
 

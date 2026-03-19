@@ -14,8 +14,8 @@ export default {
         soft: '0 30px 80px rgba(116, 98, 88, 0.18)',
       },
       fontFamily: {
-        sans: ['Datatype', 'monospace'],
-        serif: ['Datatype', 'monospace'],
+        sans: ['Roboto Condensed', 'sans-serif'],
+        serif: ['Roboto Condensed', 'sans-serif'],
       },
     },
   },

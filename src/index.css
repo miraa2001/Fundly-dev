@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Datatype:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -20,9 +20,8 @@ body,
 
 body {
   margin: 0;
-  font-family: 'Datatype', monospace;
+  font-family: 'Roboto Condensed', sans-serif;
   font-optical-sizing: auto;
-  font-variation-settings: 'wdth' 100;
   background:
     radial-gradient(circle at 16% 14%, rgba(91, 241, 219, 0.2), transparent 22%),
     radial-gradient(circle at 84% 18%, rgba(53, 217, 239, 0.14), transparent 18%),

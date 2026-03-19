@@ -76,7 +76,7 @@ export default function LoginPage() {
     <AuthLayout
       eyebrow="Account Access"
       title="Welcome back to Fundly"
-      description="Sign in with your email and password through a refined, focused auth flow."
+      description="Sign in with your email and password"
     >
       <form className="space-y-5" onSubmit={handleSubmit} noValidate>
         <StatusMessage tone={status?.tone} message={status?.message} />
@@ -107,7 +107,7 @@ export default function LoginPage() {
           action={
             <Link
               to="/forgot-password"
-              className="text-sm font-bold text-[#087f98] transition hover:text-[#d8881f]"
+              className="text-xs font-bold text-[#087f98] transition hover:text-[#d8881f] sm:text-sm"
             >
               Forgot password?
             </Link>

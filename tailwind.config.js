@@ -14,8 +14,8 @@ export default {
         soft: '0 30px 80px rgba(116, 98, 88, 0.18)',
       },
       fontFamily: {
-        sans: ['Andika', 'sans-serif'],
-        serif: ['Andika', 'sans-serif'],
+        sans: ['Datatype', 'monospace'],
+        serif: ['Datatype', 'monospace'],
       },
     },
   },

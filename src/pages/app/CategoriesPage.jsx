@@ -92,6 +92,7 @@ export default function CategoriesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isArchivingId, setIsArchivingId] = useState('');
   const [isUnarchivingId, setIsUnarchivingId] = useState('');
+  const [expandedCategoryId, setExpandedCategoryId] = useState('');
   const [editingCategoryId, setEditingCategoryId] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [form, setForm] = useState(initialFormState);
@@ -119,6 +120,12 @@ export default function CategoriesPage() {
     void loadCategories(showArchived);
   }, [showArchived, user?.id]);
 
+  useEffect(() => {
+    if (expandedCategoryId && !categories.some((category) => category.id === expandedCategoryId)) {
+      setExpandedCategoryId('');
+    }
+  }, [categories, expandedCategoryId]);
+
   function resetForm() {
     setEditingCategoryId('');
     setForm(initialFormState);
@@ -133,6 +140,7 @@ export default function CategoriesPage() {
   function openCreateDialog() {
     resetForm();
     setStatus(null);
+    setExpandedCategoryId('');
     setIsDialogOpen(true);
   }
 
@@ -143,6 +151,7 @@ export default function CategoriesPage() {
   }
 
   function handleEdit(category) {
+    setExpandedCategoryId(category.id);
     setEditingCategoryId(category.id);
     setForm({
       name: category.name ?? '',
@@ -156,6 +165,10 @@ export default function CategoriesPage() {
     setErrors({});
     setStatus(null);
     setIsDialogOpen(true);
+  }
+
+  function handleToggleCategory(categoryId) {
+    setExpandedCategoryId((current) => (current === categoryId ? '' : categoryId));
   }
 
   async function handleSubmit(event) {
@@ -359,7 +372,9 @@ export default function CategoriesPage() {
                 <CategoryCard
                   key={category.id}
                   category={category}
+                  isExpanded={expandedCategoryId === category.id}
                   isArchiving={isArchivingId === category.id}
+                  onToggle={handleToggleCategory}
                   onEdit={handleEdit}
                   onArchive={handleArchive}
                   onUnarchive={handleUnarchive}
@@ -380,7 +395,9 @@ export default function CategoriesPage() {
                 <CategoryCard
                   key={category.id}
                   category={category}
+                  isExpanded={expandedCategoryId === category.id}
                   isUnarchiving={isUnarchivingId === category.id}
+                  onToggle={handleToggleCategory}
                   onEdit={handleEdit}
                   onArchive={handleArchive}
                   onUnarchive={handleUnarchive}

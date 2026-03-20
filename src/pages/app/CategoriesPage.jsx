@@ -363,9 +363,8 @@ export default function CategoriesPage() {
 
         {!isLoading && activeCategories.length > 0 ? (
           <AppSurface
-            eyebrow="Active Categories"
-            title={`${activeCategories.length} ready to use`}
-            description="These are the categories currently active for your account."
+            eyebrow="Spending Categories"
+            description="Tap a card to see where your budget stands."
           >
             <div className="grid gap-4 sm:grid-cols-2">
               {activeCategories.map((category) => (

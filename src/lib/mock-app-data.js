@@ -41,15 +41,6 @@ export const transactionSummary = [
   { label: 'Transfers', value: '2 pending' },
 ];
 
-export const categorySnapshots = [
-  { name: 'Groceries', spent: 'ILS 610', limit: 'ILS 800', progress: 76 },
-  { name: 'Transport', spent: 'ILS 165', limit: 'ILS 250', progress: 66 },
-  { name: 'Dining', spent: 'ILS 280', limit: 'ILS 320', progress: 88 },
-  { name: 'Subscriptions', spent: 'ILS 92', limit: 'ILS 140', progress: 65 },
-  { name: 'Shopping', spent: 'ILS 340', limit: 'ILS 500', progress: 68 },
-  { name: 'Health', spent: 'ILS 115', limit: 'ILS 220', progress: 52 },
-];
-
 export const plannedItems = [
   { title: 'Internet renewal', amount: 'ILS 89', due: 'Due Mar 22', status: 'Upcoming' },
   { title: 'Gym membership', amount: 'ILS 210', due: 'Due Mar 26', status: 'Scheduled' },

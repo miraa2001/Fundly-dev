@@ -30,6 +30,10 @@ export function getResetRedirectUrl() {
     return '';
   }
 
-  return new URL('/reset-password', window.location.origin).toString();
-}
+  const pathnameWithoutFile = window.location.pathname.replace(/index\.html$/, '');
+  const normalizedBasePath = pathnameWithoutFile.endsWith('/')
+    ? pathnameWithoutFile
+    : `${pathnameWithoutFile}/`;
 
+  return `${window.location.origin}${normalizedBasePath}#/reset-password`;
+}

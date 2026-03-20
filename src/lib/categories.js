@@ -182,6 +182,25 @@ export async function archiveCategory({ id }) {
   return data;
 }
 
+export async function unarchiveCategory({ id }) {
+  const client = ensureSupabase();
+  const { data, error } = await client
+    .from('categories')
+    .update({
+      is_archived: false,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select(categoryColumns)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export async function saveCategoryBudget({ userId, categoryId, budgetLimit, monthKey = getCurrentMonthKey() }) {
   const client = ensureSupabase();
   const normalizedBudgetLimit = normalizeBudgetLimit(budgetLimit);

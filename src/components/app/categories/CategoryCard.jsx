@@ -4,7 +4,14 @@ import { formatCategoryKind, formatMonthKey, getCategoryAccentColor } from '../.
 const actionButtonClassName =
   'inline-flex items-center justify-center rounded-full border px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] transition';
 
-export default function CategoryCard({ category, isArchiving = false, onEdit, onArchive }) {
+export default function CategoryCard({
+  category,
+  isArchiving = false,
+  isUnarchiving = false,
+  onEdit,
+  onArchive,
+  onUnarchive,
+}) {
   const accentColor = getCategoryAccentColor(category.color);
   const hasMonthlyBudget = category.currentMonthBudget !== null && category.currentMonthBudget !== undefined;
 
@@ -58,7 +65,14 @@ export default function CategoryCard({ category, isArchiving = false, onEdit, on
                 {isArchiving ? 'Archiving...' : 'Archive'}
               </button>
             ) : (
-              <p className="text-xs leading-5 text-[#5a727b]">Hidden from the default active list.</p>
+              <button
+                type="button"
+                onClick={() => onUnarchive(category)}
+                disabled={isUnarchiving}
+                className={`${actionButtonClassName} border-[#efc7b8] bg-[#fff2ec] text-[#934d33] hover:border-[#e3a28a] disabled:cursor-not-allowed disabled:opacity-70`}
+              >
+                {isUnarchiving ? 'Unarchiving...' : 'Unarchive'}
+              </button>
             )}
           </div>
         </div>

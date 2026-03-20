@@ -12,6 +12,7 @@ import {
   getCurrentMonthKey,
   listCategories,
   saveCategoryBudget,
+  unarchiveCategory,
   updateCategory,
 } from '../../lib/categories';
 
@@ -90,6 +91,7 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isArchivingId, setIsArchivingId] = useState('');
+  const [isUnarchivingId, setIsUnarchivingId] = useState('');
   const [editingCategoryId, setEditingCategoryId] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [form, setForm] = useState(initialFormState);
@@ -249,6 +251,28 @@ export default function CategoriesPage() {
     }
   }
 
+  async function handleUnarchive(category) {
+    setIsUnarchivingId(category.id);
+    setStatus(null);
+
+    try {
+      await unarchiveCategory({ id: category.id });
+      setStatus({
+        tone: 'success',
+        message: `${category.name} was moved back to active categories.`,
+      });
+
+      await loadCategories(showArchived);
+    } catch (error) {
+      setStatus({
+        tone: 'error',
+        message: getCategoryErrorMessage(error, 'We could not unarchive that category. Please try again.'),
+      });
+    } finally {
+      setIsUnarchivingId('');
+    }
+  }
+
   const activeCategories = categories.filter((category) => !category.is_archived);
   const archivedCategories = categories.filter((category) => category.is_archived);
   const hasNoVisibleCategories = !isLoading && activeCategories.length === 0 && (!showArchived || archivedCategories.length === 0);
@@ -338,6 +362,7 @@ export default function CategoriesPage() {
                   isArchiving={isArchivingId === category.id}
                   onEdit={handleEdit}
                   onArchive={handleArchive}
+                  onUnarchive={handleUnarchive}
                 />
               ))}
             </div>
@@ -355,8 +380,10 @@ export default function CategoriesPage() {
                 <CategoryCard
                   key={category.id}
                   category={category}
+                  isUnarchiving={isUnarchivingId === category.id}
                   onEdit={handleEdit}
                   onArchive={handleArchive}
+                  onUnarchive={handleUnarchive}
                 />
               ))}
             </div>

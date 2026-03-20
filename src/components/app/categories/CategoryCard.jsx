@@ -18,44 +18,7 @@ function getDemoSpentPercentage(category) {
   return 24 + (hash % 61);
 }
 
-// Glow animation injected once
-const glowStyleId = 'category-card-glow-style';
-if (typeof document !== 'undefined' && !document.getElementById(glowStyleId)) {
-  const style = document.createElement('style');
-  style.id = glowStyleId;
-  style.textContent = `
-    @keyframes cc-rotate {
-      0%   { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    @keyframes cc-shimmer {
-      0%   { opacity: 0.7; }
-      50%  { opacity: 1; }
-      100% { opacity: 0.7; }
-    }
-    .cc-glow-ring {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 108%; height: 115%;
-      overflow: hidden;
-      border-radius: inherit;
-      filter: blur(9px);
-      pointer-events: none;
-      z-index: 0;
-      transition: filter 0.3s ease;
-    }
-    .cc-glow-gradient {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 110%;
-      aspect-ratio: 1;
-      border-radius: 9999px;
-      animation: cc-rotate 2.4s linear infinite;
-    }
-    .cc-card-collapsed:hover .cc-glow-ring { filter: blur(5px); }
-  `;
-  document.head.appendChild(style);
-}
+
 
 export default function CategoryCard({
   category,
@@ -95,26 +58,7 @@ export default function CategoryCard({
         position: 'relative',
         isolation: 'isolate',
       }}
-      className={isExpanded ? '' : 'cc-card-collapsed'}
     >
-      {/* Glow ring (only visible when collapsed/hovered) */}
-      {!isExpanded && (
-        <div className="cc-glow-ring" aria-hidden="true">
-          <div
-            className="cc-glow-gradient"
-            style={{
-              backgroundImage: `linear-gradient(90deg,
-                ${accentColor},
-                #44e8f4,
-                #15aeca,
-                ${accentColor}88,
-                #ffd45a55,
-                #44e8f4,
-                ${accentColor})`,
-            }}
-          />
-        </div>
-      )}
 
       {/* ── TOP SECTION ─────────────────────────────────── */}
       <button

@@ -1,6 +1,7 @@
 import {
   categoryColorPresets,
   defaultCategoryColor,
+  formatMonthKey,
   getCategoryAccentColor,
   normalizeHexColor,
   suggestedCategoryKinds,
@@ -14,6 +15,7 @@ const errorFieldClassName =
 export default function CategoryFormPanel({
   form,
   errors,
+  monthKey,
   mode,
   isSubmitting,
   onCancel,
@@ -110,6 +112,25 @@ export default function CategoryFormPanel({
           ))}
         </div>
         {errors.color ? <p className="text-sm text-[#934d33]">{errors.color}</p> : null}
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="category-budget" className="text-sm font-bold text-[#16323b]">
+          Monthly budget
+        </label>
+        <input
+          id="category-budget"
+          type="number"
+          min="0"
+          step="0.01"
+          inputMode="decimal"
+          value={form.budgetLimit}
+          onChange={(event) => onChange('budgetLimit', event.target.value)}
+          placeholder="Optional"
+          className={errors.budgetLimit ? errorFieldClassName : fieldClassName}
+        />
+        <p className="text-xs leading-5 text-[#5a727b]">Applies to {formatMonthKey(monthKey)}.</p>
+        {errors.budgetLimit ? <p className="text-sm text-[#934d33]">{errors.budgetLimit}</p> : null}
       </div>
 
       <div className="flex flex-wrap items-center gap-3">

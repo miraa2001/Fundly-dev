@@ -1,6 +1,7 @@
 import { ensureSupabase } from './supabase';
 
 const categoryColumns = 'id, user_id, name, kind, color, is_archived, created_at, updated_at';
+const categoryBudgetColumns = 'id, user_id, category_id, month_key, budget_limit, created_at, updated_at';
 
 export const defaultCategoryColor = '#15AECA';
 export const suggestedCategoryKinds = ['expense', 'income'];
@@ -48,8 +49,33 @@ export function formatCategoryKind(kind) {
     .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
+export function getCurrentMonthKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}-01`;
+}
+
+export function formatMonthKey(monthKey) {
+  const [year, month] = (monthKey ?? '').split('-').map(Number);
+
+  if (!year || !month) {
+    return 'Current month';
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(year, month - 1, 1));
+}
+
+function normalizeBudgetLimit(value) {
+  const trimmedValue = String(value ?? '').trim();
+  return trimmedValue ? trimmedValue : null;
+}
+
 export async function listCategories({ includeArchived = false } = {}) {
   const client = ensureSupabase();
+  const monthKey = getCurrentMonthKey();
   let query = client
     .from('categories')
     .select(categoryColumns)
@@ -67,7 +93,35 @@ export async function listCategories({ includeArchived = false } = {}) {
     throw error;
   }
 
-  return data ?? [];
+  const categories = data ?? [];
+
+  if (categories.length === 0) {
+    return [];
+  }
+
+  const categoryIds = categories.map((category) => category.id);
+  const { data: budgets, error: budgetError } = await client
+    .from('category_budgets')
+    .select(categoryBudgetColumns)
+    .eq('month_key', monthKey)
+    .in('category_id', categoryIds);
+
+  if (budgetError) {
+    throw budgetError;
+  }
+
+  const budgetByCategoryId = new Map((budgets ?? []).map((budget) => [budget.category_id, budget]));
+
+  return categories.map((category) => {
+    const currentMonthBudget = budgetByCategoryId.get(category.id);
+
+    return {
+      ...category,
+      currentMonthBudgetId: currentMonthBudget?.id ?? '',
+      currentMonthBudget: currentMonthBudget?.budget_limit ?? null,
+      currentMonthKey: monthKey,
+    };
+  });
 }
 
 export async function createCategory({ userId, values }) {
@@ -119,6 +173,75 @@ export async function archiveCategory({ id }) {
     })
     .eq('id', id)
     .select(categoryColumns)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function saveCategoryBudget({ userId, categoryId, budgetLimit, monthKey = getCurrentMonthKey() }) {
+  const client = ensureSupabase();
+  const normalizedBudgetLimit = normalizeBudgetLimit(budgetLimit);
+
+  const { data: existingBudget, error: existingBudgetError } = await client
+    .from('category_budgets')
+    .select(categoryBudgetColumns)
+    .eq('category_id', categoryId)
+    .eq('month_key', monthKey)
+    .limit(1)
+    .maybeSingle();
+
+  if (existingBudgetError) {
+    throw existingBudgetError;
+  }
+
+  if (!normalizedBudgetLimit) {
+    if (!existingBudget) {
+      return null;
+    }
+
+    const { error: deleteError } = await client
+      .from('category_budgets')
+      .delete()
+      .eq('id', existingBudget.id);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    return null;
+  }
+
+  if (existingBudget) {
+    const { data, error } = await client
+      .from('category_budgets')
+      .update({
+        budget_limit: normalizedBudgetLimit,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', existingBudget.id)
+      .select(categoryBudgetColumns)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
+
+  const { data, error } = await client
+    .from('category_budgets')
+    .insert({
+      user_id: userId,
+      category_id: categoryId,
+      month_key: monthKey,
+      budget_limit: normalizedBudgetLimit,
+    })
+    .select(categoryBudgetColumns)
     .single();
 
   if (error) {

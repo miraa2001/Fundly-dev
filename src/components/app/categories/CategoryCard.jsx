@@ -1,11 +1,12 @@
 import AppSurface from '../AppSurface';
-import { formatCategoryKind, getCategoryAccentColor } from '../../../lib/categories';
+import { formatCategoryKind, formatMonthKey, getCategoryAccentColor } from '../../../lib/categories';
 
 const actionButtonClassName =
   'inline-flex items-center justify-center rounded-full border px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] transition';
 
 export default function CategoryCard({ category, isArchiving = false, onEdit, onArchive }) {
   const accentColor = getCategoryAccentColor(category.color);
+  const hasMonthlyBudget = category.currentMonthBudget !== null && category.currentMonthBudget !== undefined;
 
   return (
     <AppSurface className={category.is_archived ? 'border-[#d8e8e7] bg-[linear-gradient(180deg,rgba(252,253,253,0.96),rgba(240,246,245,0.88))]' : ''}>
@@ -27,6 +28,15 @@ export default function CategoryCard({ category, isArchiving = false, onEdit, on
                 Archived
               </span>
             ) : null}
+          </div>
+
+          <div className="mt-3 rounded-[1.1rem] border border-[#d3efed] bg-white/70 px-3 py-3">
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">
+              {formatMonthKey(category.currentMonthKey)}
+            </p>
+            <p className="mt-2 text-sm font-bold text-[#16323b]">
+              {hasMonthlyBudget ? `Monthly budget: ${category.currentMonthBudget}` : 'No monthly budget set'}
+            </p>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">

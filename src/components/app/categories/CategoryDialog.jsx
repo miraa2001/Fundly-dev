@@ -5,6 +5,7 @@ import CategoryFormPanel from './CategoryFormPanel';
 export default function CategoryDialog({
   form,
   errors,
+  monthKey,
   mode,
   isOpen,
   isSubmitting,
@@ -60,7 +61,7 @@ export default function CategoryDialog({
               aria-label="Close category dialog"
             >
               <span aria-hidden="true" className="text-lg leading-none">
-                ×
+                x
               </span>
             </button>
           }
@@ -68,6 +69,7 @@ export default function CategoryDialog({
           <CategoryFormPanel
             form={form}
             errors={errors}
+            monthKey={monthKey}
             mode={mode}
             isSubmitting={isSubmitting}
             onCancel={onCancel}

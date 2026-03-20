@@ -9,7 +9,9 @@ import {
   archiveCategory,
   createCategory,
   defaultCategoryColor,
+  getCurrentMonthKey,
   listCategories,
+  saveCategoryBudget,
   updateCategory,
 } from '../../lib/categories';
 
@@ -17,6 +19,7 @@ const initialFormState = {
   name: '',
   kind: 'expense',
   color: defaultCategoryColor,
+  budgetLimit: '',
 };
 
 function getCategoryErrorMessage(error, fallbackMessage) {
@@ -36,6 +39,7 @@ function getCategoryErrorMessage(error, fallbackMessage) {
 function validateCategoryForm(form) {
   const errors = {};
   const colorValue = form.color.trim();
+  const budgetValue = form.budgetLimit.trim();
 
   if (!form.name.trim()) {
     errors.name = 'Enter a category name.';
@@ -47,6 +51,16 @@ function validateCategoryForm(form) {
 
   if (colorValue && !/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(colorValue)) {
     errors.color = 'Use a hex color like #15AECA.';
+  }
+
+  if (budgetValue) {
+    const numericBudgetValue = Number(budgetValue);
+
+    if (!Number.isFinite(numericBudgetValue)) {
+      errors.budgetLimit = 'Enter a valid budget amount.';
+    } else if (numericBudgetValue < 0) {
+      errors.budgetLimit = 'Monthly budget must be 0 or higher.';
+    }
   }
 
   return errors;
@@ -68,6 +82,7 @@ function LoadingState() {
 
 export default function CategoriesPage() {
   const { user } = useAuthSession();
+  const currentMonthKey = getCurrentMonthKey();
   const [categories, setCategories] = useState([]);
   const [fetchError, setFetchError] = useState('');
   const [status, setStatus] = useState(null);
@@ -131,6 +146,10 @@ export default function CategoriesPage() {
       name: category.name ?? '',
       kind: category.kind ?? '',
       color: category.color ?? defaultCategoryColor,
+      budgetLimit:
+        category.currentMonthBudget === null || category.currentMonthBudget === undefined
+          ? ''
+          : String(category.currentMonthBudget),
     });
     setErrors({});
     setStatus(null);
@@ -159,9 +178,15 @@ export default function CategoriesPage() {
 
     try {
       if (editingCategoryId) {
-        await updateCategory({
+        const updatedCategory = await updateCategory({
           id: editingCategoryId,
           values: form,
+        });
+        await saveCategoryBudget({
+          userId: user.id,
+          categoryId: updatedCategory.id,
+          budgetLimit: form.budgetLimit,
+          monthKey: currentMonthKey,
         });
 
         setStatus({
@@ -169,9 +194,15 @@ export default function CategoriesPage() {
           message: 'Category updated successfully.',
         });
       } else {
-        await createCategory({
+        const createdCategory = await createCategory({
           userId: user.id,
           values: form,
+        });
+        await saveCategoryBudget({
+          userId: user.id,
+          categoryId: createdCategory.id,
+          budgetLimit: form.budgetLimit,
+          monthKey: currentMonthKey,
         });
 
         setStatus({
@@ -330,6 +361,7 @@ export default function CategoriesPage() {
       <CategoryDialog
         form={form}
         errors={errors}
+        monthKey={currentMonthKey}
         mode={editingCategoryId ? 'edit' : 'create'}
         isOpen={isDialogOpen}
         isSubmitting={isSubmitting}

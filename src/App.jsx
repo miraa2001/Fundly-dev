@@ -1,10 +1,15 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import AppShell from './components/app/AppShell';
 import AuthLoadingScreen from './components/auth/AuthLoadingScreen';
 import { useAuthSession } from './lib/auth-context';
-import AppPage from './pages/AppPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import LoginPage from './pages/LoginPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import CategoriesPage from './pages/app/CategoriesPage';
+import HomePage from './pages/app/HomePage';
+import PlannedPage from './pages/app/PlannedPage';
+import SettingsPage from './pages/app/SettingsPage';
+import TransactionsPage from './pages/app/TransactionsPage';
 
 function SessionRedirect() {
   const { isAuthenticated, isAuthLoading } = useAuthSession();
@@ -54,10 +59,16 @@ export default function App() {
         path="/app"
         element={
           <ProtectedRoute>
-            <AppPage />
+            <AppShell />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<HomePage />} />
+        <Route path="transactions" element={<TransactionsPage />} />
+        <Route path="categories" element={<CategoriesPage />} />
+        <Route path="planned" element={<PlannedPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Route>
       <Route path="*" element={<SessionRedirect />} />
     </Routes>
   );

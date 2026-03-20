@@ -266,7 +266,10 @@ export default function CategoriesPage() {
               onClick={openCreateDialog}
               className="category-create-button inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#16323b] transition hover:text-[#087f98]"
             >
-              <span className="relative z-[1]">New category</span>
+              <span className="category-create-button__label">New category</span>
+              <span className="category-create-button__glow" aria-hidden="true">
+                <span className="category-create-button__gradient" />
+              </span>
             </button>
             <button
               type="button"
@@ -312,7 +315,10 @@ export default function CategoriesPage() {
                 onClick={openCreateDialog}
                 className="category-create-button inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#16323b] transition hover:text-[#087f98]"
               >
-                <span className="relative z-[1]">Add category</span>
+                <span className="category-create-button__label">Add category</span>
+                <span className="category-create-button__glow" aria-hidden="true">
+                  <span className="category-create-button__gradient" />
+                </span>
               </button>
             }
           />

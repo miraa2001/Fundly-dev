@@ -1,6 +1,6 @@
-import archiveIcon from '../../../../archive_icon.png';
-import editIcon from '../../../../edit_icon.png';
-import unarchiveIcon from '../../../../unarchive_icon.png';
+import archiveIcon from '../../../assets/icons/category-archive.png';
+import editIcon from '../../../assets/icons/category-edit.png';
+import unarchiveIcon from '../../../assets/icons/category-unarchive.png';
 import AppSurface from '../AppSurface';
 import { formatCategoryKind, formatMonthKey, getCategoryAccentColor } from '../../../lib/categories';
 

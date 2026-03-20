@@ -1,44 +1,60 @@
 import archiveIcon from '../../../assets/icons/category-archive.png';
 import editIcon from '../../../assets/icons/category-edit.png';
 import unarchiveIcon from '../../../assets/icons/category-unarchive.png';
-import AppSurface from '../AppSurface';
 import { formatCategoryKind, formatMonthKey, getCategoryAccentColor } from '../../../lib/categories';
-
-const actionButtonClassName =
-  'inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-70';
-
-const infoTileClassName = 'rounded-[1.15rem] border border-[#d3efed] bg-white/80 p-3';
 
 function formatBudgetAmount(value) {
   const numericValue = Number(value);
-
-  if (!Number.isFinite(numericValue)) {
-    return value;
-  }
-
-  return new Intl.NumberFormat(undefined, {
-    maximumFractionDigits: 2,
-  }).format(numericValue);
+  if (!Number.isFinite(numericValue)) return value;
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(numericValue);
 }
 
 function getDemoSpentPercentage(category) {
   const seed = `${category.id}-${category.name}-${category.kind}`;
   let hash = 0;
-
   for (let index = 0; index < seed.length; index += 1) {
     hash = (hash * 31 + seed.charCodeAt(index)) % 10007;
   }
-
   return 24 + (hash % 61);
 }
 
-function CategoryActionButton({ icon, label, className, ...props }) {
-  return (
-    <button type="button" className={className} {...props}>
-      <img src={icon} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
-      <span>{label}</span>
-    </button>
-  );
+// Glow animation injected once
+const glowStyleId = 'category-card-glow-style';
+if (typeof document !== 'undefined' && !document.getElementById(glowStyleId)) {
+  const style = document.createElement('style');
+  style.id = glowStyleId;
+  style.textContent = `
+    @keyframes cc-rotate {
+      0%   { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes cc-shimmer {
+      0%   { opacity: 0.7; }
+      50%  { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    .cc-glow-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 108%; height: 115%;
+      overflow: hidden;
+      border-radius: inherit;
+      filter: blur(9px);
+      pointer-events: none;
+      z-index: 0;
+      transition: filter 0.3s ease;
+    }
+    .cc-glow-gradient {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 110%;
+      aspect-ratio: 1;
+      border-radius: 9999px;
+      animation: cc-rotate 2.4s linear infinite;
+    }
+    .cc-card-collapsed:hover .cc-glow-ring { filter: blur(5px); }
+  `;
+  document.head.appendChild(style);
 }
 
 export default function CategoryCard({
@@ -53,207 +69,458 @@ export default function CategoryCard({
 }) {
   const accentColor = getCategoryAccentColor(category.color);
   const monthLabel = formatMonthKey(category.currentMonthKey);
-  const demoSpentPercentage = getDemoSpentPercentage(category);
+  const demoSpentPct = getDemoSpentPercentage(category);
   const numericBudget = Number(category.currentMonthBudget);
   const hasMonthlyBudget = Number.isFinite(numericBudget);
   const formattedBudget = hasMonthlyBudget ? formatBudgetAmount(numericBudget) : null;
-  const demoSpentAmount = hasMonthlyBudget ? formatBudgetAmount((numericBudget * demoSpentPercentage) / 100) : null;
   const demoRemainingAmount = hasMonthlyBudget
-    ? formatBudgetAmount(Math.max(numericBudget - (numericBudget * demoSpentPercentage) / 100, 0))
+    ? formatBudgetAmount(Math.max(numericBudget - (numericBudget * demoSpentPct) / 100, 0))
     : null;
-  const detailsId = `category-details-${category.id}`;
+
+  // Derive a slightly darker shade for the gradient stop
+  const topGradient = `linear-gradient(135deg, ${accentColor}cc 0%, #083747f5 55%, #44e8f422 100%)`;
 
   return (
-    <AppSurface
-      className={[
-        'overflow-hidden p-0 transition-all duration-500',
-        category.is_archived
-          ? 'border-[#e7d2cf] bg-[linear-gradient(180deg,rgba(255,251,250,0.96),rgba(247,239,236,0.9))]'
-          : '',
-        isExpanded
-          ? 'border-[#44e8f4]/45 shadow-[0_24px_52px_rgba(4,27,34,0.14)] ring-1 ring-[#44e8f4]/14'
-          : 'hover:-translate-y-0.5 hover:shadow-[0_20px_42px_rgba(4,27,34,0.12)]',
-      ].join(' ')}
+    <div
+      style={{
+        borderRadius: '20px',
+        background: '#0e1c22',
+        padding: '5px',
+        overflow: 'hidden',
+        boxShadow: isExpanded
+          ? `0 0 0 1.5px ${accentColor}55, 0 20px 60px rgba(0,0,0,0.5)`
+          : '0 7px 28px rgba(0,0,0,0.35)',
+        transition: 'box-shadow 0.4s ease, transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275)',
+        transform: isExpanded ? 'scale(1.02)' : 'scale(1)',
+        position: 'relative',
+        isolation: 'isolate',
+      }}
+      className={isExpanded ? '' : 'cc-card-collapsed'}
     >
-      <div className="relative">
+      {/* Glow ring (only visible when collapsed/hovered) */}
+      {!isExpanded && (
+        <div className="cc-glow-ring" aria-hidden="true">
+          <div
+            className="cc-glow-gradient"
+            style={{
+              backgroundImage: `linear-gradient(90deg,
+                ${accentColor},
+                #44e8f4,
+                #15aeca,
+                ${accentColor}88,
+                #ffd45a55,
+                #44e8f4,
+                ${accentColor})`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* ── TOP SECTION ─────────────────────────────────── */}
+      <button
+        type="button"
+        onClick={() => onToggle(category.id)}
+        aria-expanded={isExpanded}
+        style={{
+          display: 'block',
+          width: '100%',
+          border: 'none',
+          padding: 0,
+          cursor: 'pointer',
+          background: 'transparent',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-32"
           style={{
-            background: `linear-gradient(135deg, ${accentColor} 0%, rgba(8,55,71,0.96) 58%, rgba(68,232,244,0.34) 100%)`,
+            height: isExpanded ? '140px' : '120px',
+            borderRadius: '15px',
+            background: topGradient,
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'height 0.4s ease',
           }}
-        />
-        <div className="pointer-events-none absolute -left-8 top-8 h-28 w-28 rounded-full bg-white/12 blur-2xl" />
-        <div className="pointer-events-none absolute right-4 top-4 h-20 w-20 rounded-full border border-white/18 bg-white/10" />
-
-        <button
-          type="button"
-          onClick={() => onToggle(category.id)}
-          aria-expanded={isExpanded}
-          aria-controls={detailsId}
-          className="relative w-full text-left"
         >
-          <div className="p-4">
-            <div className="rounded-[1.45rem] border border-white/12 bg-[linear-gradient(180deg,rgba(7,42,51,0.66),rgba(7,42,51,0.36))] p-4 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm transition duration-500">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-start gap-3">
-                  <div
-                    className={[
-                      'mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-[1.4rem] border border-white/55 shadow-[0_12px_24px_rgba(7,42,51,0.22),inset_0_1px_0_rgba(255,255,255,0.35)] transition-all duration-500',
-                      isExpanded ? 'scale-[1.05] rounded-[1.7rem]' : '',
-                    ].join(' ')}
-                    style={{
-                      background: `linear-gradient(160deg, ${accentColor} 0%, rgba(255,255,255,0.34) 100%)`,
-                    }}
-                    aria-hidden="true"
-                  >
-                    <div className="h-6 w-6 rounded-[0.7rem] border border-white/35 bg-[#fff2c8]/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]" />
-                  </div>
+          {/* Tab notch (same trick as template) */}
+          <div
+            style={{
+              borderBottomRightRadius: '10px',
+              height: '28px',
+              width: '120px',
+              background: '#0e1c22',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              transform: 'skew(-38deg)',
+              boxShadow: '-10px -10px 0 0 #0e1c22',
+            }}
+          />
+          <div
+            style={{
+              content: '""',
+              position: 'absolute',
+              top: '28px',
+              left: 0,
+              height: '14px',
+              width: '14px',
+              borderTopLeftRadius: '14px',
+              boxShadow: '-5px -5px 0 2px #0e1c22',
+              background: 'transparent',
+            }}
+          />
 
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="truncate text-lg font-bold tracking-[-0.03em] text-white">{category.name}</h3>
-                      <span className="rounded-full bg-white/14 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#eafcff]">
-                        {formatCategoryKind(category.kind)}
-                      </span>
-                      {category.is_archived ? (
-                        <span className="rounded-full bg-[#fff2ec]/18 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#fff2ec]">
-                          Archived
-                        </span>
-                      ) : null}
-                    </div>
+          {/* Color swatch dot — top-left inside the notch area */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '4px',
+              left: '16px',
+              width: '20px',
+              height: '20px',
+              borderRadius: '50%',
+              background: accentColor,
+              boxShadow: `0 0 10px ${accentColor}99`,
+              border: '2px solid rgba(255,255,255,0.35)',
+            }}
+            aria-hidden="true"
+          />
 
-                    <p className="mt-2 text-sm leading-6 text-[#e7f9fb]">
-                      {hasMonthlyBudget ? `Monthly budget: ${formattedBudget}` : 'No monthly budget set'}
-                    </p>
-                  </div>
-                </div>
+          {/* Archived badge */}
+          {category.is_archived && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '5px',
+                right: '12px',
+                background: 'rgba(255,212,90,0.18)',
+                border: '1px solid rgba(255,212,90,0.4)',
+                borderRadius: '999px',
+                padding: '2px 9px',
+                fontSize: '0.6rem',
+                fontWeight: 700,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: '#ffd45a',
+              }}
+            >
+              Archived
+            </div>
+          )}
 
-                <span className="shrink-0 rounded-full border border-white/18 bg-white/10 px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#e7f9fb]">
-                  {isExpanded ? 'Hide details' : 'View details'}
-                </span>
+          {/* Main label */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: '16px',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ textAlign: 'left' }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '1.35rem',
+                  fontWeight: 800,
+                  color: '#fff',
+                  letterSpacing: '-0.02em',
+                  textShadow: '0 2px 12px rgba(0,0,0,0.4)',
+                  lineHeight: 1.1,
+                }}
+              >
+                {category.name}
+              </p>
+              {isExpanded && (
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.2em',
+                    textTransform: 'uppercase',
+                    color: `${accentColor}dd`,
+                  }}
+                >
+                  {formatCategoryKind(category.kind)}
+                </p>
+              )}
+            </div>
+
+            {/* Expand hint */}
+            <span
+              style={{
+                fontSize: '0.6rem',
+                fontWeight: 700,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.65)',
+                border: '1px solid rgba(255,255,255,0.22)',
+                borderRadius: '999px',
+                padding: '4px 10px',
+                whiteSpace: 'nowrap',
+                backdropFilter: 'blur(6px)',
+                background: 'rgba(255,255,255,0.07)',
+              }}
+            >
+              {isExpanded ? 'Close' : 'Details'}
+            </span>
+          </div>
+        </div>
+      </button>
+
+      {/* ── BOTTOM SECTION (expanded only) ───────────────── */}
+      <div
+        style={{
+          maxHeight: isExpanded ? '340px' : '0px',
+          overflow: 'hidden',
+          transition: 'max-height 0.45s cubic-bezier(0.22,1,0.36,1)',
+        }}
+        aria-hidden={!isExpanded}
+      >
+        <div style={{ padding: '14px 10px 8px' }}>
+
+          {/* Month label */}
+          <p
+            style={{
+              margin: '0 0 10px',
+              fontSize: '0.62rem',
+              fontWeight: 700,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: `${accentColor}cc`,
+              textAlign: 'center',
+            }}
+          >
+            {monthLabel}
+          </p>
+
+          {/* Stats row */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '6px',
+              marginBottom: '10px',
+            }}
+          >
+            {[
+              {
+                label: 'Budget',
+                value: hasMonthlyBudget ? formattedBudget : '—',
+              },
+              {
+                label: 'Remaining',
+                value: hasMonthlyBudget ? demoRemainingAmount : '—',
+              },
+            ].map(({ label, value }) => (
+              <div
+                key={label}
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '12px',
+                  padding: '10px 10px 8px',
+                  textAlign: 'center',
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: '0.58rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(170,222,243,0.7)',
+                  }}
+                >
+                  {label}
+                </p>
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    fontSize: '1rem',
+                    fontWeight: 800,
+                    color: '#fff',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {value}
+                </p>
               </div>
+            ))}
+          </div>
 
-              <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-white/12 bg-white/10 px-3 py-3">
-                <div>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#baf5ff]">{monthLabel}</p>
-                  <p className="mt-1 text-sm font-semibold text-white">Budget spent preview</p>
-                </div>
-
-                <div className="min-w-[88px] text-right">
-                  <p className="text-lg font-bold text-white">{demoSpentPercentage}%</p>
-                  <p className="text-[0.7rem] text-[#e7f9fb]">Demo pace</p>
-                </div>
-              </div>
+          {/* Progress bar */}
+          <div style={{ marginBottom: '12px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '5px',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '0.58rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(170,222,243,0.7)',
+                }}
+              >
+                Spent
+              </span>
+              <span
+                style={{
+                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  color: demoSpentPct >= 85 ? '#ffd45a' : '#44e8f4',
+                }}
+              >
+                {demoSpentPct}%
+              </span>
+            </div>
+            <div
+              style={{
+                height: '7px',
+                borderRadius: '999px',
+                background: 'rgba(255,255,255,0.1)',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  height: '100%',
+                  width: `${demoSpentPct}%`,
+                  borderRadius: '999px',
+                  background:
+                    demoSpentPct >= 85
+                      ? 'linear-gradient(90deg,#ffd45a,#f6c53d)'
+                      : `linear-gradient(90deg,${accentColor},#44e8f4,#15aeca)`,
+                  transition: 'width 0.8s cubic-bezier(0.22,1,0.36,1)',
+                  boxShadow:
+                    demoSpentPct >= 85
+                      ? '0 0 8px rgba(255,212,90,0.6)'
+                      : `0 0 8px ${accentColor}88`,
+                }}
+              />
             </div>
           </div>
-        </button>
 
-        <div
-          className={[
-            'grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-            isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
-          ].join(' ')}
-        >
-          <div id={detailsId} className="overflow-hidden">
-            <div className="px-4 pb-4">
-              <div className="rounded-[1.45rem] border border-[#d3efed] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(239,251,248,0.88))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className={infoTileClassName}>
-                    <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Status</p>
-                    <p className="mt-2 text-sm font-bold text-[#16323b]">{category.is_archived ? 'Archived' : 'Active'}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#5a727b]">
-                      {category.is_archived ? 'Hidden from the default list until restored.' : 'Ready for live budgeting and tracking.'}
-                    </p>
-                  </div>
+          {/* Icon action buttons */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '6px',
+              paddingTop: '4px',
+              borderTop: '1px solid rgba(255,255,255,0.07)',
+            }}
+          >
+            {/* Edit */}
+            <button
+              type="button"
+              onClick={() => onEdit(category)}
+              title="Edit category"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '34px',
+                height: '34px',
+                borderRadius: '10px',
+                border: '1px solid rgba(68,232,244,0.3)',
+                background: 'rgba(68,232,244,0.1)',
+                cursor: 'pointer',
+                transition: 'background 0.2s, border-color 0.2s, transform 0.15s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(68,232,244,0.22)';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(68,232,244,0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <img src={editIcon} alt="Edit" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'invert(1) sepia(1) saturate(2) hue-rotate(155deg)' }} />
+            </button>
 
-                  <div className={infoTileClassName}>
-                    <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Budget</p>
-                    <p className="mt-2 text-sm font-bold text-[#16323b]">{hasMonthlyBudget ? formattedBudget : 'Not set'}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#5a727b]">Current month target for {monthLabel}.</p>
-                  </div>
-
-                  <div className={infoTileClassName}>
-                    <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Kind</p>
-                    <p className="mt-2 text-sm font-bold text-[#16323b]">{formatCategoryKind(category.kind)}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#5a727b]">Used to group budget rules and future transaction flows.</p>
-                  </div>
-                </div>
-
-                <div className="mt-4 rounded-[1.25rem] border border-[#d3efed] bg-white/85 p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Budget spent</p>
-                      <p className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#16323b]">{demoSpentPercentage}%</p>
-                    </div>
-
-                    <p className="max-w-[16rem] text-right text-xs leading-5 text-[#5a727b]">
-                      {hasMonthlyBudget
-                        ? `Demo usage preview for ${monthLabel}.`
-                        : 'Demo preview only until a monthly budget is set.'}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-[#dff4f2]">
-                    <div
-                      className="h-full rounded-full bg-[linear-gradient(90deg,#44e8f4_0%,#15aeca_58%,#0a6a83_100%)] transition-all duration-700"
-                      style={{ width: `${demoSpentPercentage}%` }}
-                    />
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div className={infoTileClassName}>
-                      <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Demo spent</p>
-                      <p className="mt-2 text-sm font-bold text-[#16323b]">
-                        {hasMonthlyBudget ? demoSpentAmount : `${demoSpentPercentage}% pace`}
-                      </p>
-                      <p className="mt-1 text-xs leading-5 text-[#5a727b]">
-                        {hasMonthlyBudget ? 'Estimated amount used from this month budget.' : 'Placeholder usage rate until real transactions are connected.'}
-                      </p>
-                    </div>
-
-                    <div className={infoTileClassName}>
-                      <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Remaining</p>
-                      <p className="mt-2 text-sm font-bold text-[#16323b]">
-                        {hasMonthlyBudget ? demoRemainingAmount : 'Set budget'}
-                      </p>
-                      <p className="mt-1 text-xs leading-5 text-[#5a727b]">
-                        {hasMonthlyBudget ? 'Preview of what would still be available this month.' : 'Add a monthly budget to unlock this calculation.'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <CategoryActionButton
-                    icon={editIcon}
-                    label="Edit"
-                    onClick={() => onEdit(category)}
-                    className={`${actionButtonClassName} border-[#d3efed] bg-white text-[#16323b] hover:border-[#35d9ef]/40 hover:text-[#087f98]`}
-                  />
-
-                  {!category.is_archived ? (
-                    <CategoryActionButton
-                      icon={archiveIcon}
-                      label={isArchiving ? 'Archiving...' : 'Archive'}
-                      onClick={() => onArchive(category)}
-                      disabled={isArchiving}
-                      className={`${actionButtonClassName} border-[#efc7b8] bg-[#fff2ec] text-[#934d33] hover:border-[#e3a28a]`}
-                    />
-                  ) : (
-                    <CategoryActionButton
-                      icon={unarchiveIcon}
-                      label={isUnarchiving ? 'Unarchiving...' : 'Unarchive'}
-                      onClick={() => onUnarchive(category)}
-                      disabled={isUnarchiving}
-                      className={`${actionButtonClassName} border-[#efc7b8] bg-[#fff2ec] text-[#934d33] hover:border-[#e3a28a]`}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
+            {/* Archive / Unarchive */}
+            {!category.is_archived ? (
+              <button
+                type="button"
+                onClick={() => onArchive(category)}
+                disabled={isArchiving}
+                title={isArchiving ? 'Archiving…' : 'Archive category'}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255,212,90,0.35)',
+                  background: 'rgba(255,212,90,0.1)',
+                  cursor: isArchiving ? 'not-allowed' : 'pointer',
+                  opacity: isArchiving ? 0.6 : 1,
+                  transition: 'background 0.2s, border-color 0.2s, transform 0.15s',
+                }}
+                onMouseEnter={e => {
+                  if (!isArchiving) {
+                    e.currentTarget.style.background = 'rgba(255,212,90,0.22)';
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(255,212,90,0.1)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <img src={archiveIcon} alt="Archive" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'invert(1) sepia(1) saturate(3) hue-rotate(5deg)' }} />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onUnarchive(category)}
+                disabled={isUnarchiving}
+                title={isUnarchiving ? 'Unarchiving…' : 'Unarchive category'}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(156,239,229,0.35)',
+                  background: 'rgba(156,239,229,0.1)',
+                  cursor: isUnarchiving ? 'not-allowed' : 'pointer',
+                  opacity: isUnarchiving ? 0.6 : 1,
+                  transition: 'background 0.2s, border-color 0.2s, transform 0.15s',
+                }}
+                onMouseEnter={e => {
+                  if (!isUnarchiving) {
+                    e.currentTarget.style.background = 'rgba(156,239,229,0.22)';
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(156,239,229,0.1)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <img src={unarchiveIcon} alt="Unarchive" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'invert(1) sepia(1) saturate(2) hue-rotate(130deg)' }} />
+              </button>
+            )}
           </div>
         </div>
       </div>
-    </AppSurface>
+    </div>
   );
 }

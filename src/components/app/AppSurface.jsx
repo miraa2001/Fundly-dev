@@ -1,4 +1,12 @@
-export default function AppSurface({ eyebrow, title, description, action, className = '', children }) {
+export default function AppSurface({
+  eyebrow,
+  title,
+  description,
+  action,
+  className = '',
+  contentClassName = '',
+  children,
+}) {
   return (
     <section
       className={[
@@ -18,7 +26,9 @@ export default function AppSurface({ eyebrow, title, description, action, classN
           {action ? <div className="shrink-0">{action}</div> : null}
         </div>
       ) : null}
-      <div className={eyebrow || title || description || action ? 'mt-4' : ''}>{children}</div>
+      <div className={[eyebrow || title || description || action ? 'mt-4' : '', contentClassName].join(' ').trim()}>
+        {children}
+      </div>
     </section>
   );
 }

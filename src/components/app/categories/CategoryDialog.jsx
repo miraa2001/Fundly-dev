@@ -48,8 +48,10 @@ export default function CategoryDialog({
         onClick={onCancel}
       />
 
-      <div className="relative z-10 w-full max-w-lg max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain sm:max-h-[calc(100dvh-3rem)]">
+      <div className="relative z-10 w-full max-w-lg">
         <AppSurface
+          className="flex max-h-[calc(100dvh-5rem)] flex-col overflow-hidden sm:max-h-[calc(100dvh-3rem)]"
+          contentClassName="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1"
           eyebrow={mode === 'edit' ? 'Edit Category' : 'New Category'}
           title={mode === 'edit' ? 'Update this category' : 'Add a category'}
           description="Create and manage categories without leaving the authenticated app shell."

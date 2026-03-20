@@ -48,7 +48,7 @@ export default function CategoryDialog({
         onClick={onCancel}
       />
 
-      <div className="relative z-10 w-full max-w-lg">
+      <div className="relative z-10 w-full max-w-lg max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain sm:max-h-[calc(100dvh-3rem)]">
         <AppSurface
           eyebrow={mode === 'edit' ? 'Edit Category' : 'New Category'}
           title={mode === 'edit' ? 'Update this category' : 'Add a category'}

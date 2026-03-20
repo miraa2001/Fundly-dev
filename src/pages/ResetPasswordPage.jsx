@@ -28,7 +28,34 @@ function cleanRecoveryUrl() {
     return;
   }
 
-  window.history.replaceState({}, document.title, window.location.pathname);
+  const normalizedPathname = window.location.pathname.replace(/index\.html$/, '');
+  const basePath = normalizedPathname.endsWith('/') ? normalizedPathname : `${normalizedPathname}/`;
+  const [hashRoute] = window.location.hash.replace(/^#/, '').split('#');
+  const nextHash = hashRoute.startsWith('/') ? `#${hashRoute}` : '';
+
+  window.history.replaceState({}, document.title, `${window.location.origin}${basePath}${nextHash}`);
+}
+
+function getRecoveryUrlState() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const hashSegments = window.location.hash.replace(/^#/, '').split('#').filter(Boolean);
+  const authHashSegment =
+    hashSegments.find(
+      (segment) =>
+        segment.includes('access_token=') || segment.includes('refresh_token=') || segment.includes('type=recovery'),
+    ) ?? '';
+  const hashParams = new URLSearchParams(authHashSegment || hashSegments[0] || '');
+  const code = searchParams.get('code') || hashParams.get('code');
+  const accessToken = hashParams.get('access_token');
+  const refreshToken = hashParams.get('refresh_token');
+  const type = searchParams.get('type') || hashParams.get('type');
+
+  return {
+    code,
+    accessToken,
+    refreshToken,
+    isRecoveryLink: type === 'recovery' || Boolean(code) || Boolean(accessToken),
+  };
 }
 
 export default function ResetPasswordPage() {
@@ -52,14 +79,7 @@ export default function ResetPasswordPage() {
     }
 
     let active = true;
-    const searchParams = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-    const code = searchParams.get('code');
-    const isRecoveryLink =
-      searchParams.get('type') === 'recovery' ||
-      hashParams.get('type') === 'recovery' ||
-      Boolean(code) ||
-      hashParams.has('access_token');
+    const { code, accessToken, refreshToken, isRecoveryLink } = getRecoveryUrlState();
 
     const {
       data: { subscription },
@@ -83,6 +103,15 @@ export default function ResetPasswordPage() {
       try {
         if (code) {
           const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+          if (error) {
+            throw error;
+          }
+        } else if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
 
           if (error) {
             throw error;

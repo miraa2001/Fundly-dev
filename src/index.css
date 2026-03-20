@@ -55,3 +55,45 @@ input:autofill {
 ::selection {
   background: rgba(53, 217, 239, 0.28);
 }
+
+@keyframes category-button-border-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.category-create-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid transparent;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(236, 249, 247, 0.84));
+  box-shadow: 0 10px 24px rgba(4, 27, 34, 0.08);
+}
+
+.category-create-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(53, 217, 239, 0.15),
+    #35d9ef 22%,
+    #ffd45a 48%,
+    #15aeca 74%,
+    rgba(53, 217, 239, 0.15)
+  );
+  animation: category-button-border-spin 2.8s linear infinite;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.category-create-button:hover::before {
+  animation-duration: 2.1s;
+}

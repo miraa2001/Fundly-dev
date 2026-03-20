@@ -25,7 +25,7 @@ export default function CategoryFormPanel({
   const previewColor = getCategoryAccentColor(form.color);
 
   return (
-    <form className="space-y-4" onSubmit={onSubmit} noValidate>
+    <form className="space-y-4 pb-2" onSubmit={onSubmit} noValidate>
       <div className="rounded-[1.35rem] border border-[#d3efed] bg-white/70 p-4">
         <div className="flex items-center gap-3">
           <div
@@ -133,11 +133,11 @@ export default function CategoryFormPanel({
         {errors.budgetLimit ? <p className="text-sm text-[#934d33]">{errors.budgetLimit}</p> : null}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="sticky bottom-0 z-[1] -mx-1 flex flex-wrap items-center gap-3 border-t border-[#d3efed]/75 bg-[linear-gradient(180deg,rgba(239,251,248,0.18)_0%,rgba(239,251,248,0.96)_22%,rgba(239,251,248,0.99)_100%)] px-1 pb-1 pt-4 sm:static sm:mx-0 sm:border-t-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center justify-center rounded-[1.2rem] border border-[#073746] bg-[linear-gradient(180deg,#44e8f4_0%,#15aeca_42%,#0a6a83_100%)] px-4 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex w-full items-center justify-center rounded-[1.2rem] border border-[#073746] bg-[linear-gradient(180deg,#44e8f4_0%,#15aeca_42%,#0a6a83_100%)] px-4 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
           {isSubmitting ? (mode === 'edit' ? 'Saving...' : 'Creating...') : mode === 'edit' ? 'Save changes' : 'Add category'}
         </button>
@@ -145,7 +145,7 @@ export default function CategoryFormPanel({
         <button
           type="button"
           onClick={onCancel}
-          className="inline-flex items-center justify-center rounded-[1.2rem] border border-[#d3efed] bg-white/80 px-4 py-3 text-sm font-bold text-[#16323b] transition hover:border-[#35d9ef]/40 hover:text-[#087f98]"
+          className="inline-flex w-full items-center justify-center rounded-[1.2rem] border border-[#d3efed] bg-white/80 px-4 py-3 text-sm font-bold text-[#16323b] transition hover:border-[#35d9ef]/40 hover:text-[#087f98] sm:w-auto"
         >
           Cancel
         </button>

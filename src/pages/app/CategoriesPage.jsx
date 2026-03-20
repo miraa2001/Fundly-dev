@@ -258,7 +258,7 @@ export default function CategoriesPage() {
       <AppPageHeader
         eyebrow="Categories"
         title="Your categories, connected"
-        description="Manage the categories tied to your authenticated Fundly account. This page now reads and updates the real categories table through Supabase."
+        description="Manage your categories in one place"
         action={
           <div className="flex flex-wrap items-center gap-2">
             <button

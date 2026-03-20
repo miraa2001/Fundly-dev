@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppPageHeader from '../../components/app/AppPageHeader';
 import AppSurface from '../../components/app/AppSurface';
 import CategoryCard from '../../components/app/categories/CategoryCard';
-import CategoryFormPanel from '../../components/app/categories/CategoryFormPanel';
+import CategoryDialog from '../../components/app/categories/CategoryDialog';
 import StatusMessage from '../../components/auth/StatusMessage';
 import { useAuthSession } from '../../lib/auth-context';
 import {
@@ -17,7 +17,6 @@ const initialFormState = {
   name: '',
   kind: 'expense',
   color: defaultCategoryColor,
-  icon: '',
 };
 
 function getCategoryErrorMessage(error, fallbackMessage) {
@@ -69,7 +68,6 @@ function LoadingState() {
 
 export default function CategoriesPage() {
   const { user } = useAuthSession();
-  const formPanelRef = useRef(null);
   const [categories, setCategories] = useState([]);
   const [fetchError, setFetchError] = useState('');
   const [status, setStatus] = useState(null);
@@ -78,6 +76,7 @@ export default function CategoriesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isArchivingId, setIsArchivingId] = useState('');
   const [editingCategoryId, setEditingCategoryId] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
 
@@ -109,8 +108,15 @@ export default function CategoriesPage() {
     setErrors({});
   }
 
-  function scrollFormIntoView() {
-    formPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function closeDialog() {
+    setIsDialogOpen(false);
+    resetForm();
+  }
+
+  function openCreateDialog() {
+    resetForm();
+    setStatus(null);
+    setIsDialogOpen(true);
   }
 
   function handleChange(field, value) {
@@ -125,11 +131,10 @@ export default function CategoriesPage() {
       name: category.name ?? '',
       kind: category.kind ?? '',
       color: category.color ?? defaultCategoryColor,
-      icon: category.icon ?? '',
     });
     setErrors({});
     setStatus(null);
-    scrollFormIntoView();
+    setIsDialogOpen(true);
   }
 
   async function handleSubmit(event) {
@@ -175,7 +180,7 @@ export default function CategoriesPage() {
         });
       }
 
-      resetForm();
+      closeDialog();
       await loadCategories(showArchived);
     } catch (error) {
       setStatus({
@@ -199,7 +204,7 @@ export default function CategoriesPage() {
       });
 
       if (editingCategoryId === category.id) {
-        resetForm();
+        closeDialog();
       }
 
       await loadCategories(showArchived);
@@ -227,10 +232,7 @@ export default function CategoriesPage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => {
-                resetForm();
-                scrollFormIntoView();
-              }}
+              onClick={openCreateDialog}
               className="inline-flex items-center justify-center rounded-full border border-[#d3efed] bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#16323b] transition hover:border-[#35d9ef]/40 hover:text-[#087f98]"
             >
               New category
@@ -248,87 +250,93 @@ export default function CategoriesPage() {
 
       <StatusMessage tone={status?.tone} message={status?.message} />
 
-      <div className="grid gap-4 xl:grid-cols-[380px_minmax(0,1fr)] xl:items-start">
-        <div ref={formPanelRef} className="xl:sticky xl:top-8">
-          <CategoryFormPanel
-            form={form}
-            errors={errors}
-            mode={editingCategoryId ? 'edit' : 'create'}
-            isSubmitting={isSubmitting}
-            onCancelEdit={resetForm}
-            onChange={handleChange}
-            onSubmit={handleSubmit}
+      <div className="space-y-4">
+        {fetchError ? (
+          <AppSurface
+            eyebrow="Error"
+            title="We could not load categories"
+            description={fetchError}
+            action={
+              <button
+                type="button"
+                onClick={() => void loadCategories(showArchived)}
+                className="inline-flex items-center justify-center rounded-full border border-[#efc7b8] bg-[#fff2ec] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#934d33] transition hover:border-[#e3a28a]"
+              >
+                Retry
+              </button>
+            }
           />
-        </div>
+        ) : null}
 
-        <div className="space-y-4">
-          {fetchError ? (
-            <AppSurface
-              eyebrow="Error"
-              title="We could not load categories"
-              description={fetchError}
-              action={
-                <button
-                  type="button"
-                  onClick={() => void loadCategories(showArchived)}
-                  className="inline-flex items-center justify-center rounded-full border border-[#efc7b8] bg-[#fff2ec] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#934d33] transition hover:border-[#e3a28a]"
-                >
-                  Retry
-                </button>
-              }
-            />
-          ) : null}
+        {isLoading ? <LoadingState /> : null}
 
-          {isLoading ? <LoadingState /> : null}
+        {hasNoVisibleCategories ? (
+          <AppSurface
+            eyebrow="Empty State"
+            title="No categories yet"
+            description="Create your first category to start organizing transactions, budgets, and planned spending."
+            action={
+              <button
+                type="button"
+                onClick={openCreateDialog}
+                className="inline-flex items-center justify-center rounded-full border border-[#d3efed] bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#16323b] transition hover:border-[#35d9ef]/40 hover:text-[#087f98]"
+              >
+                Add category
+              </button>
+            }
+          />
+        ) : null}
 
-          {hasNoVisibleCategories ? (
-            <AppSurface
-              eyebrow="Empty State"
-              title="No categories yet"
-              description="Create your first category to start organizing transactions, budgets, and planned spending."
-            />
-          ) : null}
+        {!isLoading && activeCategories.length > 0 ? (
+          <AppSurface
+            eyebrow="Active Categories"
+            title={`${activeCategories.length} ready to use`}
+            description="These are the categories currently active for your account."
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              {activeCategories.map((category) => (
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  isArchiving={isArchivingId === category.id}
+                  onEdit={handleEdit}
+                  onArchive={handleArchive}
+                />
+              ))}
+            </div>
+          </AppSurface>
+        ) : null}
 
-          {!isLoading && activeCategories.length > 0 ? (
-            <AppSurface
-              eyebrow="Active Categories"
-              title={`${activeCategories.length} ready to use`}
-              description="These are the categories currently active for your account."
-            >
-              <div className="grid gap-4 sm:grid-cols-2">
-                {activeCategories.map((category) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    isArchiving={isArchivingId === category.id}
-                    onEdit={handleEdit}
-                    onArchive={handleArchive}
-                  />
-                ))}
-              </div>
-            </AppSurface>
-          ) : null}
-
-          {!isLoading && showArchived && archivedCategories.length > 0 ? (
-            <AppSurface
-              eyebrow="Archived Categories"
-              title={`${archivedCategories.length} archived`}
-              description="Archived categories stay out of the default view but remain available for reference."
-            >
-              <div className="grid gap-4 sm:grid-cols-2">
-                {archivedCategories.map((category) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    onEdit={handleEdit}
-                    onArchive={handleArchive}
-                  />
-                ))}
-              </div>
-            </AppSurface>
-          ) : null}
-        </div>
+        {!isLoading && showArchived && archivedCategories.length > 0 ? (
+          <AppSurface
+            eyebrow="Archived Categories"
+            title={`${archivedCategories.length} archived`}
+            description="Archived categories stay out of the default view but remain available for reference."
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              {archivedCategories.map((category) => (
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  onEdit={handleEdit}
+                  onArchive={handleArchive}
+                />
+              ))}
+            </div>
+          </AppSurface>
+        ) : null}
       </div>
+
+      <CategoryDialog
+        form={form}
+        errors={errors}
+        mode={editingCategoryId ? 'edit' : 'create'}
+        isOpen={isDialogOpen}
+        isSubmitting={isSubmitting}
+        onCancel={closeDialog}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }

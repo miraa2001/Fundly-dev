@@ -1,6 +1,6 @@
 import { ensureSupabase } from './supabase';
 
-const categoryColumns = 'id, user_id, name, kind, color, icon, is_archived, created_at, updated_at';
+const categoryColumns = 'id, user_id, name, kind, color, is_archived, created_at, updated_at';
 
 export const defaultCategoryColor = '#15AECA';
 export const suggestedCategoryKinds = ['expense', 'income'];
@@ -39,7 +39,6 @@ function normalizeCategoryPayload(values) {
     name: values.name.trim(),
     kind: values.kind.trim().toLowerCase(),
     color: values.color.trim() || null,
-    icon: values.icon.trim() || null,
   };
 }
 

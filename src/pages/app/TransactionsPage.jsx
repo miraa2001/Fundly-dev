@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import AppPageHeader from '../../components/app/AppPageHeader';
 import AppSurface from '../../components/app/AppSurface';
 import TransactionDialog from '../../components/app/transactions/TransactionDialog';
+import TransactionLoader from '../../components/app/transactions/TransactionLoader';
 import TransactionListItem from '../../components/app/transactions/TransactionListItem';
 import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
@@ -105,6 +106,7 @@ export default function TransactionsPage() {
   const [categoriesError, setCategoriesError] = useState('');
   const [transactionsError, setTransactionsError] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -199,6 +201,15 @@ export default function TransactionsPage() {
     setIsDialogOpen(true);
   }
 
+  function handleNewTransactionClick() {
+    setIsLoaderVisible(true);
+  }
+
+  function handleLoaderComplete() {
+    setIsLoaderVisible(false);
+    openDialog();
+  }
+
   function closeDialog() {
     setIsDialogOpen(false);
     resetForm();
@@ -265,7 +276,7 @@ export default function TransactionsPage() {
         action={
           <AuthButton
             type="button"
-            onClick={openDialog}
+            onClick={handleNewTransactionClick}
             disabled={isCategoriesLoading || !hasActiveCategories}
             className="w-auto rounded-full px-5 py-3 text-sm"
           >
@@ -401,6 +412,10 @@ export default function TransactionsPage() {
         onCancel={closeDialog}
         onChange={handleChange}
         onSubmit={handleSubmit}
+      />
+      <TransactionLoader
+        isVisible={isLoaderVisible}
+        onComplete={handleLoaderComplete}
       />
     </div>
   );

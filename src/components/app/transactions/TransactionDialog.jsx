@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import AppSurface from '../AppSurface';
 import TransactionFormPanel from './TransactionFormPanel';
 
 export default function TransactionDialog({
@@ -14,16 +13,11 @@ export default function TransactionDialog({
   onSubmit,
 }) {
   useEffect(() => {
-    if (!isOpen) {
-      return undefined;
-    }
-
+    if (!isOpen) return undefined;
     const previousOverflow = document.body.style.overflow;
 
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        onCancel();
-      }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') onCancel();
     }
 
     document.body.style.overflow = 'hidden';
@@ -35,58 +29,143 @@ export default function TransactionDialog({
     };
   }, [isOpen, onCancel]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end bg-[#07141a]/55 px-4 pb-4 pt-4 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 40,
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        padding: '0 0 0 0',
+        background: 'rgba(7,20,26,0.7)',
+        backdropFilter: 'blur(6px)',
+      }}
+      className="sm:items-center sm:p-6"
+    >
+      {/* Backdrop close */}
       <button
         type="button"
         aria-label="Close transaction dialog"
-        className="absolute inset-0 cursor-default"
+        style={{ position: 'absolute', inset: 0, cursor: 'default' }}
         onClick={onCancel}
       />
 
-      <div className="relative z-10 w-full max-w-2xl">
-        <AppSurface
-          className="flex max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-h-[calc(100dvh-3rem)]"
-          contentClassName="flex min-h-0 flex-1 flex-col"
+      {/* Sheet */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          width: '100%',
+          maxWidth: '560px',
+          borderRadius: '28px 28px 0 0',
+          background: '#0b1a20',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 -20px 60px rgba(0,0,0,0.5)',
+          maxHeight: 'calc(100dvh - 1rem)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+        className="sm:rounded-[28px]"
+      >
+        {/* Header */}
+        <div
+          style={{
+            padding: '20px 20px 16px',
+            borderBottom: '1px solid rgba(255,255,255,0.07)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '12px',
+            flexShrink: 0,
+          }}
         >
-          <div className="flex items-start justify-between gap-3 border-b border-[#d3efed]/75 pb-4">
-            <div className="min-w-0">
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#087f98]">New Transaction</p>
-              <h2 className="mt-2 text-xl font-bold tracking-[-0.02em] text-[#16323b]">Add a transaction</h2>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-[#5a727b]">
-                Capture a manual expense and connect it to one active category without leaving the app shell.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={onCancel}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d3efed] bg-white/80 text-sm font-bold text-[#5a727b] transition hover:border-[#35d9ef]/40 hover:text-[#087f98]"
-              aria-label="Close transaction dialog"
+          <div>
+            <p
+              style={{
+                margin: 0,
+                fontSize: '0.6rem',
+                fontWeight: 700,
+                letterSpacing: '0.28em',
+                textTransform: 'uppercase',
+                color: '#44e8f4',
+              }}
             >
-              <span aria-hidden="true" className="leading-none">
-                X
-              </span>
-            </button>
+              New Transaction
+            </p>
+            <h2
+              style={{
+                margin: '6px 0 0',
+                fontSize: '1.6rem',
+                fontWeight: 800,
+                color: '#fff',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.1,
+              }}
+            >
+              Add a transaction
+            </h2>
+            <p
+              style={{
+                margin: '6px 0 0',
+                fontSize: '0.82rem',
+                color: 'rgba(170,222,243,0.6)',
+                lineHeight: 1.5,
+              }}
+            >
+              Capture a manual expense and link it to a category.
+            </p>
           </div>
 
-          <div className="mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
-            <TransactionFormPanel
-              categories={categories}
-              form={form}
-              errors={errors}
-              status={status}
-              isSubmitting={isSubmitting}
-              onCancel={onCancel}
-              onChange={onChange}
-              onSubmit={onSubmit}
-            />
-          </div>
-        </AppSurface>
+          <button
+            type="button"
+            onClick={onCancel}
+            aria-label="Close transaction dialog"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'rgba(255,255,255,0.06)',
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              flexShrink: 0,
+              transition: 'background 0.2s',
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Scrollable content */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            overscrollBehavior: 'contain',
+            padding: '16px 16px 20px',
+          }}
+        >
+          <TransactionFormPanel
+            categories={categories}
+            form={form}
+            errors={errors}
+            status={status}
+            isSubmitting={isSubmitting}
+            onCancel={onCancel}
+            onChange={onChange}
+            onSubmit={onSubmit}
+          />
+        </div>
       </div>
     </div>
   );

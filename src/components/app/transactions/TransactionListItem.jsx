@@ -4,49 +4,211 @@ import { formatTransactionAmount, formatTransactionDate } from '../../../lib/tra
 export default function TransactionListItem({ transaction }) {
   const title = transaction.title || transaction.merchant_or_source || 'Untitled transaction';
   const categoryColor = transaction.categoryColor || defaultCategoryColor;
+  const topGradient = `linear-gradient(135deg, ${categoryColor}cc 0%, #083747f5 55%, #44e8f422 100%)`;
 
   return (
-    <div className="rounded-[1.35rem] border border-[#d3efed] bg-white/75 px-4 py-4 shadow-[0_14px_32px_rgba(3,41,53,0.05)]">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start gap-3">
-            <span
-              className="mt-1 h-3.5 w-3.5 shrink-0 rounded-full border border-white/80 shadow-[0_0_0_3px_rgba(255,255,255,0.55)]"
-              style={{ backgroundColor: categoryColor }}
-              aria-hidden="true"
-            />
-            <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-[#16323b] sm:text-base">{title}</p>
+    <div
+      style={{
+        borderRadius: '20px',
+        background: '#0e1c22',
+        padding: '5px',
+        overflow: 'hidden',
+        boxShadow: '0 7px 28px rgba(0,0,0,0.35)',
+        position: 'relative',
+        isolation: 'isolate',
+      }}
+    >
+      {/* ── TOP GRADIENT HEADER ── */}
+      <div
+        style={{
+          height: '90px',
+          borderRadius: '15px',
+          background: topGradient,
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Tab notch */}
+        <div
+          style={{
+            borderBottomRightRadius: '10px',
+            height: '28px',
+            width: '120px',
+            background: '#0e1c22',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            transform: 'skew(-38deg)',
+            boxShadow: '-10px -10px 0 0 #0e1c22',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: '28px',
+            left: 0,
+            height: '14px',
+            width: '14px',
+            borderTopLeftRadius: '14px',
+            boxShadow: '-5px -5px 0 2px #0e1c22',
+            background: 'transparent',
+          }}
+        />
 
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.14em]">
-                <span className="rounded-full border border-[#d3efed] bg-[#eef9f8] px-2.5 py-1 text-[#087f98]">
-                  {transaction.categoryName}
-                </span>
-                <span className="rounded-full border border-[#d3efed] bg-white px-2.5 py-1 text-[#5a727b]">
-                  {formatTransactionDate(transaction.transaction_date)}
-                </span>
-                {transaction.is_from_savings ? (
-                  <span className="rounded-full border border-[#ffd45a]/45 bg-[#fff2c8] px-2.5 py-1 text-[#8b5202]">
-                    Savings
-                  </span>
-                ) : null}
-              </div>
+        {/* Category color dot */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '5px',
+            left: '16px',
+            width: '18px',
+            height: '18px',
+            borderRadius: '50%',
+            background: categoryColor,
+            boxShadow: `0 0 10px ${categoryColor}99`,
+            border: '2px solid rgba(255,255,255,0.35)',
+          }}
+          aria-hidden="true"
+        />
 
-              {transaction.merchant_or_source ? (
-                <p className="mt-3 text-sm text-[#5a727b]">{transaction.merchant_or_source}</p>
-              ) : null}
+        {/* Savings badge */}
+        {transaction.is_from_savings && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '5px',
+              right: '12px',
+              background: 'rgba(255,212,90,0.18)',
+              border: '1px solid rgba(255,212,90,0.4)',
+              borderRadius: '999px',
+              padding: '2px 9px',
+              fontSize: '0.6rem',
+              fontWeight: 700,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: '#ffd45a',
+            }}
+          >
+            Savings
+          </div>
+        )}
 
-              {transaction.note ? <p className="mt-2 text-sm leading-6 text-[#39545d]">{transaction.note}</p> : null}
-            </div>
+        {/* Title + category row */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: '10px 14px',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              fontSize: '1.05rem',
+              fontWeight: 800,
+              color: '#fff',
+              letterSpacing: '-0.02em',
+              textShadow: '0 2px 12px rgba(0,0,0,0.4)',
+              lineHeight: 1.1,
+            }}
+          >
+            {title}
+          </p>
+          <span
+            style={{
+              fontSize: '0.6rem',
+              fontWeight: 700,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.65)',
+              border: '1px solid rgba(255,255,255,0.22)',
+              borderRadius: '999px',
+              padding: '3px 9px',
+              whiteSpace: 'nowrap',
+              backdropFilter: 'blur(6px)',
+              background: 'rgba(255,255,255,0.07)',
+            }}
+          >
+            {transaction.categoryName}
+          </span>
+        </div>
+      </div>
+
+      {/* ── BOTTOM STATS ── */}
+      <div style={{ padding: '10px 10px 8px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: '6px',
+          }}
+        >
+          {/* Amount */}
+          <div
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '12px',
+              padding: '8px',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(170,222,243,0.7)' }}>
+              Amount
+            </p>
+            <p style={{ margin: '3px 0 0', fontSize: '0.9rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>
+              {formatTransactionAmount(transaction.amount_original, transaction.currency_code)}
+            </p>
+          </div>
+
+          {/* Date */}
+          <div
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '12px',
+              padding: '8px',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(170,222,243,0.7)' }}>
+              Date
+            </p>
+            <p style={{ margin: '3px 0 0', fontSize: '0.75rem', fontWeight: 800, color: '#fff' }}>
+              {formatTransactionDate(transaction.transaction_date)}
+            </p>
+          </div>
+
+          {/* Origin */}
+          <div
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '12px',
+              padding: '8px',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(170,222,243,0.7)' }}>
+              Type
+            </p>
+            <p style={{ margin: '3px 0 0', fontSize: '0.7rem', fontWeight: 800, color: `${categoryColor}dd`, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Manual
+            </p>
           </div>
         </div>
 
-        <div className="shrink-0 text-right">
-          <p className="text-sm font-bold text-[#0e2f39] sm:text-base">
-            {formatTransactionAmount(transaction.amount_original, transaction.currency_code)}
+        {/* Note */}
+        {transaction.note ? (
+          <p style={{ margin: '8px 4px 0', fontSize: '0.75rem', color: 'rgba(170,222,243,0.6)', lineHeight: 1.5 }}>
+            {transaction.note}
           </p>
-          <p className="mt-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#087f98]">Manual expense</p>
-        </div>
+        ) : null}
       </div>
     </div>
   );

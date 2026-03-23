@@ -41,7 +41,6 @@ export default function TransactionListItem({ transaction }) {
   const [flipped, setFlipped] = useState(false);
   const title = transaction.title || transaction.merchant_or_source || 'Untitled transaction';
   const categoryColor = transaction.categoryColor || defaultCategoryColor;
-  const topGradient = `linear-gradient(135deg, ${categoryColor}cc 0%, rgba(var(--fundly-primary-rgb),0.95) 58%, rgba(var(--fundly-accent-rgb),0.18) 100%)`;
   const formattedAmount = formatTransactionAmount(transaction.amount_original, transaction.currency_code);
   const formattedDate = formatTransactionDate(transaction.transaction_date);
 
@@ -51,249 +50,99 @@ export default function TransactionListItem({ transaction }) {
         className={`txn-flip-inner${flipped ? ' flipped' : ''}`}
         onClick={() => setFlipped((f) => !f)}
       >
+
+        {/* ── FRONT ── warm cream, neutral card */}
         <div className="txn-flip-front">
           <div
             style={{
               borderRadius: '20px',
-              background: 'var(--fundly-deep)',
-              padding: '5px',
+              background: '#F2F2F2',
+              border: '1px solid rgba(12,42,70,0.10)',
               overflow: 'hidden',
-              boxShadow: '0 14px 40px rgba(var(--fundly-deep-rgb),0.26)',
+              boxShadow: '0 4px 24px rgba(12,42,70,0.08), 0 1px 4px rgba(12,42,70,0.06)',
             }}
           >
-            <div
-              style={{
-                height: '110px',
-                borderRadius: '15px',
-                background: topGradient,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  borderBottomRightRadius: '10px',
-                  height: '28px',
-                  width: '120px',
-                  background: 'var(--fundly-deep)',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  transform: 'skew(-38deg)',
-                  boxShadow: '-10px -10px 0 0 var(--fundly-deep)',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '28px',
-                  left: 0,
-                  height: '14px',
-                  width: '14px',
-                  borderTopLeftRadius: '14px',
-                  boxShadow: '-5px -5px 0 2px var(--fundly-deep)',
-                  background: 'transparent',
-                }}
-              />
+            {/* Top accent bar in category color */}
+            <div style={{ height: '4px', background: categoryColor, opacity: 0.85 }} />
 
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '5px',
-                  left: '16px',
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '50%',
-                  background: categoryColor,
-                  boxShadow: `0 0 10px ${categoryColor}99`,
-                  border: '2px solid rgba(var(--fundly-surface-rgb),0.35)',
-                }}
-                aria-hidden="true"
-              />
+            <div style={{ padding: '16px 18px 14px' }}>
 
-              {transaction.is_from_savings && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '5px',
-                    right: '12px',
-                    background: 'rgba(var(--fundly-accent-rgb),0.18)',
-                    border: '1px solid rgba(var(--fundly-accent-rgb),0.38)',
-                    borderRadius: '999px',
-                    padding: '2px 9px',
-                    fontSize: '0.6rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    color: 'var(--fundly-surface)',
-                  }}
-                >
-                  Savings
-                </div>
-              )}
-
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: '12px 14px',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: '1.1rem',
-                      fontWeight: 800,
-                      color: 'var(--fundly-surface)',
-                      letterSpacing: '-0.02em',
-                      textShadow: '0 2px 12px rgba(var(--fundly-deep-rgb),0.4)',
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {title}
-                  </p>
-                  <p
-                    style={{
-                      margin: '4px 0 0',
-                      fontSize: '0.62rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(var(--fundly-surface-rgb),0.74)',
-                    }}
-                  >
+              {/* Category pill + savings badge row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: categoryColor, flexShrink: 0 }} />
+                  <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A67A53' }}>
                     {transaction.categoryName}
-                  </p>
+                  </span>
                 </div>
-                <p
-                  style={{
-                    margin: 0,
-                    fontSize: '1.15rem',
-                    fontWeight: 800,
-                    color: 'var(--fundly-surface)',
-                    letterSpacing: '-0.02em',
-                  }}
-                >
+                {transaction.is_from_savings && (
+                  <span style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', background: 'rgba(166,122,83,0.12)', color: '#A67A53', border: '1px solid rgba(166,122,83,0.28)', borderRadius: '999px', padding: '2px 9px' }}>
+                    Savings
+                  </span>
+                )}
+              </div>
+
+              {/* Title + amount balanced row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                <p style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: '#0C2A46', letterSpacing: '-0.02em', lineHeight: 1.2, flex: 1 }}>
+                  {title}
+                </p>
+                <p style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#0C2A46', letterSpacing: '-0.02em', flexShrink: 0 }}>
                   {formattedAmount}
                 </p>
               </div>
-            </div>
 
-            <div
-              style={{
-                padding: '8px 12px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: '0.58rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(var(--fundly-surface-rgb),0.46)',
-                }}
-              >
-                {formattedDate}
-              </p>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: '0.58rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(var(--fundly-accent-rgb),0.72)',
-                }}
-              >
-                Tap for details -&gt;
-              </p>
+              {/* Date + flip hint */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px' }}>
+                <p style={{ margin: 0, fontSize: '0.68rem', color: 'rgba(12,42,70,0.45)', fontWeight: 600 }}>
+                  {formattedDate}
+                </p>
+                <p style={{ margin: 0, fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(166,122,83,0.6)' }}>
+                  Details →
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* ── BACK ── warm receipt */}
         <div className="txn-flip-back">
           <div
             style={{
               borderRadius: '20px',
-              background: 'var(--fundly-surface)',
-              border: '1px solid rgba(var(--fundly-primary-rgb),0.14)',
+              background: '#FDFAF7',
+              border: '1px solid rgba(166,122,83,0.2)',
               overflow: 'hidden',
-              boxShadow: '0 14px 34px rgba(var(--fundly-primary-rgb),0.16)',
+              boxShadow: '0 4px 24px rgba(12,42,70,0.08)',
             }}
           >
-            <div style={{ height: '6px', background: `linear-gradient(90deg, ${categoryColor}, var(--fundly-accent))` }} />
+            {/* Top strip in category color */}
+            <div style={{ height: '4px', background: categoryColor }} />
 
-            <div style={{ padding: '14px 16px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '12px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div
-                    style={{
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      background: categoryColor,
-                      flexShrink: 0,
-                    }}
-                  />
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: '0.65rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.2em',
-                      textTransform: 'uppercase',
-                      color: 'var(--fundly-primary)',
-                    }}
-                  >
+            <div style={{ padding: '14px 18px' }}>
+
+              {/* Category + type row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                  <div style={{ width: '9px', height: '9px', borderRadius: '50%', background: categoryColor, flexShrink: 0 }} />
+                  <p style={{ margin: 0, fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A67A53' }}>
                     {transaction.categoryName}
                   </p>
                 </div>
-                <p
-                  style={{
-                    margin: 0,
-                    fontSize: '0.65rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.16em',
-                    textTransform: 'uppercase',
-                    color: 'var(--fundly-accent)',
-                  }}
-                >
+                <p style={{ margin: 0, fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(12,42,70,0.35)' }}>
                   Manual
                 </p>
               </div>
 
-              <p
-                style={{
-                  margin: '0 0 10px',
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  color: 'var(--fundly-deep)',
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.2,
-                }}
-              >
+              {/* Title */}
+              <p style={{ margin: '0 0 12px', fontSize: '1.1rem', fontWeight: 800, color: '#0C2A46', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
                 {title}
               </p>
 
-              <div style={{ borderTop: '1.5px dashed rgba(var(--fundly-primary-rgb),0.16)', margin: '10px 0' }} />
+              {/* Dashed divider */}
+              <div style={{ borderTop: '1.5px dashed rgba(166,122,83,0.25)', margin: '10px 0' }} />
 
+              {/* Detail rows */}
               {[
                 { label: 'Amount', value: formattedAmount },
                 { label: 'Date', value: formattedDate },
@@ -301,61 +150,27 @@ export default function TransactionListItem({ transaction }) {
                 ...(transaction.note ? [{ label: 'Note', value: transaction.note }] : []),
                 ...(transaction.is_from_savings ? [{ label: 'Source', value: 'From savings' }] : []),
               ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline',
-                    gap: '12px',
-                    padding: '4px 0',
-                  }}
-                >
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(var(--fundly-primary-rgb),0.58)',
-                      flexShrink: 0,
-                    }}
-                  >
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px', padding: '4px 0' }}>
+                  <p style={{ margin: 0, fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(166,122,83,0.7)', flexShrink: 0 }}>
                     {label}
                   </p>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      color: 'var(--fundly-deep)',
-                      textAlign: 'right',
-                    }}
-                  >
+                  <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 700, color: '#0C2A46', textAlign: 'right' }}>
                     {value}
                   </p>
                 </div>
               ))}
 
-              <div style={{ borderTop: '1.5px dashed rgba(var(--fundly-primary-rgb),0.16)', margin: '10px 0' }} />
+              {/* Dashed divider */}
+              <div style={{ borderTop: '1.5px dashed rgba(166,122,83,0.25)', margin: '10px 0' }} />
 
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: '0.58rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(var(--fundly-primary-rgb),0.46)',
-                  textAlign: 'center',
-                }}
-              >
-                &lt;- Tap to flip back
+              {/* Flip back hint */}
+              <p style={{ margin: 0, fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(166,122,83,0.45)', textAlign: 'center' }}>
+                ← Tap to flip back
               </p>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );

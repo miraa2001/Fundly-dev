@@ -41,12 +41,11 @@ export default function TransactionDialog({
         alignItems: 'flex-end',
         justifyContent: 'center',
         padding: '0 0 0 0',
-        background: 'rgba(7,20,26,0.7)',
+        background: 'rgba(1,24,38,0.78)',
         backdropFilter: 'blur(6px)',
       }}
       className="sm:items-center sm:p-6"
     >
-      {/* Backdrop close */}
       <button
         type="button"
         aria-label="Close transaction dialog"
@@ -54,7 +53,6 @@ export default function TransactionDialog({
         onClick={onCancel}
       />
 
-      {/* Sheet */}
       <div
         style={{
           position: 'relative',
@@ -62,8 +60,8 @@ export default function TransactionDialog({
           width: '100%',
           maxWidth: '560px',
           borderRadius: '28px 28px 0 0',
-          background: '#0b1a20',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: '#011826',
+          border: '1px solid rgba(166,122,83,0.18)',
           boxShadow: '0 -20px 60px rgba(0,0,0,0.5)',
           maxHeight: 'calc(100dvh - 1rem)',
           display: 'flex',
@@ -72,7 +70,6 @@ export default function TransactionDialog({
         }}
         className="sm:rounded-[28px]"
       >
-        {/* Header */}
         <div
           style={{
             padding: '20px 20px 16px',
@@ -92,7 +89,7 @@ export default function TransactionDialog({
                 fontWeight: 700,
                 letterSpacing: '0.28em',
                 textTransform: 'uppercase',
-                color: '#44e8f4',
+                color: '#A67A53',
               }}
             >
               New Transaction
@@ -102,7 +99,7 @@ export default function TransactionDialog({
                 margin: '6px 0 0',
                 fontSize: '1.6rem',
                 fontWeight: 800,
-                color: '#fff',
+                color: '#F2F2F2',
                 letterSpacing: '-0.03em',
                 lineHeight: 1.1,
               }}
@@ -113,7 +110,7 @@ export default function TransactionDialog({
               style={{
                 margin: '6px 0 0',
                 fontSize: '0.82rem',
-                color: 'rgba(170,222,243,0.6)',
+                color: 'rgba(242,242,242,0.66)',
                 lineHeight: 1.5,
               }}
             >
@@ -132,9 +129,9 @@ export default function TransactionDialog({
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              border: '1px solid rgba(255,255,255,0.12)',
-              background: 'rgba(255,255,255,0.06)',
-              color: 'rgba(255,255,255,0.5)',
+              border: '1px solid rgba(242,242,242,0.12)',
+              background: 'rgba(242,242,242,0.06)',
+              color: 'rgba(242,242,242,0.58)',
               fontSize: '0.8rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -142,11 +139,10 @@ export default function TransactionDialog({
               transition: 'background 0.2s',
             }}
           >
-            ✕
+            X
           </button>
         </div>
 
-        {/* Scrollable content */}
         <div
           style={{
             flex: 1,

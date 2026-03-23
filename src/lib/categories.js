@@ -3,17 +3,17 @@ import { ensureSupabase } from './supabase';
 const categoryColumns = 'id, user_id, name, kind, color, is_archived, created_at, updated_at';
 const categoryBudgetColumns = 'id, user_id, category_id, month_key, budget_limit, created_at, updated_at';
 
-export const defaultCategoryColor = '#15AECA';
+export const defaultCategoryColor = '#0C2A46';
 export const suggestedCategoryKinds = ['expense', 'income'];
 export const categoryColorPresets = [
-  '#15AECA',
-  '#44E8F4',
-  '#0A6A83',
-  '#FFD45A',
-  '#F6C53D',
-  '#E3A28A',
-  '#9CEFE5',
-  '#0E728D',
+  '#0C2A46',
+  '#173754',
+  '#011826',
+  '#A67A53',
+  '#8F6847',
+  '#401F14',
+  '#6A3627',
+  '#F2F2F2',
 ];
 
 export function normalizeHexColor(value) {

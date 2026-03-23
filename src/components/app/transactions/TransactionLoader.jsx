@@ -44,10 +44,6 @@ export default function TransactionLoader({ isVisible, onComplete }) {
           50%  { transform: translateY(0); }
           100% { transform: translateY(-70px); }
         }
-        @keyframes txl-fade-dollar {
-          0%   { opacity: 0; transform: translateY(-5px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
         @keyframes txl-fade-in {
           from { opacity: 0; }
           to   { opacity: 1; }
@@ -68,7 +64,7 @@ export default function TransactionLoader({ isVisible, onComplete }) {
         .txl-post {
           animation: txl-slide-post 1s cubic-bezier(0.165, 0.84, 0.44, 1) both;
         }
-        .txl-dollar {
+        .txl-label {
           animation: txl-fade-in 0.3s 1s backwards;
         }
       `}</style>
@@ -84,11 +80,10 @@ export default function TransactionLoader({ isVisible, onComplete }) {
           alignItems: 'center',
           justifyContent: 'center',
           gap: '24px',
-          background: 'rgba(7, 20, 26, 0.88)',
+          background: 'rgba(1,24,38,0.88)',
           backdropFilter: 'blur(8px)',
         }}
       >
-        {/* ── POS SCENE ── */}
         <div
           style={{
             width: '130px',
@@ -99,39 +94,36 @@ export default function TransactionLoader({ isVisible, onComplete }) {
             alignItems: 'center',
           }}
         >
-          {/* Credit card */}
           <div
             className="txl-card"
             style={{
               width: '70px',
               height: '46px',
-              backgroundColor: '#c7ffbc',
+              background: 'linear-gradient(180deg, #D0AE8C 0%, #A67A53 58%, #401F14 100%)',
               borderRadius: '6px',
               position: 'absolute',
               display: 'flex',
               zIndex: 10,
               flexDirection: 'column',
               alignItems: 'center',
-              boxShadow: '9px 9px 9px -2px rgba(77,200,143,0.72)',
+              boxShadow: '9px 9px 20px -6px rgba(166,122,83,0.75)',
             }}
           >
-            {/* Card stripe */}
             <div
               style={{
                 width: '65px',
                 height: '13px',
-                backgroundColor: '#80ea69',
+                backgroundColor: 'rgba(1,24,38,0.42)',
                 borderRadius: '2px',
                 marginTop: '7px',
               }}
             />
-            {/* Card dots */}
             <div
               style={{
                 width: '8px',
                 height: '8px',
-                backgroundColor: '#379e1f',
-                boxShadow: '0 -10px 0 0 #26850e, 0 10px 0 0 #56be3e',
+                backgroundColor: '#F2F2F2',
+                boxShadow: '0 -10px 0 0 rgba(242,242,242,0.9), 0 10px 0 0 rgba(242,242,242,0.6)',
                 borderRadius: '50%',
                 transform: 'rotate(90deg)',
                 margin: '10px 0 0 -30px',
@@ -139,69 +131,59 @@ export default function TransactionLoader({ isVisible, onComplete }) {
             />
           </div>
 
-          {/* POS terminal */}
           <div
             className="txl-post"
             style={{
               width: '63px',
               height: '75px',
-              backgroundColor: '#dddde0',
+              backgroundColor: '#F2F2F2',
+              border: '1px solid rgba(12,42,70,0.14)',
               position: 'absolute',
               zIndex: 11,
               top: '120px',
               borderRadius: '6px',
               overflow: 'hidden',
+              boxShadow: '0 10px 24px rgba(1,24,38,0.2)',
             }}
           >
-            {/* Terminal top bar */}
             <div
               style={{
                 width: '47px',
                 height: '9px',
-                backgroundColor: '#545354',
+                backgroundColor: '#0C2A46',
                 position: 'absolute',
                 borderRadius: '0 0 3px 3px',
                 right: '8px',
                 top: '8px',
               }}
             />
-            {/* Screen */}
             <div
               style={{
                 width: '47px',
                 height: '23px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'rgba(166,122,83,0.12)',
                 position: 'absolute',
                 top: '22px',
                 right: '8px',
                 borderRadius: '3px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#0C2A46',
+                fontSize: '10px',
+                fontWeight: 800,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
               }}
             >
-              {/* Dollar sign */}
-              <div
-                className="txl-dollar"
-                style={{
-                  position: 'absolute',
-                  fontSize: '16px',
-                  fontFamily: '"Roboto Condensed", sans-serif',
-                  width: '100%',
-                  left: 0,
-                  top: 0,
-                  color: '#4b953b',
-                  textAlign: 'center',
-                  lineHeight: '23px',
-                }}
-              >
-                ₪
-              </div>
+              NIS
             </div>
-            {/* Keypad row 1 */}
             <div
               style={{
                 width: '12px',
                 height: '12px',
-                backgroundColor: '#838183',
-                boxShadow: '0 -18px 0 0 #838183, 0 18px 0 0 #838183',
+                backgroundColor: '#0C2A46',
+                boxShadow: '0 -18px 0 0 #0C2A46, 0 18px 0 0 #0C2A46',
                 borderRadius: '2px',
                 position: 'absolute',
                 transform: 'rotate(90deg)',
@@ -209,13 +191,12 @@ export default function TransactionLoader({ isVisible, onComplete }) {
                 top: '52px',
               }}
             />
-            {/* Keypad row 2 */}
             <div
               style={{
                 width: '12px',
                 height: '12px',
-                backgroundColor: '#aaa9ab',
-                boxShadow: '0 -18px 0 0 #aaa9ab, 0 18px 0 0 #aaa9ab',
+                backgroundColor: '#A67A53',
+                boxShadow: '0 -18px 0 0 #A67A53, 0 18px 0 0 #A67A53',
                 borderRadius: '2px',
                 position: 'absolute',
                 transform: 'rotate(90deg)',
@@ -226,18 +207,18 @@ export default function TransactionLoader({ isVisible, onComplete }) {
           </div>
         </div>
 
-        {/* Label */}
         <p
+          className="txl-label"
           style={{
             margin: 0,
             fontSize: '0.7rem',
             fontWeight: 700,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: 'rgba(68,232,244,0.7)',
+            color: 'rgba(242,242,242,0.7)',
           }}
         >
-          Opening transaction form…
+          Opening transaction form...
         </p>
       </div>
     </>

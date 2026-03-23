@@ -41,13 +41,13 @@ export default function CategoryCard({
     : null;
 
   // Derive a slightly darker shade for the gradient stop
-  const topGradient = `linear-gradient(135deg, ${accentColor}cc 0%, #083747f5 55%, #44e8f422 100%)`;
+  const topGradient = `linear-gradient(135deg, ${accentColor}cc 0%, #0C2A46f2 56%, rgba(166,122,83,0.16) 100%)`;
 
   return (
     <div
       style={{
         borderRadius: '20px',
-        background: '#0e1c22',
+        background: '#011826',
         padding: '5px',
         overflow: 'hidden',
         boxShadow: isExpanded
@@ -92,12 +92,12 @@ export default function CategoryCard({
               borderBottomRightRadius: '10px',
               height: '28px',
               width: '120px',
-              background: '#0e1c22',
+              background: '#011826',
               position: 'absolute',
               top: 0,
               left: 0,
               transform: 'skew(-38deg)',
-              boxShadow: '-10px -10px 0 0 #0e1c22',
+              boxShadow: '-10px -10px 0 0 #011826',
             }}
           />
           <div
@@ -109,7 +109,7 @@ export default function CategoryCard({
               height: '14px',
               width: '14px',
               borderTopLeftRadius: '14px',
-              boxShadow: '-5px -5px 0 2px #0e1c22',
+              boxShadow: '-5px -5px 0 2px #011826',
               background: 'transparent',
             }}
           />
@@ -137,15 +137,15 @@ export default function CategoryCard({
                 position: 'absolute',
                 top: '5px',
                 right: '12px',
-                background: 'rgba(255,212,90,0.18)',
-                border: '1px solid rgba(255,212,90,0.4)',
+                background: 'rgba(166,122,83,0.18)',
+                border: '1px solid rgba(166,122,83,0.36)',
                 borderRadius: '999px',
                 padding: '2px 9px',
                 fontSize: '0.6rem',
                 fontWeight: 700,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: '#ffd45a',
+                color: '#A67A53',
               }}
             >
               Archived
@@ -171,7 +171,7 @@ export default function CategoryCard({
                   margin: 0,
                   fontSize: '1.35rem',
                   fontWeight: 800,
-                  color: '#fff',
+                  color: '#F2F2F2',
                   letterSpacing: '-0.02em',
                   textShadow: '0 2px 12px rgba(0,0,0,0.4)',
                   lineHeight: 1.1,
@@ -255,11 +255,11 @@ export default function CategoryCard({
             {[
               {
                 label: 'Budget',
-                value: hasMonthlyBudget ? formattedBudget : '—',
+                value: hasMonthlyBudget ? formattedBudget : 'Not set',
               },
               {
                 label: 'Remaining',
-                value: hasMonthlyBudget ? demoRemainingAmount : '—',
+                value: hasMonthlyBudget ? demoRemainingAmount : 'Not set',
               },
             ].map(({ label, value }) => (
               <div
@@ -279,7 +279,7 @@ export default function CategoryCard({
                     fontWeight: 700,
                     letterSpacing: '0.18em',
                     textTransform: 'uppercase',
-                    color: 'rgba(170,222,243,0.7)',
+                    color: 'rgba(242,242,242,0.7)',
                   }}
                 >
                   {label}
@@ -289,7 +289,7 @@ export default function CategoryCard({
                     margin: '4px 0 0',
                     fontSize: '1rem',
                     fontWeight: 800,
-                    color: '#fff',
+                    color: '#F2F2F2',
                     letterSpacing: '-0.01em',
                   }}
                 >
@@ -315,7 +315,7 @@ export default function CategoryCard({
                   fontWeight: 700,
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  color: 'rgba(170,222,243,0.7)',
+                  color: 'rgba(242,242,242,0.68)',
                 }}
               >
                 Spent
@@ -324,7 +324,7 @@ export default function CategoryCard({
                 style={{
                   fontSize: '0.85rem',
                   fontWeight: 800,
-                  color: demoSpentPct >= 85 ? '#ffd45a' : '#44e8f4',
+                  color: demoSpentPct >= 85 ? '#A67A53' : '#F2F2F2',
                 }}
               >
                 {demoSpentPct}%
@@ -345,12 +345,12 @@ export default function CategoryCard({
                   borderRadius: '999px',
                   background:
                     demoSpentPct >= 85
-                      ? 'linear-gradient(90deg,#ffd45a,#f6c53d)'
-                      : `linear-gradient(90deg,${accentColor},#44e8f4,#15aeca)`,
+                      ? 'linear-gradient(90deg,#D5B595,#A67A53,#401F14)'
+                      : `linear-gradient(90deg,${accentColor},#0C2A46,#A67A53)`,
                   transition: 'width 0.8s cubic-bezier(0.22,1,0.36,1)',
                   boxShadow:
                     demoSpentPct >= 85
-                      ? '0 0 8px rgba(255,212,90,0.6)'
+                      ? '0 0 8px rgba(166,122,83,0.55)'
                       : `0 0 8px ${accentColor}88`,
                 }}
               />
@@ -379,21 +379,21 @@ export default function CategoryCard({
                 width: '34px',
                 height: '34px',
                 borderRadius: '10px',
-                border: '1px solid rgba(68,232,244,0.3)',
-                background: 'rgba(68,232,244,0.1)',
+                  border: '1px solid rgba(12,42,70,0.36)',
+                  background: 'rgba(12,42,70,0.22)',
                 cursor: 'pointer',
                 transition: 'background 0.2s, border-color 0.2s, transform 0.15s',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(68,232,244,0.22)';
+                e.currentTarget.style.background = 'rgba(12,42,70,0.34)';
                 e.currentTarget.style.transform = 'scale(1.1)';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(68,232,244,0.1)';
+                e.currentTarget.style.background = 'rgba(12,42,70,0.22)';
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              <img src={editIcon} alt="Edit" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'invert(1) sepia(1) saturate(2) hue-rotate(155deg)' }} />
+              <img src={editIcon} alt="Edit" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             </button>
 
             {/* Archive / Unarchive */}
@@ -402,7 +402,7 @@ export default function CategoryCard({
                 type="button"
                 onClick={() => onArchive(category)}
                 disabled={isArchiving}
-                title={isArchiving ? 'Archiving…' : 'Archive category'}
+                title={isArchiving ? 'Archiving...' : 'Archive category'}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -410,31 +410,31 @@ export default function CategoryCard({
                   width: '34px',
                   height: '34px',
                   borderRadius: '10px',
-                  border: '1px solid rgba(255,212,90,0.35)',
-                  background: 'rgba(255,212,90,0.1)',
+                  border: '1px solid rgba(166,122,83,0.35)',
+                  background: 'rgba(166,122,83,0.12)',
                   cursor: isArchiving ? 'not-allowed' : 'pointer',
                   opacity: isArchiving ? 0.6 : 1,
                   transition: 'background 0.2s, border-color 0.2s, transform 0.15s',
                 }}
                 onMouseEnter={e => {
                   if (!isArchiving) {
-                    e.currentTarget.style.background = 'rgba(255,212,90,0.22)';
+                    e.currentTarget.style.background = 'rgba(166,122,83,0.24)';
                     e.currentTarget.style.transform = 'scale(1.1)';
                   }
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(255,212,90,0.1)';
+                  e.currentTarget.style.background = 'rgba(166,122,83,0.12)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                <img src={archiveIcon} alt="Archive" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'invert(1) sepia(1) saturate(3) hue-rotate(5deg)' }} />
+                <img src={archiveIcon} alt="Archive" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => onUnarchive(category)}
                 disabled={isUnarchiving}
-                title={isUnarchiving ? 'Unarchiving…' : 'Unarchive category'}
+                title={isUnarchiving ? 'Unarchiving...' : 'Unarchive category'}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -442,24 +442,24 @@ export default function CategoryCard({
                   width: '34px',
                   height: '34px',
                   borderRadius: '10px',
-                  border: '1px solid rgba(156,239,229,0.35)',
-                  background: 'rgba(156,239,229,0.1)',
+                  border: '1px solid rgba(12,42,70,0.3)',
+                  background: 'rgba(12,42,70,0.18)',
                   cursor: isUnarchiving ? 'not-allowed' : 'pointer',
                   opacity: isUnarchiving ? 0.6 : 1,
                   transition: 'background 0.2s, border-color 0.2s, transform 0.15s',
                 }}
                 onMouseEnter={e => {
                   if (!isUnarchiving) {
-                    e.currentTarget.style.background = 'rgba(156,239,229,0.22)';
+                    e.currentTarget.style.background = 'rgba(12,42,70,0.28)';
                     e.currentTarget.style.transform = 'scale(1.1)';
                   }
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(156,239,229,0.1)';
+                  e.currentTarget.style.background = 'rgba(12,42,70,0.18)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                <img src={unarchiveIcon} alt="Unarchive" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'invert(1) sepia(1) saturate(2) hue-rotate(130deg)' }} />
+                <img src={unarchiveIcon} alt="Unarchive" style={{ width: '16px', height: '16px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
               </button>
             )}
           </div>

@@ -25,9 +25,9 @@ export default function HomePage() {
       <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {homeStats.map((item) => (
           <AppSurface key={item.label} className="p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#087f98]">{item.label}</p>
-            <p className="mt-3 text-2xl font-bold tracking-[-0.03em] text-[#16323b]">{item.value}</p>
-            <p className="mt-2 text-sm leading-6 text-[#5a727b]">{item.detail}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#A67A53]">{item.label}</p>
+            <p className="mt-3 text-2xl font-bold tracking-[-0.03em] text-[#0C2A46]">{item.value}</p>
+            <p className="mt-2 text-sm leading-6 text-[rgba(12,42,70,0.7)]">{item.detail}</p>
           </AppSurface>
         ))}
       </div>
@@ -42,15 +42,15 @@ export default function HomePage() {
             {recentTransactions.map((item) => (
               <div
                 key={`${item.name}-${item.date}`}
-                className="flex items-center justify-between gap-4 rounded-[1.3rem] border border-[#d3efed] bg-white/70 px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-3"
               >
                 <div>
-                  <p className="font-bold text-[#16323b]">{item.name}</p>
-                  <p className="mt-1 text-sm text-[#5a727b]">
+                  <p className="font-bold text-[#0C2A46]">{item.name}</p>
+                  <p className="mt-1 text-sm text-[rgba(12,42,70,0.7)]">
                     {item.category} . {item.date}
                   </p>
                 </div>
-                <p className="text-sm font-bold text-[#0e2f39]">{item.amount}</p>
+                <p className="text-sm font-bold text-[#0C2A46]">{item.amount}</p>
               </div>
             ))}
           </div>
@@ -63,9 +63,9 @@ export default function HomePage() {
         >
           <div className="space-y-3">
             {homeHighlights.map((item) => (
-              <div key={item.title} className="rounded-[1.3rem] border border-[#d3efed] bg-white/70 px-4 py-4">
-                <p className="font-bold text-[#16323b]">{item.title}</p>
-                <p className="mt-2 text-sm leading-6 text-[#5a727b]">{item.detail}</p>
+              <div key={item.title} className="rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-4">
+                <p className="font-bold text-[#0C2A46]">{item.title}</p>
+                <p className="mt-2 text-sm leading-6 text-[rgba(12,42,70,0.7)]">{item.detail}</p>
               </div>
             ))}
           </div>

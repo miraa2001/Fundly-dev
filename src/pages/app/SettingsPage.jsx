@@ -58,13 +58,13 @@ export default function SettingsPage() {
           description="Your current authenticated identity and the main session action for now."
         >
           <div className="space-y-4">
-            <div className="rounded-[1.3rem] border border-[#d3efed] bg-white/70 px-4 py-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#087f98]">Email</p>
-              <p className="mt-2 text-lg font-bold text-[#16323b]">{user?.email ?? 'Unknown email'}</p>
+            <div className="rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#A67A53]">Email</p>
+              <p className="mt-2 text-lg font-bold text-[#0C2A46]">{user?.email ?? 'Unknown email'}</p>
             </div>
-            <div className="rounded-[1.3rem] border border-[#d3efed] bg-white/70 px-4 py-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#087f98]">Session State</p>
-              <p className="mt-2 text-sm leading-6 text-[#5a727b]">
+            <div className="rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#A67A53]">Session State</p>
+              <p className="mt-2 text-sm leading-6 text-[rgba(12,42,70,0.7)]">
                 You are currently signed in. Use the sign-out action below to return to the login screen.
               </p>
             </div>
@@ -88,13 +88,13 @@ export default function SettingsPage() {
             {settingsPreferences.map((item) => (
               <div
                 key={item.label}
-                className="flex items-start justify-between gap-4 rounded-[1.3rem] border border-[#d3efed] bg-white/70 px-4 py-4"
+                className="flex items-start justify-between gap-4 rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-4"
               >
                 <div>
-                  <p className="font-bold text-[#16323b]">{item.label}</p>
-                  <p className="mt-1 text-sm leading-6 text-[#5a727b]">{item.value}</p>
+                  <p className="font-bold text-[#0C2A46]">{item.label}</p>
+                  <p className="mt-1 text-sm leading-6 text-[rgba(12,42,70,0.7)]">{item.value}</p>
                 </div>
-                <span className="mt-1 h-6 w-11 rounded-full bg-[linear-gradient(90deg,#44e8f4_0%,#15aeca_55%,#0a6a83_100%)] p-1">
+                <span className="mt-1 h-6 w-11 rounded-full bg-[linear-gradient(90deg,#A67A53_0%,#0C2A46_58%,#011826_100%)] p-1">
                   <span className="block h-4 w-4 rounded-full bg-white" />
                 </span>
               </div>

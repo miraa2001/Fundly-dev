@@ -76,7 +76,7 @@ export default function LoginPage() {
     <AuthLayout
       eyebrow="Budget Better, Save Smarter"
       title="Welcome back to Fundly"
-      description="Track spending, set budgets, and reach your savings goals — all in one place."
+      description="Track spending, set budgets, and reach your savings goals, all in one place."
     >
       <form className="space-y-5" onSubmit={handleSubmit} noValidate>
         <StatusMessage tone={status?.tone} message={status?.message} />
@@ -107,7 +107,7 @@ export default function LoginPage() {
           action={
             <Link
               to="/forgot-password"
-              className="text-xs font-bold text-[#087f98] transition hover:text-[#d8881f] sm:text-sm"
+              className="text-xs font-bold text-[#A67A53] transition hover:text-[#401F14] sm:text-sm"
             >
               Forgot password?
             </Link>

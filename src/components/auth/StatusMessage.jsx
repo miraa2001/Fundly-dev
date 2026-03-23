@@ -1,7 +1,7 @@
 const tones = {
-  error: 'border-[#efc7b8] bg-[#fff2ec] text-[#934d33]',
-  success: 'border-[#9cefe5] bg-[#eafffb] text-[#0c6375]',
-  info: 'border-[#b8f2f2] bg-[#eefcff] text-[#0d5b70]',
+  error: 'border-[#401F14]/25 bg-[#401F14]/10 text-[#401F14]',
+  success: 'border-[#A67A53]/30 bg-[#A67A53]/12 text-[#0C2A46]',
+  info: 'border-[#0C2A46]/16 bg-[#0C2A46]/6 text-[#0C2A46]',
 };
 
 export default function StatusMessage({ tone = 'info', message }) {
@@ -14,7 +14,7 @@ export default function StatusMessage({ tone = 'info', message }) {
       role={tone === 'error' ? 'alert' : 'status'}
       aria-live="polite"
       className={[
-        'rounded-[1.15rem] border px-4 py-3 text-sm leading-6 shadow-[0_12px_30px_rgba(3,41,53,0.08)]',
+        'rounded-[1.15rem] border px-4 py-3 text-sm leading-6 shadow-[0_12px_30px_rgba(1,24,38,0.08)]',
         tones[tone] ?? tones.info,
       ].join(' ')}
     >

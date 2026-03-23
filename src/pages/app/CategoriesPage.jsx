@@ -51,7 +51,7 @@ function validateCategoryForm(form) {
   }
 
   if (colorValue && !/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(colorValue)) {
-    errors.color = 'Use a hex color like #15AECA.';
+    errors.color = 'Use a hex color like #0C2A46.';
   }
 
   if (budgetValue) {
@@ -72,9 +72,9 @@ function LoadingState() {
     <div className="grid gap-4 sm:grid-cols-2">
       {Array.from({ length: 4 }).map((_, index) => (
         <AppSurface key={index} className="animate-pulse p-5">
-          <div className="h-6 w-32 rounded-full bg-[#dff4f2]" />
-          <div className="mt-4 h-4 w-20 rounded-full bg-[#e8f7f5]" />
-          <div className="mt-6 h-24 rounded-[1.2rem] bg-[#eef9f8]" />
+          <div className="h-6 w-32 rounded-full bg-[#0C2A46]/10" />
+          <div className="mt-4 h-4 w-20 rounded-full bg-[#0C2A46]/8" />
+          <div className="mt-6 h-24 rounded-[1.2rem] bg-[#0C2A46]/6" />
         </AppSurface>
       ))}
     </div>
@@ -311,7 +311,7 @@ export default function CategoriesPage() {
             <button
               type="button"
               onClick={() => setShowArchived((current) => !current)}
-              className="inline-flex items-center justify-center rounded-full border border-[#ffd45a]/45 bg-[#fff2c8] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#8b5202] transition hover:border-[#f6c53d]"
+              className="inline-flex items-center justify-center rounded-full border border-[#A67A53]/35 bg-[#A67A53]/12 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#A67A53] transition hover:border-[#A67A53]/55 hover:text-[#401F14]"
             >
               {showArchived ? 'Hide archived' : 'Show archived'}
             </button>
@@ -331,7 +331,7 @@ export default function CategoriesPage() {
               <button
                 type="button"
                 onClick={() => void loadCategories(showArchived)}
-                className="inline-flex items-center justify-center rounded-full border border-[#efc7b8] bg-[#fff2ec] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#934d33] transition hover:border-[#e3a28a]"
+                className="inline-flex items-center justify-center rounded-full border border-[#401F14]/25 bg-[#401F14]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#401F14] transition hover:border-[#401F14]/40"
               >
                 Retry
               </button>

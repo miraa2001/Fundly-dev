@@ -107,7 +107,7 @@ export default function LoginPage() {
           action={
             <Link
               to="/forgot-password"
-              className="text-xs font-bold text-[#A67A53] transition hover:text-[#401F14] sm:text-sm"
+              className="text-xs font-bold text-[var(--fundly-accent)] transition hover:text-[var(--fundly-warm)] sm:text-sm"
             >
               Forgot password?
             </Link>

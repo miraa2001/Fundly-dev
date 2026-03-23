@@ -72,9 +72,9 @@ function LoadingState() {
     <div className="grid gap-4 sm:grid-cols-2">
       {Array.from({ length: 4 }).map((_, index) => (
         <AppSurface key={index} className="animate-pulse p-5">
-          <div className="h-6 w-32 rounded-full bg-[#0C2A46]/10" />
-          <div className="mt-4 h-4 w-20 rounded-full bg-[#0C2A46]/8" />
-          <div className="mt-6 h-24 rounded-[1.2rem] bg-[#0C2A46]/6" />
+          <div className="h-6 w-32 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]" />
+          <div className="mt-4 h-4 w-20 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.08)]" />
+          <div className="mt-6 h-24 rounded-[1.2rem] bg-[rgba(var(--fundly-primary-rgb),0.06)]" />
         </AppSurface>
       ))}
     </div>
@@ -311,7 +311,7 @@ export default function CategoriesPage() {
             <button
               type="button"
               onClick={() => setShowArchived((current) => !current)}
-              className="inline-flex items-center justify-center rounded-full border border-[#A67A53]/35 bg-[#A67A53]/12 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#A67A53] transition hover:border-[#A67A53]/55 hover:text-[#401F14]"
+              className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-accent-rgb),0.35)] bg-[rgba(var(--fundly-accent-rgb),0.12)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-accent)] transition hover:border-[rgba(var(--fundly-accent-rgb),0.55)] hover:text-[var(--fundly-warm)]"
             >
               {showArchived ? 'Hide archived' : 'Show archived'}
             </button>
@@ -331,7 +331,7 @@ export default function CategoriesPage() {
               <button
                 type="button"
                 onClick={() => void loadCategories(showArchived)}
-                className="inline-flex items-center justify-center rounded-full border border-[#401F14]/25 bg-[#401F14]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#401F14] transition hover:border-[#401F14]/40"
+                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
               >
                 Retry
               </button>

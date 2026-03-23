@@ -85,10 +85,10 @@ function LoadingState() {
   return (
     <div className="space-y-3">
       {Array.from({ length: 5 }).map((_, index) => (
-        <div key={index} className="animate-pulse rounded-[1.35rem] border border-[#0C2A46]/10 bg-white/75 px-4 py-4">
-          <div className="h-5 w-36 rounded-full bg-[#0C2A46]/10" />
-          <div className="mt-3 h-4 w-52 rounded-full bg-[#0C2A46]/8" />
-          <div className="mt-4 h-14 rounded-[1rem] bg-[#0C2A46]/6" />
+        <div key={index} className="animate-pulse rounded-[1.35rem] border border-[rgba(var(--fundly-primary-rgb),0.10)] bg-white/75 px-4 py-4">
+          <div className="h-5 w-36 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]" />
+          <div className="mt-3 h-4 w-52 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.08)]" />
+          <div className="mt-4 h-14 rounded-[1rem] bg-[rgba(var(--fundly-primary-rgb),0.06)]" />
         </div>
       ))}
     </div>
@@ -297,7 +297,7 @@ export default function TransactionsPage() {
               <button
                 type="button"
                 onClick={() => void loadCategories()}
-                className="inline-flex items-center justify-center rounded-full border border-[#401F14]/25 bg-[#401F14]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#401F14] transition hover:border-[#401F14]/40"
+                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
               >
                 Retry
               </button>
@@ -322,7 +322,7 @@ export default function TransactionsPage() {
               <button
                 type="button"
                 onClick={() => void loadTransactionsPage(currentPage)}
-                className="inline-flex items-center justify-center rounded-full border border-[#401F14]/25 bg-[#401F14]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#401F14] transition hover:border-[#401F14]/40"
+                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
               >
                 Retry
               </button>
@@ -346,7 +346,7 @@ export default function TransactionsPage() {
                 <button
                   type="button"
                   onClick={openDialog}
-                  className="inline-flex items-center justify-center rounded-full border border-[#A67A53] bg-[linear-gradient(180deg,#0C2A46_0%,#062239_46%,#011826_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#F2F2F2] transition hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5"
                 >
                   Add first transaction
                 </button>
@@ -362,7 +362,7 @@ export default function TransactionsPage() {
             description="Newest transactions first, joined with their category split for a clean real-time feed."
             action={
               pagination.totalPages > 1 ? (
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#A67A53]">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--fundly-accent)]">
                   Page {pagination.page} of {pagination.totalPages}
                 </p>
               ) : null
@@ -374,8 +374,8 @@ export default function TransactionsPage() {
               ))}
             </div>
 
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#0C2A46]/10 pt-4">
-              <p className="text-sm text-[rgba(12,42,70,0.7)]">
+            <div className="mt-4 flex items-center justify-between gap-3 border-t border-[rgba(var(--fundly-primary-rgb),0.10)] pt-4">
+              <p className="text-sm text-[rgba(var(--fundly-primary-rgb),0.7)]">
                 Showing page {pagination.page} of {pagination.totalPages}
               </p>
 
@@ -384,7 +384,7 @@ export default function TransactionsPage() {
                   type="button"
                   onClick={() => setCurrentPage((current) => Math.max(1, current - 1))}
                   disabled={pagination.page <= 1}
-                  className="inline-flex items-center justify-center rounded-full border border-[#0C2A46]/12 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#0C2A46] transition hover:border-[#A67A53]/40 hover:text-[#A67A53] disabled:cursor-not-allowed disabled:opacity-55"
+                  className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-primary)] transition hover:border-[rgba(var(--fundly-accent-rgb),0.40)] hover:text-[var(--fundly-accent)] disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   Previous
                 </button>
@@ -392,7 +392,7 @@ export default function TransactionsPage() {
                   type="button"
                   onClick={() => setCurrentPage((current) => Math.min(pagination.totalPages, current + 1))}
                   disabled={pagination.page >= pagination.totalPages}
-                  className="inline-flex items-center justify-center rounded-full border border-[#A67A53] bg-[linear-gradient(180deg,#0C2A46_0%,#062239_46%,#011826_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#F2F2F2] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   Next
                 </button>

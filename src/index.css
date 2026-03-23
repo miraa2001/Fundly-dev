@@ -5,16 +5,6 @@
 @tailwind utilities;
 
 :root {
-  --fundly-primary: #0c2a46;
-  --fundly-primary-rgb: 12, 42, 70;
-  --fundly-deep: #011826;
-  --fundly-deep-rgb: 1, 24, 38;
-  --fundly-accent: #a67a53;
-  --fundly-accent-rgb: 166, 122, 83;
-  --fundly-warm: #401f14;
-  --fundly-warm-rgb: 64, 31, 20;
-  --fundly-surface: #f2f2f2;
-  --fundly-surface-rgb: 242, 242, 242;
   color: var(--fundly-primary);
   font-synthesis: none;
   text-rendering: optimizeLegibility;

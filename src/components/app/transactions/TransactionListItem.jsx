@@ -41,7 +41,7 @@ export default function TransactionListItem({ transaction }) {
   const [flipped, setFlipped] = useState(false);
   const title = transaction.title || transaction.merchant_or_source || 'Untitled transaction';
   const categoryColor = transaction.categoryColor || defaultCategoryColor;
-  const topGradient = `linear-gradient(135deg, ${categoryColor}cc 0%, #0C2A46f5 58%, rgba(166,122,83,0.18) 100%)`;
+  const topGradient = `linear-gradient(135deg, ${categoryColor}cc 0%, rgba(var(--fundly-primary-rgb),0.95) 58%, rgba(var(--fundly-accent-rgb),0.18) 100%)`;
   const formattedAmount = formatTransactionAmount(transaction.amount_original, transaction.currency_code);
   const formattedDate = formatTransactionDate(transaction.transaction_date);
 
@@ -55,10 +55,10 @@ export default function TransactionListItem({ transaction }) {
           <div
             style={{
               borderRadius: '20px',
-              background: '#011826',
+              background: 'var(--fundly-deep)',
               padding: '5px',
               overflow: 'hidden',
-              boxShadow: '0 14px 40px rgba(1,24,38,0.26)',
+              boxShadow: '0 14px 40px rgba(var(--fundly-deep-rgb),0.26)',
             }}
           >
             <div
@@ -75,12 +75,12 @@ export default function TransactionListItem({ transaction }) {
                   borderBottomRightRadius: '10px',
                   height: '28px',
                   width: '120px',
-                  background: '#011826',
+                  background: 'var(--fundly-deep)',
                   position: 'absolute',
                   top: 0,
                   left: 0,
                   transform: 'skew(-38deg)',
-                  boxShadow: '-10px -10px 0 0 #011826',
+                  boxShadow: '-10px -10px 0 0 var(--fundly-deep)',
                 }}
               />
               <div
@@ -91,7 +91,7 @@ export default function TransactionListItem({ transaction }) {
                   height: '14px',
                   width: '14px',
                   borderTopLeftRadius: '14px',
-                  boxShadow: '-5px -5px 0 2px #011826',
+                  boxShadow: '-5px -5px 0 2px var(--fundly-deep)',
                   background: 'transparent',
                 }}
               />
@@ -106,7 +106,7 @@ export default function TransactionListItem({ transaction }) {
                   borderRadius: '50%',
                   background: categoryColor,
                   boxShadow: `0 0 10px ${categoryColor}99`,
-                  border: '2px solid rgba(242,242,242,0.35)',
+                  border: '2px solid rgba(var(--fundly-surface-rgb),0.35)',
                 }}
                 aria-hidden="true"
               />
@@ -117,15 +117,15 @@ export default function TransactionListItem({ transaction }) {
                     position: 'absolute',
                     top: '5px',
                     right: '12px',
-                    background: 'rgba(166,122,83,0.18)',
-                    border: '1px solid rgba(166,122,83,0.38)',
+                    background: 'rgba(var(--fundly-accent-rgb),0.18)',
+                    border: '1px solid rgba(var(--fundly-accent-rgb),0.38)',
                     borderRadius: '999px',
                     padding: '2px 9px',
                     fontSize: '0.6rem',
                     fontWeight: 700,
                     letterSpacing: '0.18em',
                     textTransform: 'uppercase',
-                    color: '#F2F2F2',
+                    color: 'var(--fundly-surface)',
                   }}
                 >
                   Savings
@@ -150,9 +150,9 @@ export default function TransactionListItem({ transaction }) {
                       margin: 0,
                       fontSize: '1.1rem',
                       fontWeight: 800,
-                      color: '#F2F2F2',
+                      color: 'var(--fundly-surface)',
                       letterSpacing: '-0.02em',
-                      textShadow: '0 2px 12px rgba(1,24,38,0.4)',
+                      textShadow: '0 2px 12px rgba(var(--fundly-deep-rgb),0.4)',
                       lineHeight: 1.1,
                     }}
                   >
@@ -165,7 +165,7 @@ export default function TransactionListItem({ transaction }) {
                       fontWeight: 700,
                       letterSpacing: '0.18em',
                       textTransform: 'uppercase',
-                      color: 'rgba(242,242,242,0.74)',
+                      color: 'rgba(var(--fundly-surface-rgb),0.74)',
                     }}
                   >
                     {transaction.categoryName}
@@ -176,7 +176,7 @@ export default function TransactionListItem({ transaction }) {
                     margin: 0,
                     fontSize: '1.15rem',
                     fontWeight: 800,
-                    color: '#F2F2F2',
+                    color: 'var(--fundly-surface)',
                     letterSpacing: '-0.02em',
                   }}
                 >
@@ -200,7 +200,7 @@ export default function TransactionListItem({ transaction }) {
                   fontWeight: 700,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: 'rgba(242,242,242,0.46)',
+                  color: 'rgba(var(--fundly-surface-rgb),0.46)',
                 }}
               >
                 {formattedDate}
@@ -212,7 +212,7 @@ export default function TransactionListItem({ transaction }) {
                   fontWeight: 700,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: 'rgba(166,122,83,0.72)',
+                  color: 'rgba(var(--fundly-accent-rgb),0.72)',
                 }}
               >
                 Tap for details -&gt;
@@ -225,13 +225,13 @@ export default function TransactionListItem({ transaction }) {
           <div
             style={{
               borderRadius: '20px',
-              background: '#F2F2F2',
-              border: '1px solid rgba(12,42,70,0.14)',
+              background: 'var(--fundly-surface)',
+              border: '1px solid rgba(var(--fundly-primary-rgb),0.14)',
               overflow: 'hidden',
-              boxShadow: '0 14px 34px rgba(12,42,70,0.16)',
+              boxShadow: '0 14px 34px rgba(var(--fundly-primary-rgb),0.16)',
             }}
           >
-            <div style={{ height: '6px', background: `linear-gradient(90deg, ${categoryColor}, #A67A53)` }} />
+            <div style={{ height: '6px', background: `linear-gradient(90deg, ${categoryColor}, var(--fundly-accent))` }} />
 
             <div style={{ padding: '14px 16px' }}>
               <div
@@ -259,7 +259,7 @@ export default function TransactionListItem({ transaction }) {
                       fontWeight: 700,
                       letterSpacing: '0.2em',
                       textTransform: 'uppercase',
-                      color: '#0C2A46',
+                      color: 'var(--fundly-primary)',
                     }}
                   >
                     {transaction.categoryName}
@@ -272,7 +272,7 @@ export default function TransactionListItem({ transaction }) {
                     fontWeight: 700,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
-                    color: '#A67A53',
+                    color: 'var(--fundly-accent)',
                   }}
                 >
                   Manual
@@ -284,7 +284,7 @@ export default function TransactionListItem({ transaction }) {
                   margin: '0 0 10px',
                   fontSize: '1.15rem',
                   fontWeight: 800,
-                  color: '#011826',
+                  color: 'var(--fundly-deep)',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.2,
                 }}
@@ -292,7 +292,7 @@ export default function TransactionListItem({ transaction }) {
                 {title}
               </p>
 
-              <div style={{ borderTop: '1.5px dashed rgba(12,42,70,0.16)', margin: '10px 0' }} />
+              <div style={{ borderTop: '1.5px dashed rgba(var(--fundly-primary-rgb),0.16)', margin: '10px 0' }} />
 
               {[
                 { label: 'Amount', value: formattedAmount },
@@ -318,7 +318,7 @@ export default function TransactionListItem({ transaction }) {
                       fontWeight: 700,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
-                      color: 'rgba(12,42,70,0.58)',
+                      color: 'rgba(var(--fundly-primary-rgb),0.58)',
                       flexShrink: 0,
                     }}
                   >
@@ -329,7 +329,7 @@ export default function TransactionListItem({ transaction }) {
                       margin: 0,
                       fontSize: '0.82rem',
                       fontWeight: 700,
-                      color: '#011826',
+                      color: 'var(--fundly-deep)',
                       textAlign: 'right',
                     }}
                   >
@@ -338,7 +338,7 @@ export default function TransactionListItem({ transaction }) {
                 </div>
               ))}
 
-              <div style={{ borderTop: '1.5px dashed rgba(12,42,70,0.16)', margin: '10px 0' }} />
+              <div style={{ borderTop: '1.5px dashed rgba(var(--fundly-primary-rgb),0.16)', margin: '10px 0' }} />
 
               <p
                 style={{
@@ -347,7 +347,7 @@ export default function TransactionListItem({ transaction }) {
                   fontWeight: 700,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: 'rgba(12,42,70,0.46)',
+                  color: 'rgba(var(--fundly-primary-rgb),0.46)',
                   textAlign: 'center',
                 }}
               >

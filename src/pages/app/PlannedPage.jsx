@@ -21,15 +21,15 @@ export default function PlannedPage() {
             {plannedItems.map((item) => (
               <div
                 key={item.title}
-                className="flex items-center justify-between gap-4 rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-3"
               >
                 <div>
-                  <p className="font-bold text-[#0C2A46]">{item.title}</p>
-                  <p className="mt-1 text-sm text-[rgba(12,42,70,0.7)]">{item.due}</p>
+                  <p className="font-bold text-[var(--fundly-primary)]">{item.title}</p>
+                  <p className="mt-1 text-sm text-[rgba(var(--fundly-primary-rgb),0.7)]">{item.due}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-[#0C2A46]">{item.amount}</p>
-                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-[#A67A53]">{item.status}</p>
+                  <p className="text-sm font-bold text-[var(--fundly-primary)]">{item.amount}</p>
+                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-[var(--fundly-accent)]">{item.status}</p>
                 </div>
               </div>
             ))}
@@ -43,21 +43,21 @@ export default function PlannedPage() {
         >
           <div className="space-y-4">
             {savingsGoals.map((goal) => (
-              <div key={goal.title} className="rounded-[1.3rem] border border-[#0C2A46]/12 bg-white/70 px-4 py-4">
+              <div key={goal.title} className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-bold text-[#0C2A46]">{goal.title}</p>
-                    <p className="mt-1 text-sm text-[rgba(12,42,70,0.7)]">
+                    <p className="font-bold text-[var(--fundly-primary)]">{goal.title}</p>
+                    <p className="mt-1 text-sm text-[rgba(var(--fundly-primary-rgb),0.7)]">
                       {goal.saved} saved of {goal.target}
                     </p>
                   </div>
-                  <span className="rounded-full bg-[#A67A53]/12 px-3 py-1 text-xs font-bold text-[#A67A53]">
+                  <span className="rounded-full bg-[rgba(var(--fundly-accent-rgb),0.12)] px-3 py-1 text-xs font-bold text-[var(--fundly-accent)]">
                     {goal.progress}%
                   </span>
                 </div>
-                <div className="mt-4 h-3 rounded-full bg-[#0C2A46]/10">
+                <div className="mt-4 h-3 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]">
                   <div
-                    className="h-3 rounded-full bg-[linear-gradient(90deg,#A67A53_0%,#0C2A46_58%,#011826_100%)]"
+                    className="h-3 rounded-full bg-[linear-gradient(90deg,var(--fundly-accent)_0%,var(--fundly-primary)_58%,var(--fundly-deep)_100%)]"
                     style={{ width: `${Math.min(goal.progress, 100)}%` }}
                   />
                 </div>

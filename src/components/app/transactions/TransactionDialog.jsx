@@ -41,7 +41,7 @@ export default function TransactionDialog({
         alignItems: 'flex-end',
         justifyContent: 'center',
         padding: '0 0 0 0',
-        background: 'rgba(1,24,38,0.78)',
+        background: 'rgba(var(--fundly-deep-rgb),0.78)',
         backdropFilter: 'blur(6px)',
       }}
       className="sm:items-center sm:p-6"
@@ -60,8 +60,8 @@ export default function TransactionDialog({
           width: '100%',
           maxWidth: '560px',
           borderRadius: '28px 28px 0 0',
-          background: '#011826',
-          border: '1px solid rgba(166,122,83,0.18)',
+          background: 'var(--fundly-deep)',
+          border: '1px solid rgba(var(--fundly-accent-rgb),0.18)',
           boxShadow: '0 -20px 60px rgba(0,0,0,0.5)',
           maxHeight: 'calc(100dvh - 1rem)',
           display: 'flex',
@@ -89,7 +89,7 @@ export default function TransactionDialog({
                 fontWeight: 700,
                 letterSpacing: '0.28em',
                 textTransform: 'uppercase',
-                color: '#A67A53',
+                color: 'var(--fundly-accent)',
               }}
             >
               New Transaction
@@ -99,7 +99,7 @@ export default function TransactionDialog({
                 margin: '6px 0 0',
                 fontSize: '1.6rem',
                 fontWeight: 800,
-                color: '#F2F2F2',
+                color: 'var(--fundly-surface)',
                 letterSpacing: '-0.03em',
                 lineHeight: 1.1,
               }}
@@ -110,7 +110,7 @@ export default function TransactionDialog({
               style={{
                 margin: '6px 0 0',
                 fontSize: '0.82rem',
-                color: 'rgba(242,242,242,0.66)',
+                color: 'rgba(var(--fundly-surface-rgb),0.66)',
                 lineHeight: 1.5,
               }}
             >
@@ -129,9 +129,9 @@ export default function TransactionDialog({
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              border: '1px solid rgba(242,242,242,0.12)',
-              background: 'rgba(242,242,242,0.06)',
-              color: 'rgba(242,242,242,0.58)',
+              border: '1px solid rgba(var(--fundly-surface-rgb),0.12)',
+              background: 'rgba(var(--fundly-surface-rgb),0.06)',
+              color: 'rgba(var(--fundly-surface-rgb),0.58)',
               fontSize: '0.8rem',
               fontWeight: 700,
               cursor: 'pointer',

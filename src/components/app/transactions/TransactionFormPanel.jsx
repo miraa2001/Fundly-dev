@@ -7,10 +7,10 @@ import {
 } from '../../../lib/transactions';
 
 const fieldClassName =
-  'w-full rounded-[1.15rem] border border-[#0C2A46]/18 bg-white/6 px-4 py-3 text-sm text-[#F2F2F2] outline-none transition focus:border-[#A67A53]/50 focus:bg-white/10 focus:ring-2 focus:ring-[#A67A53]/14 placeholder:text-white/30';
+  'w-full rounded-[1.15rem] border border-[rgba(var(--fundly-primary-rgb),0.18)] bg-white/6 px-4 py-3 text-sm text-[var(--fundly-surface)] outline-none transition focus:border-[rgba(var(--fundly-accent-rgb),0.50)] focus:bg-white/10 focus:ring-2 focus:ring-[rgba(var(--fundly-accent-rgb),0.14)] placeholder:text-white/30';
 const errorFieldClassName =
-  'w-full rounded-[1.15rem] border border-[#401F14]/45 bg-white/5 px-4 py-3 text-sm text-[#F2F2F2] outline-none ring-2 ring-[#401F14]/16 placeholder:text-white/30';
-const labelClassName = 'text-xs font-bold uppercase tracking-[0.18em] text-[rgba(166,122,83,0.88)]';
+  'w-full rounded-[1.15rem] border border-[rgba(var(--fundly-warm-rgb),0.45)] bg-white/5 px-4 py-3 text-sm text-[var(--fundly-surface)] outline-none ring-2 ring-[rgba(var(--fundly-warm-rgb),0.16)] placeholder:text-white/30';
+const labelClassName = 'text-xs font-bold uppercase tracking-[0.18em] text-[rgba(var(--fundly-accent-rgb),0.88)]';
 
 export default function TransactionFormPanel({
   categories,
@@ -26,14 +26,14 @@ export default function TransactionFormPanel({
   const categoryColor = selectedCategory?.color || defaultCategoryColor;
   const previewTitle = form.title.trim() || form.merchantOrSource.trim() || 'New transaction';
   const previewAmount = formatTransactionAmount(form.amount || '0', form.currency || defaultTransactionCurrency);
-  const topGradient = `linear-gradient(135deg, ${categoryColor}cc 0%, #0C2A46f2 56%, rgba(166,122,83,0.16) 100%)`;
+  const topGradient = `linear-gradient(135deg, ${categoryColor}cc 0%, rgba(var(--fundly-primary-rgb),0.95) 56%, rgba(var(--fundly-accent-rgb),0.16) 100%)`;
 
   return (
     <form className="space-y-4 pb-2" onSubmit={onSubmit} noValidate>
       <div
         style={{
           borderRadius: '16px',
-          background: '#011826',
+          background: 'var(--fundly-deep)',
           padding: '4px',
           overflow: 'hidden',
           boxShadow: '0 7px 28px rgba(0,0,0,0.4)',
@@ -53,12 +53,12 @@ export default function TransactionFormPanel({
               borderBottomRightRadius: '10px',
               height: '24px',
               width: '110px',
-              background: '#011826',
+              background: 'var(--fundly-deep)',
               position: 'absolute',
               top: 0,
               left: 0,
               transform: 'skew(-38deg)',
-              boxShadow: '-10px -10px 0 0 #011826',
+              boxShadow: '-10px -10px 0 0 var(--fundly-deep)',
             }}
           />
           <div
@@ -69,7 +69,7 @@ export default function TransactionFormPanel({
               height: '12px',
               width: '12px',
               borderTopLeftRadius: '12px',
-              boxShadow: '-5px -5px 0 2px #011826',
+              boxShadow: '-5px -5px 0 2px var(--fundly-deep)',
               background: 'transparent',
             }}
           />
@@ -109,7 +109,7 @@ export default function TransactionFormPanel({
                   fontWeight: 700,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: 'rgba(166,122,83,0.88)',
+                  color: 'rgba(var(--fundly-accent-rgb),0.88)',
                 }}
               >
                 Preview
@@ -119,7 +119,7 @@ export default function TransactionFormPanel({
                   margin: '2px 0 0',
                   fontSize: '1rem',
                   fontWeight: 800,
-                  color: '#F2F2F2',
+                  color: 'var(--fundly-surface)',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.1,
                 }}
@@ -127,7 +127,7 @@ export default function TransactionFormPanel({
                 {previewTitle}
               </p>
             </div>
-            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#A67A53' }}>{previewAmount}</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--fundly-accent)' }}>{previewAmount}</span>
           </div>
         </div>
 
@@ -151,7 +151,7 @@ export default function TransactionFormPanel({
 
       <div
         style={{
-          background: '#011826',
+          background: 'var(--fundly-deep)',
           borderRadius: '16px',
           padding: '16px',
           display: 'flex',
@@ -172,7 +172,7 @@ export default function TransactionFormPanel({
             autoFocus
             className={errors.title ? errorFieldClassName : fieldClassName}
           />
-          {errors.title && <p className="text-sm text-[#A67A53]">{errors.title}</p>}
+          {errors.title && <p className="text-sm text-[var(--fundly-accent)]">{errors.title}</p>}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '10px' }}>
@@ -191,7 +191,7 @@ export default function TransactionFormPanel({
               placeholder="0.00"
               className={errors.amount ? errorFieldClassName : fieldClassName}
             />
-            {errors.amount && <p className="text-sm text-[#A67A53]">{errors.amount}</p>}
+            {errors.amount && <p className="text-sm text-[var(--fundly-accent)]">{errors.amount}</p>}
           </div>
 
           <div className="space-y-1.5">
@@ -203,7 +203,7 @@ export default function TransactionFormPanel({
               value={form.currency}
               onChange={(e) => onChange('currency', e.target.value)}
               className={`${errors.currency ? errorFieldClassName : fieldClassName} min-w-[80px]`}
-              style={{ background: '#0C2A46' }}
+              style={{ background: 'var(--fundly-primary)' }}
             >
               {supportedTransactionCurrencies.map((code) => (
                 <option key={code} value={code}>
@@ -226,7 +226,7 @@ export default function TransactionFormPanel({
             className={errors.transactionDate ? errorFieldClassName : fieldClassName}
             style={{ colorScheme: 'dark' }}
           />
-          {errors.transactionDate && <p className="text-sm text-[#A67A53]">{errors.transactionDate}</p>}
+          {errors.transactionDate && <p className="text-sm text-[var(--fundly-accent)]">{errors.transactionDate}</p>}
         </div>
 
         <div className="space-y-1.5">
@@ -238,7 +238,7 @@ export default function TransactionFormPanel({
             value={form.categoryId}
             onChange={(e) => onChange('categoryId', e.target.value)}
             className={errors.categoryId ? errorFieldClassName : fieldClassName}
-            style={{ background: '#0C2A46' }}
+            style={{ background: 'var(--fundly-primary)' }}
             disabled={categories.length === 0}
           >
             {categories.length === 0 && <option value="">No active categories</option>}
@@ -248,7 +248,7 @@ export default function TransactionFormPanel({
               </option>
             ))}
           </select>
-          {errors.categoryId && <p className="text-sm text-[#A67A53]">{errors.categoryId}</p>}
+          {errors.categoryId && <p className="text-sm text-[var(--fundly-accent)]">{errors.categoryId}</p>}
         </div>
 
         <div className="space-y-1.5">
@@ -304,7 +304,7 @@ export default function TransactionFormPanel({
                 fontWeight: 700,
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                color: 'rgba(166,122,83,0.88)',
+                color: 'rgba(var(--fundly-accent-rgb),0.88)',
               }}
             >
               Use savings
@@ -313,7 +313,7 @@ export default function TransactionFormPanel({
               style={{
                 margin: '2px 0 0',
                 fontSize: '0.75rem',
-                color: form.isFromSavings ? '#A67A53' : 'rgba(242,242,242,0.46)',
+                color: form.isFromSavings ? 'var(--fundly-accent)' : 'rgba(var(--fundly-surface-rgb),0.46)',
               }}
             >
               {form.isFromSavings ? 'This comes from your savings balance' : 'Regular spending'}
@@ -327,9 +327,9 @@ export default function TransactionFormPanel({
               width: '46px',
               borderRadius: '999px',
               border: '1px solid',
-              borderColor: form.isFromSavings ? '#A67A53' : 'rgba(242,242,242,0.15)',
+              borderColor: form.isFromSavings ? 'var(--fundly-accent)' : 'rgba(var(--fundly-surface-rgb),0.15)',
               background: form.isFromSavings
-                ? 'linear-gradient(180deg,#D0AE8C 0%,#A67A53 58%,#401F14 100%)'
+                ? 'linear-gradient(180deg,var(--fundly-accent-soft) 0%,var(--fundly-accent) 58%,var(--fundly-warm) 100%)'
                 : 'rgba(255,255,255,0.08)',
               transition: 'all 0.25s',
               flexShrink: 0,
@@ -343,7 +343,7 @@ export default function TransactionFormPanel({
                 width: '18px',
                 height: '18px',
                 borderRadius: '50%',
-                background: '#F2F2F2',
+                background: 'var(--fundly-surface)',
                 boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                 transition: 'left 0.25s cubic-bezier(0.22,1,0.36,1)',
               }}
@@ -362,12 +362,12 @@ export default function TransactionFormPanel({
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: '999px',
-            border: '1px solid #A67A53',
-            background: 'linear-gradient(180deg,#0C2A46 0%,#062239 46%,#011826 100%)',
+            border: '1px solid var(--fundly-accent)',
+            background: 'linear-gradient(180deg,var(--fundly-primary) 0%,var(--fundly-primary-soft) 46%,var(--fundly-deep) 100%)',
             padding: '12px 20px',
             fontSize: '0.85rem',
             fontWeight: 700,
-            color: '#F2F2F2',
+            color: 'var(--fundly-surface)',
             cursor: isSubmitting ? 'not-allowed' : 'pointer',
             opacity: isSubmitting ? 0.7 : 1,
             transition: 'transform 0.2s, opacity 0.2s',

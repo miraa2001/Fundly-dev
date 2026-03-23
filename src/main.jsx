@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import App from './App';
 import { AuthSessionProvider } from './lib/auth-context';
+import './lib/palette';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(

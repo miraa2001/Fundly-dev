@@ -1,19 +1,20 @@
+import { fundlyPalette } from './palette';
 import { ensureSupabase } from './supabase';
 
 const categoryColumns = 'id, user_id, name, kind, color, is_archived, created_at, updated_at';
 const categoryBudgetColumns = 'id, user_id, category_id, month_key, budget_limit, created_at, updated_at';
 
-export const defaultCategoryColor = '#0C2A46';
+export const defaultCategoryColor = fundlyPalette.primary;
 export const suggestedCategoryKinds = ['expense', 'income'];
 export const categoryColorPresets = [
-  '#0C2A46',
+  fundlyPalette.primary,
   '#173754',
-  '#011826',
-  '#A67A53',
+  fundlyPalette.deep,
+  fundlyPalette.accent,
   '#8F6847',
-  '#401F14',
+  fundlyPalette.warm,
   '#6A3627',
-  '#F2F2F2',
+  fundlyPalette.surface,
 ];
 
 export function normalizeHexColor(value) {

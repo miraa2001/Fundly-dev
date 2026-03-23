@@ -80,7 +80,7 @@ export default function TransactionLoader({ isVisible, onComplete }) {
           alignItems: 'center',
           justifyContent: 'center',
           gap: '24px',
-          background: 'rgba(1,24,38,0.88)',
+          background: 'rgba(var(--fundly-deep-rgb),0.88)',
           backdropFilter: 'blur(8px)',
         }}
       >
@@ -99,21 +99,21 @@ export default function TransactionLoader({ isVisible, onComplete }) {
             style={{
               width: '70px',
               height: '46px',
-              background: 'linear-gradient(180deg, #D0AE8C 0%, #A67A53 58%, #401F14 100%)',
+              background: 'linear-gradient(180deg, var(--fundly-accent-soft) 0%, var(--fundly-accent) 58%, var(--fundly-warm) 100%)',
               borderRadius: '6px',
               position: 'absolute',
               display: 'flex',
               zIndex: 10,
               flexDirection: 'column',
               alignItems: 'center',
-              boxShadow: '9px 9px 20px -6px rgba(166,122,83,0.75)',
+              boxShadow: '9px 9px 20px -6px rgba(var(--fundly-accent-rgb),0.75)',
             }}
           >
             <div
               style={{
                 width: '65px',
                 height: '13px',
-                backgroundColor: 'rgba(1,24,38,0.42)',
+                backgroundColor: 'rgba(var(--fundly-deep-rgb),0.42)',
                 borderRadius: '2px',
                 marginTop: '7px',
               }}
@@ -122,8 +122,8 @@ export default function TransactionLoader({ isVisible, onComplete }) {
               style={{
                 width: '8px',
                 height: '8px',
-                backgroundColor: '#F2F2F2',
-                boxShadow: '0 -10px 0 0 rgba(242,242,242,0.9), 0 10px 0 0 rgba(242,242,242,0.6)',
+                backgroundColor: 'var(--fundly-surface)',
+                boxShadow: '0 -10px 0 0 rgba(var(--fundly-surface-rgb),0.9), 0 10px 0 0 rgba(var(--fundly-surface-rgb),0.6)',
                 borderRadius: '50%',
                 transform: 'rotate(90deg)',
                 margin: '10px 0 0 -30px',
@@ -136,21 +136,21 @@ export default function TransactionLoader({ isVisible, onComplete }) {
             style={{
               width: '63px',
               height: '75px',
-              backgroundColor: '#F2F2F2',
-              border: '1px solid rgba(12,42,70,0.14)',
+              backgroundColor: 'var(--fundly-surface)',
+              border: '1px solid rgba(var(--fundly-primary-rgb),0.14)',
               position: 'absolute',
               zIndex: 11,
               top: '120px',
               borderRadius: '6px',
               overflow: 'hidden',
-              boxShadow: '0 10px 24px rgba(1,24,38,0.2)',
+              boxShadow: '0 10px 24px rgba(var(--fundly-deep-rgb),0.2)',
             }}
           >
             <div
               style={{
                 width: '47px',
                 height: '9px',
-                backgroundColor: '#0C2A46',
+                backgroundColor: 'var(--fundly-primary)',
                 position: 'absolute',
                 borderRadius: '0 0 3px 3px',
                 right: '8px',
@@ -161,7 +161,7 @@ export default function TransactionLoader({ isVisible, onComplete }) {
               style={{
                 width: '47px',
                 height: '23px',
-                backgroundColor: 'rgba(166,122,83,0.12)',
+                backgroundColor: 'rgba(var(--fundly-accent-rgb),0.12)',
                 position: 'absolute',
                 top: '22px',
                 right: '8px',
@@ -169,7 +169,7 @@ export default function TransactionLoader({ isVisible, onComplete }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#0C2A46',
+                color: 'var(--fundly-primary)',
                 fontSize: '10px',
                 fontWeight: 800,
                 letterSpacing: '0.12em',
@@ -182,8 +182,8 @@ export default function TransactionLoader({ isVisible, onComplete }) {
               style={{
                 width: '12px',
                 height: '12px',
-                backgroundColor: '#0C2A46',
-                boxShadow: '0 -18px 0 0 #0C2A46, 0 18px 0 0 #0C2A46',
+                backgroundColor: 'var(--fundly-primary)',
+                boxShadow: '0 -18px 0 0 var(--fundly-primary), 0 18px 0 0 var(--fundly-primary)',
                 borderRadius: '2px',
                 position: 'absolute',
                 transform: 'rotate(90deg)',
@@ -195,8 +195,8 @@ export default function TransactionLoader({ isVisible, onComplete }) {
               style={{
                 width: '12px',
                 height: '12px',
-                backgroundColor: '#A67A53',
-                boxShadow: '0 -18px 0 0 #A67A53, 0 18px 0 0 #A67A53',
+                backgroundColor: 'var(--fundly-accent)',
+                boxShadow: '0 -18px 0 0 var(--fundly-accent), 0 18px 0 0 var(--fundly-accent)',
                 borderRadius: '2px',
                 position: 'absolute',
                 transform: 'rotate(90deg)',
@@ -215,7 +215,7 @@ export default function TransactionLoader({ isVisible, onComplete }) {
             fontWeight: 700,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: 'rgba(242,242,242,0.7)',
+            color: 'rgba(var(--fundly-surface-rgb),0.7)',
           }}
         >
           Opening transaction form...

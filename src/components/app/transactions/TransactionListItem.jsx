@@ -2,274 +2,238 @@ import { useState } from 'react';
 import { defaultCategoryColor } from '../../../lib/categories';
 import { formatTransactionAmount, formatTransactionDate } from '../../../lib/transactions';
 
-const envStyleId = 'txn-envelope-style';
+const envStyleId = 'txn-envelope-figma-style';
 if (typeof document !== 'undefined' && !document.getElementById(envStyleId)) {
   const style = document.createElement('style');
   style.id = envStyleId;
   style.textContent = `
-    .env-wrap {
+    .env-card-wrap {
       position: relative;
       width: 100%;
       cursor: pointer;
       user-select: none;
     }
 
-    /* ── ENVELOPE BODY ── */
-    .env-body {
+    /* animated height */
+    .env-card-body {
       position: relative;
-      border-radius: 4px 4px 6px 6px;
-      background: #F5F0E8;
-      border: 1px solid rgba(64,31,20,0.15);
       overflow: hidden;
-      box-shadow: 0 2px 12px rgba(12,42,70,0.10), 0 1px 3px rgba(12,42,70,0.07);
-      transition: box-shadow 0.3s ease;
-      z-index: 1;
-    }
-    .env-wrap:hover .env-body {
-      box-shadow: 0 6px 24px rgba(12,42,70,0.14), 0 2px 6px rgba(12,42,70,0.08);
+      border-radius: 12px;
+      background-color: #F5F0E8;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* diagonal corner lines on envelope body */
-    .env-body::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(135deg, rgba(64,31,20,0.07) 0%, transparent 40%),
-        linear-gradient(225deg, rgba(64,31,20,0.07) 0%, transparent 40%);
-      pointer-events: none;
-    }
-
-    /* ── FLAP ── */
-    .env-flap-wrap {
+    /* flap */
+    .env-flap {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 80px;
+      height: 64px;
+      background-color: #EDE6D6;
       transform-origin: top center;
       transform: rotateX(0deg);
-      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-      z-index: 3;
-      perspective: 600px;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  translateY 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      overflow: visible;
+      perspective: 1000px;
+      transform-style: preserve-3d;
     }
-    .env-wrap.open .env-flap-wrap {
-      transform: rotateX(-178deg);
-    }
-    .env-flap {
-      width: 100%;
-      height: 80px;
-      position: relative;
-      overflow: hidden;
-    }
-    /* Triangle flap shape */
-    .env-flap-triangle {
-      width: 0;
-      height: 0;
-      border-left: 50vw solid transparent;
-      border-right: 50vw solid transparent;
-      border-top: 80px solid #EDE6D6;
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      filter: drop-shadow(0 2px 3px rgba(64,31,20,0.12));
-    }
-    .env-flap-triangle-inner {
-      width: 0;
-      height: 0;
-      border-left: 50vw solid transparent;
-      border-right: 50vw solid transparent;
-      border-top: 80px solid #F5F0E8;
-      position: absolute;
-      top: -1px; left: 50%;
-      transform: translateX(-50%);
-    }
-
-    /* ── CONTENTS (revealed when open) ── */
-    .env-contents {
-      padding: 14px 18px 16px;
-      opacity: 0;
-      transform: translateY(-6px);
-      transition: opacity 0.3s ease 0.3s, transform 0.3s ease 0.3s;
-      pointer-events: none;
-    }
-    .env-wrap.open .env-contents {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    /* ── SEALED FRONT ── */
-    .env-sealed {
-      padding: 28px 18px 18px;
-      opacity: 1;
-      transition: opacity 0.15s ease;
-    }
-    .env-wrap.open .env-sealed {
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-      top: 0; left: 0; right: 0;
+    .env-card-wrap.open .env-flap {
+      transform: rotateX(180deg) translateY(-8px);
     }
 
     /* wax seal */
     .env-seal {
       position: absolute;
-      bottom: -16px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 4;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.3);
-      transition: transform 0.3s ease, opacity 0.2s ease;
+      bottom: -20px;
+      transform: translateX(-50%) scale(1);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 1;
+      z-index: 20;
     }
-    .env-wrap.open .env-seal {
+    .env-card-wrap.open .env-seal {
       transform: translateX(-50%) scale(0);
       opacity: 0;
     }
-    .env-seal-inner {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.35);
-      border: 1.5px solid rgba(255,255,255,0.5);
+
+    /* expandable details */
+    .env-details {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1) 0.1s,
+                  opacity 0.4s ease 0.1s;
+    }
+    .env-card-wrap.open .env-details {
+      max-height: 400px;
+      opacity: 1;
     }
 
-    /* bottom envelope V shape */
-    .env-bottom-v {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 60px;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .env-bottom-v::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(135deg, #EDE6D6 50%, transparent 50%);
-    }
-    .env-bottom-v::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(225deg, #EDE6D6 50%, transparent 50%);
-    }
+    /* tap hint swap */
+    .env-hint-open  { display: block; }
+    .env-hint-close { display: none; }
+    .env-card-wrap.open .env-hint-open  { display: none; }
+    .env-card-wrap.open .env-hint-close { display: block; }
   `;
   document.head.appendChild(style);
 }
 
+function DetailRow({ label, value }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <span style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#A67A53' }}>
+        {label}
+      </span>
+      <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#0C2A46' }}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function DashedDivider() {
+  return (
+    <div style={{ position: 'relative', height: '1px', margin: '2px 0' }}>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        opacity: 0.25,
+        backgroundImage: 'repeating-linear-gradient(to right, #A67A53 0, #A67A53 4px, transparent 4px, transparent 8px)',
+      }} />
+    </div>
+  );
+}
+
 export default function TransactionListItem({ transaction }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const title = transaction.title || transaction.merchant_or_source || 'Untitled transaction';
   const categoryColor = transaction.categoryColor || defaultCategoryColor;
   const formattedAmount = formatTransactionAmount(transaction.amount_original, transaction.currency_code);
   const formattedDate = formatTransactionDate(transaction.transaction_date);
 
+  const detailRows = [
+    ...(transaction.merchant_or_source ? [{ label: 'Merchant', value: transaction.merchant_or_source }] : []),
+    { label: 'Date', value: formattedDate },
+    { label: 'Category', value: transaction.categoryName },
+    { label: 'Type', value: 'Manual expense' },
+    ...(transaction.note ? [{ label: 'Note', value: transaction.note }] : []),
+    ...(transaction.is_from_savings ? [{ label: 'Source', value: 'From savings' }] : []),
+  ];
+
   return (
     <div
-      className={`env-wrap${open ? ' open' : ''}`}
-      onClick={() => setOpen((v) => !v)}
+      className={`env-card-wrap${isOpen ? ' open' : ''}`}
+      onClick={() => setIsOpen((v) => !v)}
       role="button"
       tabIndex={0}
-      aria-expanded={open}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen((v) => !v); }}
+      aria-expanded={isOpen}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsOpen((v) => !v); }}
     >
-      <div className="env-body" style={{ minHeight: open ? '220px' : '130px', transition: 'min-height 0.4s ease' }}>
+      <div className="env-card-body">
 
-        {/* ── FLAP ── */}
-        <div className="env-flap-wrap">
-          <div className="env-flap">
-            <div className="env-flap-triangle" />
-            <div className="env-flap-triangle-inner" />
+        {/* ── Corner fold decoration ── */}
+        <svg style={{ position: 'absolute', top: 0, left: 0, width: 64, height: 64, opacity: 0.3, pointerEvents: 'none' }} viewBox="0 0 64 64">
+          <line x1="0" y1="0" x2="20" y2="0" stroke="#D4C5B0" strokeWidth="1" />
+          <line x1="0" y1="0" x2="0" y2="20" stroke="#D4C5B0" strokeWidth="1" />
+          <line x1="0" y1="0" x2="15" y2="15" stroke="#D4C5B0" strokeWidth="0.5" />
+        </svg>
+        <svg style={{ position: 'absolute', top: 0, right: 0, width: 64, height: 64, opacity: 0.3, pointerEvents: 'none' }} viewBox="0 0 64 64">
+          <line x1="44" y1="0" x2="64" y2="0" stroke="#D4C5B0" strokeWidth="1" />
+          <line x1="64" y1="0" x2="64" y2="20" stroke="#D4C5B0" strokeWidth="1" />
+          <line x1="49" y1="15" x2="64" y2="0" stroke="#D4C5B0" strokeWidth="0.5" />
+        </svg>
+
+        {/* ── Flap ── */}
+        <div className="env-flap">
+          <svg
+            style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 32 }}
+            viewBox="0 0 380 32"
+            preserveAspectRatio="none"
+          >
+            <path d="M 0,0 L 190,32 L 380,0 L 380,32 L 0,32 Z" fill="#EDE6D6" />
+          </svg>
+
+          {/* Wax seal */}
+          <div className="env-seal">
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                backgroundColor: categoryColor,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: '50%',
+                  backgroundColor: '#F5F0E8',
+                }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* ── WAX SEAL ── */}
-        <div className="env-seal" style={{ background: categoryColor }}>
-          <div className="env-seal-inner" />
-        </div>
+        {/* ── Card content ── */}
+        <div style={{ paddingTop: 80, paddingLeft: 24, paddingRight: 24, paddingBottom: 24 }}>
 
-        {/* ── SEALED FRONT (visible when closed) ── */}
-        <div className="env-sealed">
-          {/* To: label */}
-          <p style={{ margin: '0 0 6px', fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(64,31,20,0.4)' }}>
-            To: My Budget
-          </p>
-
-          {/* Title + amount */}
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '12px' }}>
-            <p style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: '#0C2A46', letterSpacing: '-0.02em', lineHeight: 1.2, flex: 1 }}>
+          {/* Title + Amount */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <h3 style={{ margin: 0, fontWeight: 500, fontSize: '1.1rem', color: '#0C2A46' }}>
               {title}
-            </p>
-            <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0C2A46', letterSpacing: '-0.02em', flexShrink: 0 }}>
+            </h3>
+            <span style={{ fontWeight: 700, fontSize: '1.2rem', color: '#0C2A46' }}>
               {formattedAmount}
-            </p>
+            </span>
           </div>
 
-          {/* Category + date row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: categoryColor, flexShrink: 0 }} />
-              <p style={{ margin: 0, fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A67A53' }}>
+          {/* Category + Date */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: categoryColor }} />
+              <span style={{ fontSize: '0.85rem', color: '#A67A53' }}>
                 {transaction.categoryName}
-              </p>
+              </span>
             </div>
-            <p style={{ margin: 0, fontSize: '0.65rem', color: 'rgba(12,42,70,0.4)', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.85rem', color: '#A67A53', opacity: 0.6 }}>
               {formattedDate}
-            </p>
+            </span>
           </div>
 
-          {/* open hint */}
-          <p style={{ margin: '10px 0 0', fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(166,122,83,0.5)', textAlign: 'center' }}>
-            Tap to open ↑
-          </p>
-        </div>
-
-        {/* ── CONTENTS (visible when open) ── */}
-        <div className="env-contents" style={{ paddingTop: '86px' }}>
-          {/* Letter heading */}
-          <div style={{ borderBottom: '1px solid rgba(64,31,20,0.12)', paddingBottom: '10px', marginBottom: '12px' }}>
-            <p style={{ margin: '0 0 2px', fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(64,31,20,0.4)' }}>
-              Transaction receipt
-            </p>
-            <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0C2A46', letterSpacing: '-0.02em' }}>
-              {title}
-            </p>
-          </div>
-
-          {/* Detail rows */}
-          {[
-            { label: 'Amount', value: formattedAmount },
-            { label: 'Date', value: formattedDate },
-            { label: 'Category', value: transaction.categoryName },
-            ...(transaction.merchant_or_source ? [{ label: 'Merchant', value: transaction.merchant_or_source }] : []),
-            ...(transaction.note ? [{ label: 'Note', value: transaction.note }] : []),
-            ...(transaction.is_from_savings ? [{ label: 'Source', value: 'From savings' }] : []),
-          ].map(({ label, value }) => (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px', padding: '3px 0', borderBottom: '1px dashed rgba(166,122,83,0.15)' }}>
-              <p style={{ margin: 0, fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(166,122,83,0.7)', flexShrink: 0 }}>
-                {label}
-              </p>
-              <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 700, color: '#0C2A46', textAlign: 'right' }}>
-                {value}
-              </p>
+          {/* ── Expandable details ── */}
+          <div className="env-details">
+            <div style={{ height: 1, backgroundColor: 'rgba(166,122,83,0.25)', marginBottom: 16 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {detailRows.map(({ label, value }, i) => (
+                <div key={label}>
+                  <DetailRow label={label} value={value} />
+                  {i < detailRows.length - 1 && <DashedDivider />}
+                </div>
+              ))}
             </div>
-          ))}
+            <div style={{ marginTop: 20, textAlign: 'center' }}>
+              <span className="env-hint-close" style={{ fontSize: '0.72rem', letterSpacing: '0.08em', color: '#A67A53', opacity: 0.6 }}>
+                Tap to seal ↑
+              </span>
+            </div>
+          </div>
 
-          {/* close hint */}
-          <p style={{ margin: '12px 0 0', fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(166,122,83,0.45)', textAlign: 'center' }}>
-            Tap to seal ↓
-          </p>
+          {/* Tap to open hint */}
+          <div style={{ textAlign: 'center' }}>
+            <span className="env-hint-open" style={{ fontSize: '0.72rem', letterSpacing: '0.08em', color: '#A67A53', opacity: 0.6 }}>
+              Tap to open ↓
+            </span>
+          </div>
+
         </div>
-
-        {/* Bottom V fold lines */}
-        <div className="env-bottom-v" />
       </div>
     </div>
   );

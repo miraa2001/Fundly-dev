@@ -49,6 +49,17 @@ export function PlannedIcon() {
   );
 }
 
+export function RecurringIcon() {
+  return (
+    <IconBase>
+      <path d="M7 8.5A6 6 0 0 1 18 11" />
+      <path d="m18 7.5.5 3.75-3.75.5" />
+      <path d="M17 15.5A6 6 0 0 1 6 13" />
+      <path d="m6 16.5-.5-3.75 3.75-.5" />
+    </IconBase>
+  );
+}
+
 export function SettingsIcon() {
   return (
     <IconBase>

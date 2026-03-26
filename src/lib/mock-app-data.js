@@ -7,7 +7,7 @@ export const homeStats = [
 
 export const homeHighlights = [
   { title: 'Groceries are on track', detail: 'You still have ILS 190 left in your groceries limit this week.' },
-  { title: 'Next planned payment', detail: 'Internet renewal is coming up on March 22.' },
+  { title: 'Transport is trending higher', detail: 'Ride costs are climbing faster than last week.' },
   { title: 'Savings goal progress', detail: 'Your laptop fund is already 64% complete.' },
 ];
 
@@ -41,12 +41,6 @@ export const transactionSummary = [
   { label: 'Transfers', value: '2 pending' },
 ];
 
-export const plannedItems = [
-  { title: 'Internet renewal', amount: 'ILS 89', due: 'Due Mar 22', status: 'Upcoming' },
-  { title: 'Gym membership', amount: 'ILS 210', due: 'Due Mar 26', status: 'Scheduled' },
-  { title: 'Quarterly insurance', amount: 'ILS 460', due: 'Due Apr 03', status: 'Drafted' },
-];
-
 export const savingsGoals = [
   { title: 'Laptop fund', saved: 'ILS 3,200', target: 'ILS 5,000', progress: 64 },
   { title: 'Travel weekend', saved: 'ILS 1,120', target: 'ILS 2,000', progress: 56 },
@@ -55,5 +49,5 @@ export const savingsGoals = [
 export const settingsPreferences = [
   { label: 'Weekly summary', value: 'Every Monday morning' },
   { label: 'Budget alerts', value: 'Warn when a category reaches 80%' },
-  { label: 'Planned payment reminders', value: '24 hours before each due date' },
+  { label: 'Monthly review reminder', value: 'At the end of each month' },
 ];

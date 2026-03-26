@@ -1,5 +1,4 @@
 import { listCategories } from './categories';
-import { PLANNED_STATUS, normalizePlannedStatus } from './planned';
 import { ensureSupabase } from './supabase';
 
 const recentTransactionColumns =
@@ -7,7 +6,6 @@ const recentTransactionColumns =
 const monthlyExpenseColumns =
   'id, amount_base, transaction_date, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
 const incomeEntryColumns = 'id, amount_base, entry_date';
-const plannedTransactionColumns = 'id, planned_date, status';
 const profileColumns = 'id, savings_balance';
 
 function formatDateOnly(date) {
@@ -33,16 +31,6 @@ function getTransactionTitle(transaction) {
   const normalizedMerchant = transaction.merchant_or_source?.trim();
 
   return normalizedTitle || normalizedMerchant || 'Untitled transaction';
-}
-
-function isOpenPlannedItem(status) {
-  const normalizedStatus = normalizePlannedStatus(status);
-
-  if (!normalizedStatus) {
-    return true;
-  }
-
-  return normalizedStatus === PLANNED_STATUS.PENDING;
 }
 
 function buildCategorySpendMap(transactions) {
@@ -145,7 +133,6 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
   const [
     { data: monthlyExpenseTransactions, error: monthlyExpenseError },
     { data: incomeEntries, error: incomeError },
-    { data: plannedTransactions, error: plannedError },
     { data: recentTransactions, error: recentError },
     { data: profile, error: profileError },
     categories,
@@ -161,11 +148,6 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
       .select(incomeEntryColumns)
       .gte('entry_date', startDate)
       .lt('entry_date', endDateExclusive),
-    client
-      .from('planned_transactions')
-      .select(plannedTransactionColumns)
-      .gte('planned_date', startDate)
-      .lt('planned_date', endDateExclusive),
     client
       .from('transactions')
       .select(recentTransactionColumns)
@@ -189,10 +171,6 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
     throw incomeError;
   }
 
-  if (plannedError) {
-    throw plannedError;
-  }
-
   if (recentError) {
     throw recentError;
   }
@@ -203,7 +181,6 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
 
   const totalIncome = (incomeEntries ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
   const totalExpenses = (monthlyExpenseTransactions ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
-  const plannedItemsCount = (plannedTransactions ?? []).filter((item) => isOpenPlannedItem(item.status)).length;
   const savingsBalance = toNumber(profile?.savings_balance);
   const budgetHighlights = buildBudgetHighlights({
     categories,
@@ -215,7 +192,6 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
     summary: {
       totalIncome,
       totalExpenses,
-      plannedItemsCount,
       savingsBalance,
     },
     recentTransactions: (recentTransactions ?? []).map((transaction) => {

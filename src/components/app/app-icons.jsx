@@ -37,29 +37,6 @@ export function CategoriesIcon() {
   );
 }
 
-export function PlannedIcon() {
-  return (
-    <IconBase>
-      <rect x="4.5" y="5.5" width="15" height="14" rx="2" />
-      <path d="M8 3.5v4" />
-      <path d="M16 3.5v4" />
-      <path d="M4.5 9.5h15" />
-      <path d="m9.5 13 2 2 4-4" />
-    </IconBase>
-  );
-}
-
-export function RecurringIcon() {
-  return (
-    <IconBase>
-      <path d="M7 8.5A6 6 0 0 1 18 11" />
-      <path d="m18 7.5.5 3.75-3.75.5" />
-      <path d="M17 15.5A6 6 0 0 1 6 13" />
-      <path d="m6 16.5-.5-3.75 3.75-.5" />
-    </IconBase>
-  );
-}
-
 export function SettingsIcon() {
   return (
     <IconBase>

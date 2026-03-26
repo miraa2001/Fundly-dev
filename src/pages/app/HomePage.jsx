@@ -15,10 +15,6 @@ function getDisplayName(email) {
   return email.split('@')[0];
 }
 
-function formatCountLabel(count, singular, plural = `${singular}s`) {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
-
 function formatSignedAmount(transaction) {
   const formattedAmount = formatTransactionAmount(transaction.amountOriginal, transaction.currencyCode || defaultBaseCurrency);
 
@@ -35,8 +31,8 @@ function formatSignedAmount(transaction) {
 
 function SummarySkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, index) => (
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, index) => (
         <AppSurface key={index} className="animate-pulse p-4">
           <div className="h-3 w-28 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]" />
           <div className="mt-4 h-8 w-32 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.12)]" />
@@ -109,11 +105,6 @@ export default function HomePage() {
           detail: 'Calculated from amount_base across this month\'s transactions.',
         },
         {
-          label: 'Planned this month',
-          value: formatCountLabel(dashboard.summary.plannedItemsCount, 'item'),
-          detail: 'Open planned items scheduled inside the current month.',
-        },
-        {
           label: 'Savings balance',
           value: formatTransactionAmount(dashboard.summary.savingsBalance, defaultBaseCurrency),
           detail: 'Pulled directly from your profile savings balance.',
@@ -137,7 +128,7 @@ export default function HomePage() {
       {isLoading ? (
         <SummarySkeleton />
       ) : summaryCards.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
           {summaryCards.map((item) => (
             <AppSurface key={item.label} className="p-4">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--fundly-accent)]">{item.label}</p>

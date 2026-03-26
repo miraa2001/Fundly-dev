@@ -345,7 +345,7 @@ export default function CategoriesPage() {
           <AppSurface
             eyebrow="Empty State"
             title="No categories yet"
-            description="Create your first category to start organizing transactions, budgets, and planned spending."
+            description="Create your first category to start organizing transactions and budgets."
             action={
               <button
                 type="button"

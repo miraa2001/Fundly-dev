@@ -7,8 +7,6 @@ import LoginPage from './pages/LoginPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import CategoriesPage from './pages/app/CategoriesPage';
 import HomePage from './pages/app/HomePage';
-import PlannedPage from './pages/app/PlannedPage';
-import RecurringPage from './pages/app/RecurringPage';
 import SettingsPage from './pages/app/SettingsPage';
 import TransactionsPage from './pages/app/TransactionsPage';
 
@@ -67,8 +65,6 @@ export default function App() {
         <Route index element={<HomePage />} />
         <Route path="transactions" element={<TransactionsPage />} />
         <Route path="categories" element={<CategoriesPage />} />
-        <Route path="planned" element={<PlannedPage />} />
-        <Route path="recurring" element={<RecurringPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<SessionRedirect />} />

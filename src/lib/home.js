@@ -1,4 +1,5 @@
 import { listCategories } from './categories';
+import { PLANNED_STATUS, normalizePlannedStatus } from './planned';
 import { ensureSupabase } from './supabase';
 
 const recentTransactionColumns =
@@ -8,8 +9,6 @@ const monthlyExpenseColumns =
 const incomeEntryColumns = 'id, amount_base, entry_date';
 const plannedTransactionColumns = 'id, planned_date, status';
 const profileColumns = 'id, savings_balance';
-
-const closedPlannedStatuses = new Set(['completed', 'complete', 'done', 'paid', 'cancelled', 'canceled', 'archived']);
 
 function formatDateOnly(date) {
   const year = date.getFullYear();
@@ -36,10 +35,6 @@ function getTransactionTitle(transaction) {
   return normalizedTitle || normalizedMerchant || 'Untitled transaction';
 }
 
-function normalizePlannedStatus(status) {
-  return String(status ?? '').trim().toLowerCase();
-}
-
 function isOpenPlannedItem(status) {
   const normalizedStatus = normalizePlannedStatus(status);
 
@@ -47,7 +42,7 @@ function isOpenPlannedItem(status) {
     return true;
   }
 
-  return !closedPlannedStatuses.has(normalizedStatus);
+  return normalizedStatus === PLANNED_STATUS.PENDING;
 }
 
 function buildCategorySpendMap(transactions) {

@@ -317,7 +317,7 @@ export default function PlannedPage() {
 
   const hasActiveCategories = activeCategories.length > 0;
   const openItems = plannedTransactions.filter((item) => item.isOpen);
-  const completedItems = plannedTransactions.filter((item) => item.isCompleted);
+  const confirmedItems = plannedTransactions.filter((item) => item.isConfirmed);
   const cancelledItems = plannedTransactions.filter((item) => item.isCancelled);
   const nextPlannedItem = openItems[0] ?? null;
 
@@ -370,7 +370,7 @@ export default function PlannedPage() {
         <AppSurface
           eyebrow="Upcoming"
           title="Planned payments"
-          description="Upcoming items first, with completed and cancelled items kept below the open queue."
+          description="Upcoming items first, with confirmed and cancelled items kept below the open queue."
         >
           {plannedError ? (
             <div className="space-y-3">
@@ -426,7 +426,7 @@ export default function PlannedPage() {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:grid-cols-1">
               {[
                 { label: 'Open items', value: openItems.length, detail: 'Still pending confirmation or cancellation.' },
-                { label: 'Confirmed', value: completedItems.length, detail: 'Already turned into real transactions.' },
+                { label: 'Confirmed', value: confirmedItems.length, detail: 'Already turned into real transactions.' },
                 { label: 'Cancelled', value: cancelledItems.length, detail: 'Kept for history without deleting them.' },
               ].map((item) => (
                 <div key={item.label} className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-4">

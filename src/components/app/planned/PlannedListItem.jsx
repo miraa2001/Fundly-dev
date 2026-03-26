@@ -53,12 +53,12 @@ export default function PlannedListItem({
 
   const statusTone = plannedTransaction.isCancelled
     ? 'var(--fundly-warm)'
-    : plannedTransaction.isCompleted
+    : plannedTransaction.isConfirmed
       ? 'var(--fundly-primary)'
       : 'var(--fundly-accent)';
   const statusBackground = plannedTransaction.isCancelled
     ? 'rgba(var(--fundly-warm-rgb),0.12)'
-    : plannedTransaction.isCompleted
+    : plannedTransaction.isConfirmed
       ? 'rgba(var(--fundly-primary-rgb),0.10)'
       : 'rgba(var(--fundly-accent-rgb),0.12)';
 
@@ -91,7 +91,7 @@ export default function PlannedListItem({
             <p className="mt-3 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.76)]">{plannedTransaction.note}</p>
           ) : null}
 
-          {plannedTransaction.isCompleted && plannedTransaction.created_transaction_id ? (
+          {plannedTransaction.isConfirmed && plannedTransaction.created_transaction_id ? (
             <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-[var(--fundly-accent)]">
               Confirmed into a real transaction
             </p>

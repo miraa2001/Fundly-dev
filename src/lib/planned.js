@@ -14,10 +14,18 @@ const plannedTransactionSplitColumns = 'id, planned_transaction_id, category_id,
 const plannedTransactionListColumns =
   `${plannedTransactionColumns}, planned_transaction_splits(${plannedTransactionSplitColumns}, category:categories(id, name, color))`;
 
-const completedPlannedStatuses = new Set(['completed', 'complete', 'confirmed', 'done', 'paid', 'archived']);
-const cancelledPlannedStatuses = new Set(['cancelled', 'canceled']);
+export const PLANNED_STATUS = Object.freeze({
+  PENDING: 'pending',
+  CONFIRMED: 'confirmed',
+  CANCELLED: 'cancelled',
+  EXPIRED: 'expired',
+});
 
-export const defaultPlannedStatus = 'planned';
+const confirmedPlannedStatuses = new Set([PLANNED_STATUS.CONFIRMED]);
+const cancelledPlannedStatuses = new Set([PLANNED_STATUS.CANCELLED]);
+const expiredPlannedStatuses = new Set([PLANNED_STATUS.EXPIRED]);
+
+export const defaultPlannedStatus = PLANNED_STATUS.PENDING;
 
 function normalizeOptionalText(value) {
   const trimmedValue = value?.trim() ?? '';
@@ -56,20 +64,30 @@ function getPrimarySplit(plannedTransaction) {
   return primarySplit ?? null;
 }
 
-function normalizeStatus(status) {
+export function normalizePlannedStatus(status) {
   return String(status ?? '').trim().toLowerCase();
 }
 
 export function isPlannedTransactionCancelled(status) {
-  return cancelledPlannedStatuses.has(normalizeStatus(status));
+  return cancelledPlannedStatuses.has(normalizePlannedStatus(status));
 }
 
-export function isPlannedTransactionCompleted(plannedTransaction) {
-  return Boolean(plannedTransaction?.created_transaction_id) || completedPlannedStatuses.has(normalizeStatus(plannedTransaction?.status));
+export function isPlannedTransactionConfirmed(plannedTransaction) {
+  return Boolean(plannedTransaction?.created_transaction_id) || confirmedPlannedStatuses.has(normalizePlannedStatus(plannedTransaction?.status));
+}
+
+export function isPlannedTransactionExpired(status) {
+  return expiredPlannedStatuses.has(normalizePlannedStatus(status));
 }
 
 export function isPlannedTransactionOpen(plannedTransaction) {
-  return !isPlannedTransactionCancelled(plannedTransaction?.status) && !isPlannedTransactionCompleted(plannedTransaction);
+  const normalizedStatus = normalizePlannedStatus(plannedTransaction?.status);
+
+  if (!normalizedStatus) {
+    return true;
+  }
+
+  return normalizedStatus === PLANNED_STATUS.PENDING;
 }
 
 export function formatPlannedStatus(status) {
@@ -98,6 +116,20 @@ function sortPlannedTransactions(left, right) {
     return (left.planned_date ?? '').localeCompare(right.planned_date ?? '');
   }
 
+  const leftIsConfirmed = isPlannedTransactionConfirmed(left);
+  const rightIsConfirmed = isPlannedTransactionConfirmed(right);
+
+  if (leftIsConfirmed !== rightIsConfirmed) {
+    return leftIsConfirmed ? -1 : 1;
+  }
+
+  const leftIsCancelled = isPlannedTransactionCancelled(left.status);
+  const rightIsCancelled = isPlannedTransactionCancelled(right.status);
+
+  if (leftIsCancelled !== rightIsCancelled) {
+    return leftIsCancelled ? -1 : 1;
+  }
+
   return (right.updated_at ?? right.planned_date ?? '').localeCompare(left.updated_at ?? left.planned_date ?? '');
 }
 
@@ -113,7 +145,8 @@ function mapPlannedTransaction(plannedTransaction) {
     categoryColor: category?.color ?? null,
     isOpen: isPlannedTransactionOpen(plannedTransaction),
     isCancelled: isPlannedTransactionCancelled(plannedTransaction.status),
-    isCompleted: isPlannedTransactionCompleted(plannedTransaction),
+    isConfirmed: isPlannedTransactionConfirmed(plannedTransaction),
+    isExpired: isPlannedTransactionExpired(plannedTransaction.status),
   };
 }
 
@@ -324,7 +357,7 @@ export async function cancelPlannedTransaction({ id }) {
   const { data, error } = await client
     .from('planned_transactions')
     .update({
-      status: 'cancelled',
+      status: PLANNED_STATUS.CANCELLED,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)
@@ -347,7 +380,11 @@ export async function confirmPlannedTransaction({ userId, plannedTransaction }) 
     throw new Error('Select a category before confirming this planned item.');
   }
 
-  if (isPlannedTransactionCompleted(plannedTransaction)) {
+  if (!isPlannedTransactionOpen(plannedTransaction)) {
+    throw new Error('Only pending planned transactions can be confirmed.');
+  }
+
+  if (isPlannedTransactionConfirmed(plannedTransaction)) {
     throw new Error('This planned transaction has already been confirmed.');
   }
 
@@ -369,7 +406,7 @@ export async function confirmPlannedTransaction({ userId, plannedTransaction }) 
   const { data, error } = await client
     .from('planned_transactions')
     .update({
-      status: 'completed',
+      status: PLANNED_STATUS.CONFIRMED,
       created_transaction_id: transaction.id,
       updated_at: new Date().toISOString(),
     })

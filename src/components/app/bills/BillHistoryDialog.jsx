@@ -21,6 +21,7 @@ function HistorySkeleton() {
 export default function BillHistoryDialog({
   bill,
   historyItems,
+  summary,
   error,
   isLoading,
   isOpen,
@@ -51,6 +52,11 @@ export default function BillHistoryDialog({
   if (!isOpen || !bill) {
     return null;
   }
+
+  const totalPayments = summary?.totalPayments ?? 0;
+  const latestPaymentDate = summary?.latestPaymentDate || '';
+  const latestPaymentAmount = Number(summary?.latestPaymentAmount) || 0;
+  const latestPaymentCurrencyCode = summary?.latestPaymentCurrencyCode;
 
   return (
     <div
@@ -186,6 +192,33 @@ export default function BillHistoryDialog({
 
           {!isLoading && !error && historyItems.length > 0 ? (
             <div className="space-y-3">
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4">
+                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-accent-rgb),0.76)]">
+                    Payments
+                  </p>
+                  <p className="mt-2 text-lg font-extrabold text-[var(--fundly-surface)]">{totalPayments}</p>
+                </div>
+
+                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4">
+                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-accent-rgb),0.76)]">
+                    Latest date
+                  </p>
+                  <p className="mt-2 text-base font-bold text-[var(--fundly-surface)]">
+                    {latestPaymentDate ? formatBillDate(latestPaymentDate) : 'No payments yet'}
+                  </p>
+                </div>
+
+                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4">
+                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-accent-rgb),0.76)]">
+                    Latest amount
+                  </p>
+                  <p className="mt-2 text-base font-bold text-[var(--fundly-surface)]">
+                    {totalPayments > 0 ? formatBillAmount(latestPaymentAmount, latestPaymentCurrencyCode) : 'No payments yet'}
+                  </p>
+                </div>
+              </div>
+
               {historyItems.map((item) => (
                 <div
                   key={item.id}

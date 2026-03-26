@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AppPageHeader from '../../components/app/AppPageHeader';
 import AppSurface from '../../components/app/AppSurface';
+import BillDeleteDialog from '../../components/app/bills/BillDeleteDialog';
 import BillDialog from '../../components/app/bills/BillDialog';
 import BillHistoryDialog from '../../components/app/bills/BillHistoryDialog';
 import BillListItem from '../../components/app/bills/BillListItem';
@@ -11,6 +12,7 @@ import {
   createBill,
   createInitialBillFormState,
   createInitialBillPaymentFormState,
+  deleteBill,
   listBillHistory,
   listBills,
   processBillPayment,
@@ -21,6 +23,10 @@ import { useAuthSession } from '../../lib/auth-context';
 
 function getBillErrorMessage(error, fallbackMessage) {
   const message = error?.message?.toLowerCase?.() ?? '';
+
+  if (error?.code === 'BILL_HAS_LINKED_TRANSACTIONS') {
+    return error.message;
+  }
 
   if (message.includes('foreign key')) {
     return 'The selected category is no longer available. Refresh and try again.';
@@ -110,11 +116,23 @@ function LoadingState() {
   );
 }
 
+function createEmptyHistorySummary() {
+  return {
+    totalPayments: 0,
+    latestPaymentDate: '',
+    latestPaymentAmount: 0,
+    latestPaymentAmountBase: 0,
+    latestPaymentCurrencyCode: 'NIS',
+    latestPaymentBaseCurrencyCode: 'NIS',
+  };
+}
+
 export default function BillsPage() {
   const { user } = useAuthSession();
   const [billCategories, setBillCategories] = useState([]);
   const [bills, setBills] = useState([]);
   const [historyItems, setHistoryItems] = useState([]);
+  const [historySummary, setHistorySummary] = useState(createEmptyHistorySummary());
   const [form, setForm] = useState(createInitialBillFormState());
   const [paymentForm, setPaymentForm] = useState(createInitialBillPaymentFormState(null));
   const [errors, setErrors] = useState({});
@@ -122,25 +140,44 @@ export default function BillsPage() {
   const [status, setStatus] = useState(null);
   const [dialogStatus, setDialogStatus] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const [deleteStatus, setDeleteStatus] = useState(null);
   const [categoriesError, setCategoriesError] = useState('');
   const [billsError, setBillsError] = useState('');
   const [historyError, setHistoryError] = useState('');
   const [isBillDialogOpen, setIsBillDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isPayDialogOpen, setIsPayDialogOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isBillsLoading, setIsBillsLoading] = useState(true);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [isDeletingBill, setIsDeletingBill] = useState(false);
   const [isSubmittingBill, setIsSubmittingBill] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [editingBillId, setEditingBillId] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [billToDelete, setBillToDelete] = useState(null);
   const [selectedBill, setSelectedBill] = useState(null);
   const [historyBill, setHistoryBill] = useState(null);
 
   const hasBillCategories = billCategories.length > 0;
   const hasBills = bills.length > 0;
   const historyBillId = historyBill?.id ?? '';
+  const billToDeleteId = billToDelete?.id ?? '';
   const selectedBillId = selectedBill?.id ?? '';
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const filteredBills = normalizedSearchQuery
+    ? bills.filter((bill) => bill.name.toLowerCase().includes(normalizedSearchQuery))
+    : bills;
+  const hasFilteredBills = filteredBills.length > 0;
+
+  function resolveActiveBillCategoryId(categoryId) {
+    if (categoryId && billCategories.some((category) => category.id === categoryId)) {
+      return categoryId;
+    }
+
+    return billCategories[0]?.id ?? '';
+  }
 
   async function loadCategories() {
     setCategoriesError('');
@@ -157,13 +194,16 @@ export default function BillsPage() {
     }
   }
 
-  async function loadBillsData() {
+  async function loadBillsData({ preserveSelectedBillId = selectedBillId, preserveHistoryBillId = historyBillId } = {}) {
     setBillsError('');
     setIsBillsLoading(true);
 
     try {
       const nextBills = await listBills();
       setBills(nextBills);
+      setSelectedBill(preserveSelectedBillId ? nextBills.find((bill) => bill.id === preserveSelectedBillId) ?? null : null);
+      setHistoryBill(preserveHistoryBillId ? nextBills.find((bill) => bill.id === preserveHistoryBillId) ?? null : null);
+      setBillToDelete(billToDeleteId ? nextBills.find((bill) => bill.id === billToDeleteId) ?? null : null);
     } catch (error) {
       setBillsError(getBillErrorMessage(error, 'We could not load your bills right now.'));
     } finally {
@@ -176,10 +216,12 @@ export default function BillsPage() {
     setHistoryError('');
     setIsHistoryLoading(true);
     setHistoryItems([]);
+    setHistorySummary(createEmptyHistorySummary());
 
     try {
-      const nextHistoryItems = await listBillHistory({ billId: bill.id });
-      setHistoryItems(nextHistoryItems);
+      const { items, summary } = await listBillHistory({ billId: bill.id });
+      setHistoryItems(items);
+      setHistorySummary(summary);
     } catch (error) {
       setHistoryError(getBillErrorMessage(error, 'We could not load this bill history right now.'));
     } finally {
@@ -227,15 +269,32 @@ export default function BillsPage() {
   }
 
   function openEditDialog(bill) {
+    const nextCategoryId = resolveActiveBillCategoryId(bill.categoryId);
+
+    if (!nextCategoryId) {
+      setStatus({
+        tone: 'error',
+        message: 'Add an active spending category before editing this bill.',
+      });
+      return;
+    }
+
     setEditingBillId(bill.id);
     setForm({
       name: bill.name ?? '',
       defaultAmount: bill.defaultAmount ? String(bill.defaultAmount) : '',
-      categoryId: bill.categoryId ?? '',
+      categoryId: nextCategoryId,
       note: bill.note ?? '',
     });
     setErrors({});
-    setDialogStatus(null);
+    setDialogStatus(
+      nextCategoryId !== bill.categoryId
+        ? {
+            tone: 'error',
+            message: 'This bill’s original category is no longer active. Choose a new active category before saving.',
+          }
+        : null,
+    );
     setStatus(null);
     setIsBillDialogOpen(true);
   }
@@ -299,10 +358,27 @@ export default function BillsPage() {
   }
 
   function openPayDialog(bill) {
+    const nextCategoryId = resolveActiveBillCategoryId(bill.categoryId);
+
+    if (!nextCategoryId) {
+      setStatus({
+        tone: 'error',
+        message: 'Add an active spending category before paying this bill.',
+      });
+      return;
+    }
+
     setSelectedBill(bill);
-    setPaymentForm(createInitialBillPaymentFormState(bill));
+    setPaymentForm(createInitialBillPaymentFormState({ ...bill, categoryId: nextCategoryId }));
     setPaymentErrors({});
-    setPaymentStatus(null);
+    setPaymentStatus(
+      nextCategoryId !== bill.categoryId
+        ? {
+            tone: 'error',
+            message: 'This bill’s saved category is no longer active. Pick a valid category before confirming payment.',
+          }
+        : null,
+    );
     setStatus(null);
     setIsPayDialogOpen(true);
   }
@@ -342,16 +418,27 @@ export default function BillsPage() {
     setPaymentStatus(null);
 
     try {
+      const paidBill = selectedBill;
+      const shouldRefreshHistory = isHistoryOpen && historyBillId === paidBill.id;
+
       await processBillPayment({
         userId: user.id,
-        bill: selectedBill,
+        bill: paidBill,
         values: paymentForm,
       });
+
+      await loadBillsData({
+        preserveHistoryBillId: shouldRefreshHistory ? paidBill.id : historyBillId,
+      });
+
+      if (shouldRefreshHistory) {
+        await loadHistory(paidBill);
+      }
 
       closePayDialog();
       setStatus({
         tone: 'success',
-        message: `${selectedBill.name} was recorded as a real transaction.`,
+        message: `${paidBill.name} was recorded as a real transaction.`,
       });
     } catch (error) {
       setPaymentStatus({
@@ -368,10 +455,65 @@ export default function BillsPage() {
     await loadHistory(bill);
   }
 
+  function openDeleteDialog(bill) {
+    setBillToDelete(bill);
+    setDeleteStatus(null);
+    setStatus(null);
+    setIsDeleteDialogOpen(true);
+  }
+
+  function closeDeleteDialog() {
+    setIsDeleteDialogOpen(false);
+    setBillToDelete(null);
+    setDeleteStatus(null);
+  }
+
+  async function handleDeleteBill() {
+    if (!billToDelete?.id) {
+      return;
+    }
+
+    setIsDeletingBill(true);
+    setDeleteStatus(null);
+
+    try {
+      const deletingBill = billToDelete;
+      await deleteBill({ id: deletingBill.id });
+
+      closeDeleteDialog();
+
+      if (editingBillId === deletingBill.id) {
+        closeBillDialog();
+      }
+
+      if (selectedBillId === deletingBill.id) {
+        closePayDialog();
+      }
+
+      if (historyBillId === deletingBill.id) {
+        closeHistoryDialog();
+      }
+
+      await loadBillsData();
+      setStatus({
+        tone: 'success',
+        message: `${deletingBill.name} was deleted.`,
+      });
+    } catch (error) {
+      setDeleteStatus({
+        tone: 'error',
+        message: getBillErrorMessage(error, 'We could not delete this bill right now.'),
+      });
+    } finally {
+      setIsDeletingBill(false);
+    }
+  }
+
   function closeHistoryDialog() {
     setIsHistoryOpen(false);
     setHistoryBill(null);
     setHistoryItems([]);
+    setHistorySummary(createEmptyHistorySummary());
     setHistoryError('');
   }
 
@@ -474,13 +616,41 @@ export default function BillsPage() {
             description="Each bill is a reusable payment template. Quick pay opens a confirmation step, then records a real transaction immediately."
           >
             <div className="space-y-3">
-              {bills.map((bill) => (
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <label className="block sm:max-w-xs sm:flex-1">
+                  <span className="sr-only">Search bills by name</span>
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search bills"
+                    className="w-full rounded-full border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/80 px-4 py-2.5 text-sm text-[var(--fundly-primary)] outline-none transition placeholder:text-[rgba(var(--fundly-primary-rgb),0.42)] focus:border-[rgba(var(--fundly-accent-rgb),0.35)] focus:ring-2 focus:ring-[rgba(var(--fundly-accent-rgb),0.12)]"
+                  />
+                </label>
+
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
+                  {filteredBills.length} visible
+                </p>
+              </div>
+
+              {!hasFilteredBills ? (
+                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/55 px-4 py-5">
+                  <p className="font-bold text-[var(--fundly-primary)]">No bills match that search</p>
+                  <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">
+                    Try a different bill name or clear the search field.
+                  </p>
+                </div>
+              ) : null}
+
+              {filteredBills.map((bill) => (
                 <BillListItem
                   key={bill.id}
                   bill={bill}
+                  onDelete={openDeleteDialog}
                   onEdit={openEditDialog}
                   onPay={openPayDialog}
                   onViewHistory={(nextBill) => void handleViewHistory(nextBill)}
+                  isDeleting={isDeleteDialogOpen && billToDeleteId === bill.id && isDeletingBill}
                   isPaying={isPayDialogOpen && selectedBillId === bill.id}
                   isViewingHistory={isHistoryOpen && historyBillId === bill.id && isHistoryLoading}
                 />
@@ -503,6 +673,15 @@ export default function BillsPage() {
         onSubmit={handleBillSubmit}
       />
 
+      <BillDeleteDialog
+        bill={billToDelete}
+        status={deleteStatus}
+        isDeleting={isDeletingBill}
+        isOpen={isDeleteDialogOpen}
+        onCancel={closeDeleteDialog}
+        onConfirm={() => void handleDeleteBill()}
+      />
+
       <BillPayDialog
         bill={selectedBill}
         categories={billCategories}
@@ -519,6 +698,7 @@ export default function BillsPage() {
       <BillHistoryDialog
         bill={historyBill}
         historyItems={historyItems}
+        summary={historySummary}
         error={historyError}
         isLoading={isHistoryLoading}
         isOpen={isHistoryOpen}

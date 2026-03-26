@@ -8,6 +8,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import CategoriesPage from './pages/app/CategoriesPage';
 import BillsPage from './pages/app/BillsPage';
 import HomePage from './pages/app/HomePage';
+import IncomePage from './pages/app/IncomePage';
 import SettingsPage from './pages/app/SettingsPage';
 import TransactionsPage from './pages/app/TransactionsPage';
 
@@ -64,6 +65,7 @@ export default function App() {
         }
       >
         <Route index element={<HomePage />} />
+        <Route path="income" element={<IncomePage />} />
         <Route path="bills" element={<BillsPage />} />
         <Route path="transactions" element={<TransactionsPage />} />
         <Route path="categories" element={<CategoriesPage />} />

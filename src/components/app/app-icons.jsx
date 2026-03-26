@@ -37,6 +37,16 @@ export function BillsIcon() {
   );
 }
 
+export function IncomeIcon() {
+  return (
+    <IconBase>
+      <path d="M12 19V5" />
+      <path d="m7 10 5-5 5 5" />
+      <path d="M6 19h12" />
+    </IconBase>
+  );
+}
+
 export function CategoriesIcon() {
   return (
     <IconBase>

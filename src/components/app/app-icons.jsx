@@ -26,6 +26,17 @@ export function TransactionsIcon() {
   );
 }
 
+export function BillsIcon() {
+  return (
+    <IconBase>
+      <rect x="5" y="4.5" width="14" height="15" rx="2" />
+      <path d="M8.5 8.5h7" />
+      <path d="M8.5 12h7" />
+      <path d="M8.5 15.5h4.5" />
+    </IconBase>
+  );
+}
+
 export function CategoriesIcon() {
   return (
     <IconBase>

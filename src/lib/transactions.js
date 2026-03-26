@@ -1,7 +1,7 @@
 import { ensureSupabase } from './supabase';
 
 const transactionColumns =
-  'id, user_id, transaction_kind, origin, title, amount_original, currency_code, conversion_rate, amount_base, base_currency_code, transaction_date, note, merchant_or_source, is_from_savings, created_at, updated_at';
+  'id, user_id, bill_id, transaction_kind, origin, title, amount_original, currency_code, conversion_rate, amount_base, base_currency_code, transaction_date, note, merchant_or_source, is_from_savings, created_at, updated_at';
 const transactionSplitColumns = 'id, transaction_id, category_id, amount_original, amount_base, note, created_at, updated_at';
 const transactionListColumns = `${transactionColumns}, transaction_splits(${transactionSplitColumns}, category:categories(id, name, color))`;
 
@@ -125,6 +125,7 @@ export async function listTransactions({ page = 1, pageSize = transactionsPageSi
 
     return {
       ...transaction,
+      billId: transaction.bill_id ?? null,
       primarySplit: primarySplit ?? null,
       categoryName: category?.name ?? 'Unknown category',
       categoryColor: category?.color ?? null,
@@ -151,6 +152,7 @@ export async function createTransaction({ userId, values }) {
     .from('transactions')
     .insert({
       user_id: userId,
+      bill_id: values.billId || null,
       title: normalizeOptionalText(values.title),
       amount_original: amountOriginal,
       currency_code: currencyCode,
@@ -162,7 +164,7 @@ export async function createTransaction({ userId, values }) {
       merchant_or_source: normalizeOptionalText(values.merchantOrSource),
       is_from_savings: Boolean(values.isFromSavings),
       transaction_kind: 'expense',
-      origin: 'manual',
+      origin: values.origin || 'manual',
       updated_at: new Date().toISOString(),
     })
     .select(transactionColumns)

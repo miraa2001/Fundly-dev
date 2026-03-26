@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
-import { CategoriesIcon, HomeIcon, SettingsIcon, TransactionsIcon } from './app-icons';
+import { BillsIcon, CategoriesIcon, HomeIcon, SettingsIcon, TransactionsIcon } from './app-icons';
 
 const navItems = [
   { label: 'Home', to: '/app', Icon: HomeIcon, end: true },
+  { label: 'Bills', to: '/app/bills', Icon: BillsIcon },
   { label: 'Transactions', to: '/app/transactions', Icon: TransactionsIcon },
   { label: 'Categories', to: '/app/categories', Icon: CategoriesIcon },
   { label: 'Settings', to: '/app/settings', Icon: SettingsIcon },
@@ -38,7 +39,7 @@ export default function AppNavigation({ variant = 'mobile' }) {
 
   return (
     <nav className="rounded-[1.9rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-[linear-gradient(180deg,rgba(var(--fundly-surface-rgb),0.97),rgba(var(--fundly-surface-rgb),0.92))] px-2 py-2 shadow-[0_20px_40px_rgba(var(--fundly-deep-rgb),0.18)] backdrop-blur-2xl ring-1 ring-[rgba(var(--fundly-accent-rgb),0.12)]">
-      <div className="grid grid-cols-4 gap-1">
+      <div className="grid grid-cols-5 gap-1">
         {navItems.map(({ label, to, Icon, end }) => (
           <NavLink
             key={to}

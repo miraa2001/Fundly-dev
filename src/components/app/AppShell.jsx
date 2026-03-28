@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import fundlyLogo from '../../../fundly-logo.png';
 import { useAuthSession } from '../../lib/auth-context';
 import AppNavigation from './AppNavigation';
+import AppFloatingMoneyActions from './fab/AppFloatingMoneyActions';
 
 export default function AppShell() {
   const { user } = useAuthSession();
@@ -83,6 +84,8 @@ export default function AppShell() {
           <AppNavigation variant="mobile" />
         </div>
       </div>
+
+      <AppFloatingMoneyActions />
     </main>
   );
 }

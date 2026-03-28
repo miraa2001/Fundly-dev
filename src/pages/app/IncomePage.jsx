@@ -7,6 +7,7 @@ import IncomeSourceDialog from '../../components/app/income/IncomeSourceDialog';
 import IncomeSourceListItem from '../../components/app/income/IncomeSourceListItem';
 import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
+import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import { useAuthSession } from '../../lib/auth-context';
 import { listCategories } from '../../lib/categories';
 import {
@@ -268,6 +269,17 @@ export default function IncomePage() {
     void loadSources();
     void loadEntries();
     void loadIncomeCategories();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+
+    return subscribeMoneyDataUpdated(() => {
+      void loadSummary();
+      void loadEntries();
+    });
   }, [user?.id]);
 
   useEffect(() => {

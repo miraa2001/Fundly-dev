@@ -6,6 +6,7 @@ import TransactionLoader from '../../components/app/transactions/TransactionLoad
 import TransactionListItem from '../../components/app/transactions/TransactionListItem';
 import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
+import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import { listCategories } from '../../lib/categories';
 import { useAuthSession } from '../../lib/auth-context';
 import {
@@ -171,6 +172,17 @@ export default function TransactionsPage() {
 
     void loadTransactionsPage(currentPage);
   }, [currentPage, user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+
+    return subscribeMoneyDataUpdated(() => {
+      setCurrentPage(1);
+      void loadTransactionsPage(1);
+    });
+  }, [user?.id]);
 
   useEffect(() => {
     if (activeCategories.length === 0) {

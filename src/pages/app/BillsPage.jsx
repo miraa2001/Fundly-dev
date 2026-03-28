@@ -8,6 +8,7 @@ import BillListItem from '../../components/app/bills/BillListItem';
 import BillPayDialog from '../../components/app/bills/BillPayDialog';
 import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
+import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import {
   createBill,
   createInitialBillFormState,
@@ -237,6 +238,19 @@ export default function BillsPage() {
     void loadCategories();
     void loadBillsData();
   }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+
+    return subscribeMoneyDataUpdated(() => {
+      void loadBillsData({
+        preserveSelectedBillId: selectedBillId,
+        preserveHistoryBillId: historyBillId,
+      });
+    });
+  }, [historyBillId, selectedBillId, user?.id]);
 
   useEffect(() => {
     if (billCategories.length === 0) {

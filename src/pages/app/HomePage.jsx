@@ -3,6 +3,7 @@ import AppPageHeader from '../../components/app/AppPageHeader';
 import AppSurface from '../../components/app/AppSurface';
 import StatusMessage from '../../components/auth/StatusMessage';
 import { useAuthSession } from '../../lib/auth-context';
+import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import { defaultCategoryColor } from '../../lib/categories';
 import { loadHomeDashboard } from '../../lib/home';
 import { defaultBaseCurrency, formatTransactionAmount, formatTransactionDate } from '../../lib/transactions';
@@ -90,6 +91,16 @@ export default function HomePage() {
     }
 
     void loadDashboard();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+
+    return subscribeMoneyDataUpdated(() => {
+      void loadDashboard();
+    });
   }, [user?.id]);
 
   const summaryCards = dashboard

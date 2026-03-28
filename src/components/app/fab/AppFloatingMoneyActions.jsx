@@ -741,8 +741,8 @@ export default function AppFloatingMoneyActions() {
       )}
 
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[34] px-4 pb-4 sm:px-6 lg:px-8">
-        <div className="pointer-events-auto mx-auto flex max-w-7xl justify-end">
-          <div className="relative flex flex-col items-end">
+        <div className="mx-auto flex max-w-7xl justify-end">
+          <div className="pointer-events-auto relative flex flex-col items-end">
             <div
               className={[
                 'mb-3 w-[min(100vw-2rem,22rem)] transition-all duration-200 ease-out sm:w-[20rem]',

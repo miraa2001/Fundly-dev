@@ -1,12 +1,13 @@
 import { listCategories } from './categories';
 import { ensureSupabase } from './supabase';
+import { defaultBaseCurrency } from './transactions';
 
 const recentTransactionColumns =
-  'id, title, merchant_or_source, transaction_kind, amount_original, currency_code, amount_base, transaction_date, created_at, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
+  'id, title, merchant_or_source, transaction_kind, amount_original, currency_code, amount_base, transaction_date, is_from_savings, created_at, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
 const monthlyExpenseColumns =
   'id, amount_base, transaction_date, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
 const incomeEntryColumns = 'id, amount_base, entry_date';
-const profileColumns = 'id, savings_balance';
+const profileColumns = 'id, savings_balance, base_currency_code, base_currency';
 
 function formatDateOnly(date) {
   const year = date.getFullYear();
@@ -19,6 +20,11 @@ function formatDateOnly(date) {
 function toNumber(value) {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
+function normalizeCurrencyCode(value, fallback = defaultBaseCurrency) {
+  const normalizedValue = value?.trim().toUpperCase() ?? '';
+  return normalizedValue || fallback;
 }
 
 function getPrimaryCategory(transaction) {
@@ -182,6 +188,7 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
   const totalIncome = (incomeEntries ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
   const totalExpenses = (monthlyExpenseTransactions ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
   const savingsBalance = toNumber(profile?.savings_balance);
+  const savingsBalanceCurrencyCode = normalizeCurrencyCode(profile?.base_currency_code ?? profile?.base_currency);
   const budgetHighlights = buildBudgetHighlights({
     categories,
     monthlyExpenseTransactions: monthlyExpenseTransactions ?? [],
@@ -193,6 +200,7 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
       totalIncome,
       totalExpenses,
       savingsBalance,
+      savingsBalanceCurrencyCode,
     },
     recentTransactions: (recentTransactions ?? []).map((transaction) => {
       const category = getPrimaryCategory(transaction);
@@ -205,6 +213,7 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
         amountBase: toNumber(transaction.amount_base),
         currencyCode: transaction.currency_code,
         transactionDate: transaction.transaction_date,
+        isFromSavings: Boolean(transaction.is_from_savings),
         categoryName: category?.name ?? 'Uncategorized',
         categoryColor: category?.color ?? null,
       };

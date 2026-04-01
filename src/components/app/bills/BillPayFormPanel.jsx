@@ -220,6 +220,78 @@ export default function BillPayFormPanel({
             className={`${fieldClassName} resize-none`}
           />
         </div>
+
+        <button
+          type="button"
+          role="switch"
+          aria-checked={form.isFromSavings}
+          onClick={() => onChange('isFromSavings', !form.isFromSavings)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '12px',
+            padding: '10px 14px',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+        >
+          <div style={{ textAlign: 'left' }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'rgba(var(--fundly-accent-rgb),0.88)',
+              }}
+            >
+              Use savings
+            </p>
+            <p
+              style={{
+                margin: '2px 0 0',
+                fontSize: '0.75rem',
+                color: form.isFromSavings ? 'var(--fundly-accent)' : 'rgba(var(--fundly-surface-rgb),0.46)',
+              }}
+            >
+              {form.isFromSavings ? 'This bill payment comes from your savings balance' : 'Use regular spending'}
+            </p>
+          </div>
+          <span
+            style={{
+              position: 'relative',
+              display: 'inline-flex',
+              height: '26px',
+              width: '46px',
+              borderRadius: '999px',
+              border: '1px solid',
+              borderColor: form.isFromSavings ? 'var(--fundly-accent)' : 'rgba(var(--fundly-surface-rgb),0.15)',
+              background: form.isFromSavings
+                ? 'linear-gradient(180deg,var(--fundly-accent-soft) 0%,var(--fundly-accent) 58%,var(--fundly-warm) 100%)'
+                : 'rgba(255,255,255,0.08)',
+              transition: 'all 0.25s',
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                position: 'absolute',
+                top: '3px',
+                left: form.isFromSavings ? '22px' : '3px',
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                background: 'var(--fundly-surface)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                transition: 'left 0.25s cubic-bezier(0.22,1,0.36,1)',
+              }}
+            />
+          </span>
+        </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3 pt-1">

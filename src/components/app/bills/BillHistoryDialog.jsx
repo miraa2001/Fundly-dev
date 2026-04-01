@@ -238,6 +238,7 @@ export default function BillHistoryDialog({
                         <span>{item.categoryName}</span>
                         <span>{formatBillDate(item.transaction_date)}</span>
                         {item.merchant_or_source ? <span>{item.merchant_or_source}</span> : null}
+                        {item.isFromSavings ? <span>From savings</span> : null}
                       </div>
                     </div>
                     <span className="shrink-0 text-sm font-bold text-[var(--fundly-accent)]">

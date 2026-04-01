@@ -11,9 +11,9 @@ import {
 
 const billColumns = 'id, user_id, name, default_amount, category_id, note, created_at, updated_at, category:categories(id, name, color, is_archived)';
 const billHistoryColumns =
-  'id, user_id, bill_id, title, amount_original, currency_code, amount_base, base_currency_code, transaction_date, note, merchant_or_source, created_at, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
+  'id, user_id, bill_id, title, amount_original, currency_code, amount_base, base_currency_code, transaction_date, note, merchant_or_source, is_from_savings, created_at, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
 const billPaymentSummaryColumns =
-  'id, bill_id, amount_original, currency_code, amount_base, base_currency_code, transaction_date, created_at';
+  'id, bill_id, amount_original, currency_code, amount_base, base_currency_code, transaction_date, is_from_savings, created_at';
 
 function normalizeOptionalText(value) {
   const trimmedValue = value?.trim() ?? '';
@@ -50,6 +50,7 @@ function mapBill(bill) {
     lastPaidAmountBase: Number(bill.lastPaidAmountBase) || 0,
     lastPaidCurrencyCode: bill.lastPaidCurrencyCode || defaultTransactionCurrency,
     lastPaidBaseCurrencyCode: bill.lastPaidBaseCurrencyCode || defaultBaseCurrency,
+    lastPaidFromSavings: Boolean(bill.lastPaidFromSavings),
   };
 }
 
@@ -62,6 +63,7 @@ function mapBillHistoryItem(transaction) {
     title,
     amountOriginal: Number(transaction.amount_original) || 0,
     amountBase: Number(transaction.amount_base) || 0,
+    isFromSavings: Boolean(transaction.is_from_savings),
     categoryName: category?.name || 'Unknown category',
     categoryColor: category?.color || defaultCategoryColor,
   };
@@ -91,6 +93,7 @@ function summarizeBillPayments(transactions) {
       lastPaidAmountBase: Number(transaction.amount_base) || 0,
       lastPaidCurrencyCode: transaction.currency_code || defaultTransactionCurrency,
       lastPaidBaseCurrencyCode: transaction.base_currency_code || defaultBaseCurrency,
+      lastPaidFromSavings: Boolean(transaction.is_from_savings),
     });
   }
 
@@ -123,6 +126,7 @@ export function createInitialBillPaymentFormState(bill) {
     categoryId: bill?.categoryId || '',
     transactionDate: getTodayDateInputValue(),
     note: bill?.note || '',
+    isFromSavings: false,
   };
 }
 
@@ -292,7 +296,7 @@ export async function processBillPayment({ userId, bill, values }) {
       categoryId: values.categoryId,
       merchantOrSource: '',
       note: values.note,
-      isFromSavings: false,
+      isFromSavings: Boolean(values.isFromSavings),
       billId: bill.id,
     },
   });

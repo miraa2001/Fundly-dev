@@ -12,7 +12,7 @@ export default function BillListItem({
 }) {
   const hasPayments = (bill.paymentCount ?? 0) > 0;
   const lastPaidLabel = hasPayments
-    ? `Last paid ${formatBillDate(bill.lastPaidAt)}${bill.lastPaidAmount ? ` • ${formatBillAmount(bill.lastPaidAmount, bill.lastPaidCurrencyCode)}` : ''}`
+    ? `Last paid ${formatBillDate(bill.lastPaidAt)}${bill.lastPaidAmount ? ` • ${formatBillAmount(bill.lastPaidAmount, bill.lastPaidCurrencyCode)}` : ''}${bill.lastPaidFromSavings ? ' • from savings' : ''}`
     : 'Never paid yet';
 
   return (

@@ -1,4 +1,5 @@
 import { ensureSupabase } from './supabase';
+import { planSavingsDeduction, saveSavingsBalance, savingsErrorCodes } from './savings';
 
 const transactionColumns =
   'id, user_id, bill_id, transaction_kind, origin, title, amount_original, currency_code, conversion_rate, amount_base, base_currency_code, transaction_date, note, merchant_or_source, is_from_savings, created_at, updated_at';
@@ -40,6 +41,39 @@ function getConversionRate(currencyCode) {
 
 function getBaseAmount(amountOriginal, conversionRate) {
   return (Number(amountOriginal) * Number(conversionRate)).toFixed(2);
+}
+
+function buildTransactionInsertPayload({ userId, values }) {
+  const currencyCode = normalizeCurrencyCode(values.currency);
+  const amountOriginal = normalizeStoredAmount(values.amount);
+  const conversionRate = getConversionRate(currencyCode);
+  const amountBase = getBaseAmount(amountOriginal, conversionRate);
+  const baseCurrencyCode = defaultBaseCurrency;
+
+  return {
+    currencyCode,
+    amountOriginal,
+    conversionRate,
+    amountBase,
+    baseCurrencyCode,
+    insertPayload: {
+      user_id: userId,
+      bill_id: values.billId || null,
+      title: normalizeOptionalText(values.title),
+      amount_original: amountOriginal,
+      currency_code: currencyCode,
+      conversion_rate: conversionRate,
+      amount_base: amountBase,
+      base_currency_code: baseCurrencyCode,
+      transaction_date: values.transactionDate,
+      note: normalizeOptionalText(values.note),
+      merchant_or_source: normalizeOptionalText(values.merchantOrSource),
+      is_from_savings: Boolean(values.isFromSavings),
+      transaction_kind: 'expense',
+      origin: values.origin || 'manual',
+      updated_at: new Date().toISOString(),
+    },
+  };
 }
 
 function getTransactionCategory(transaction) {
@@ -143,30 +177,11 @@ export async function listTransactions({ page = 1, pageSize = transactionsPageSi
 
 export async function createTransaction({ userId, values }) {
   const client = ensureSupabase();
-  const currencyCode = normalizeCurrencyCode(values.currency);
-  const amountOriginal = normalizeStoredAmount(values.amount);
-  const conversionRate = getConversionRate(currencyCode);
-  const amountBase = getBaseAmount(amountOriginal, conversionRate);
+  const transactionDraft = buildTransactionInsertPayload({ userId, values });
 
   const { data, error } = await client
     .from('transactions')
-    .insert({
-      user_id: userId,
-      bill_id: values.billId || null,
-      title: normalizeOptionalText(values.title),
-      amount_original: amountOriginal,
-      currency_code: currencyCode,
-      conversion_rate: conversionRate,
-      amount_base: amountBase,
-      base_currency_code: defaultBaseCurrency,
-      transaction_date: values.transactionDate,
-      note: normalizeOptionalText(values.note),
-      merchant_or_source: normalizeOptionalText(values.merchantOrSource),
-      is_from_savings: Boolean(values.isFromSavings),
-      transaction_kind: 'expense',
-      origin: values.origin || 'manual',
-      updated_at: new Date().toISOString(),
-    })
+    .insert(transactionDraft.insertPayload)
     .select(transactionColumns)
     .single();
 
@@ -200,6 +215,18 @@ export async function createTransactionSplit({ transactionId, categoryId, amount
 }
 
 export async function createTransactionWithSplit({ userId, values }) {
+  const transactionDraft = buildTransactionInsertPayload({ userId, values });
+  const shouldUseSavings = Boolean(values.isFromSavings);
+  let savingsPlan = null;
+
+  if (shouldUseSavings) {
+    savingsPlan = await planSavingsDeduction({
+      userId,
+      amountBase: transactionDraft.amountBase,
+      transactionBaseCurrencyCode: transactionDraft.baseCurrencyCode,
+    });
+  }
+
   const transaction = await createTransaction({ userId, values });
 
   try {
@@ -210,6 +237,46 @@ export async function createTransactionWithSplit({ userId, values }) {
       amountBase: transaction.amount_base,
       note: values.note,
     });
+
+    if (savingsPlan) {
+      try {
+        const savingsProfile = await saveSavingsBalance({
+          userId,
+          nextSavingsBalance: savingsPlan.nextSavingsBalance,
+        });
+
+        return {
+          transaction,
+          split,
+          savingsProfile,
+        };
+      } catch (error) {
+        let cleanupSucceeded = false;
+
+        try {
+          // We do not have a multi-table DB transaction here, so if savings sync fails
+          // we roll the transaction back and surface a clear error instead of silently drifting.
+          await bestEffortDeleteTransaction(transaction.id);
+          cleanupSucceeded = true;
+        } catch {
+          cleanupSucceeded = false;
+        }
+
+        if (cleanupSucceeded) {
+          const savingsSyncError = new Error(
+            'We could not update your savings balance, so this transaction was not saved. Please try again.',
+          );
+          savingsSyncError.code = savingsErrorCodes.syncFailed;
+          throw savingsSyncError;
+        }
+
+        const uncertainSavingsSyncError = new Error(
+          'We could not safely sync your savings balance after creating this transaction. Refresh the app and verify your latest transaction and savings balance before trying again.',
+        );
+        uncertainSavingsSyncError.code = savingsErrorCodes.syncUncertain;
+        throw uncertainSavingsSyncError;
+      }
+    }
 
     return {
       transaction,

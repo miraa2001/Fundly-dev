@@ -117,7 +117,10 @@ export default function HomePage() {
         },
         {
           label: 'Savings balance',
-          value: formatTransactionAmount(dashboard.summary.savingsBalance, defaultBaseCurrency),
+          value: formatTransactionAmount(
+            dashboard.summary.savingsBalance,
+            dashboard.summary.savingsBalanceCurrencyCode || defaultBaseCurrency,
+          ),
           detail: 'Pulled directly from your profile savings balance.',
         },
       ]
@@ -193,6 +196,7 @@ export default function HomePage() {
                     </div>
                     <p className="mt-1 text-sm text-[rgba(var(--fundly-primary-rgb),0.7)]">
                       {item.categoryName} . {formatTransactionDate(item.transactionDate)}
+                      {item.isFromSavings ? ' . From savings' : ''}
                     </p>
                   </div>
                   <p className="shrink-0 text-sm font-bold text-[var(--fundly-primary)]">{formatSignedAmount(item)}</p>

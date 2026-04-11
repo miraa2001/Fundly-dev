@@ -585,7 +585,7 @@ export default function AppFloatingMoneyActions() {
       nextCategoryId !== bill.categoryId
         ? {
             tone: 'error',
-            message: 'This bill’s saved category is no longer active. Pick a valid category before confirming payment.',
+            message: 'This bill\'s saved category is no longer active. Pick a valid category before confirming payment.',
           }
         : null,
     );

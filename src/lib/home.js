@@ -5,8 +5,8 @@ import { defaultBaseCurrency } from './transactions';
 const recentTransactionColumns =
   'id, title, merchant_or_source, transaction_kind, amount_original, currency_code, amount_base, transaction_date, is_from_savings, created_at, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
 const monthlyExpenseColumns =
-  'id, amount_base, transaction_date, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
-const incomeEntryColumns = 'id, amount_base, entry_date';
+  'id, amount_base, base_currency_code, transaction_date, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
+const incomeEntryColumns = 'id, amount_base, base_currency_code, entry_date';
 const profileColumns = 'id, savings_balance, base_currency_code, base_currency';
 
 function formatDateOnly(date) {
@@ -25,6 +25,20 @@ function toNumber(value) {
 function normalizeCurrencyCode(value, fallback = defaultBaseCurrency) {
   const normalizedValue = value?.trim().toUpperCase() ?? '';
   return normalizedValue || fallback;
+}
+
+function getSummaryCurrencyCode(items, fieldName, fallbackCurrencyCode) {
+  const currencyCodes = new Set(
+    (items ?? [])
+      .map((item) => normalizeCurrencyCode(item?.[fieldName], fallbackCurrencyCode))
+      .filter(Boolean),
+  );
+
+  if (currencyCodes.size === 1) {
+    return Array.from(currencyCodes)[0];
+  }
+
+  return fallbackCurrencyCode;
 }
 
 function getPrimaryCategory(transaction) {
@@ -189,6 +203,16 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
   const totalExpenses = (monthlyExpenseTransactions ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
   const savingsBalance = toNumber(profile?.savings_balance);
   const savingsBalanceCurrencyCode = normalizeCurrencyCode(profile?.base_currency_code ?? profile?.base_currency);
+  const incomeBaseCurrencyCode = getSummaryCurrencyCode(
+    incomeEntries,
+    'base_currency_code',
+    savingsBalanceCurrencyCode,
+  );
+  const expenseBaseCurrencyCode = getSummaryCurrencyCode(
+    monthlyExpenseTransactions,
+    'base_currency_code',
+    defaultBaseCurrency,
+  );
   const budgetHighlights = buildBudgetHighlights({
     categories,
     monthlyExpenseTransactions: monthlyExpenseTransactions ?? [],
@@ -198,7 +222,9 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
     monthLabel,
     summary: {
       totalIncome,
+      incomeBaseCurrencyCode,
       totalExpenses,
+      expenseBaseCurrencyCode,
       savingsBalance,
       savingsBalanceCurrencyCode,
     },

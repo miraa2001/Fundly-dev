@@ -276,7 +276,13 @@ export default function IncomePage() {
       return undefined;
     }
 
-    return subscribeMoneyDataUpdated(() => {
+    return subscribeMoneyDataUpdated((event) => {
+      const updateSource = event?.detail?.source;
+
+      if (updateSource && updateSource !== 'income') {
+        return;
+      }
+
       void loadSummary();
       void loadEntries();
     });
@@ -387,12 +393,12 @@ export default function IncomePage() {
     if (nextSourceId !== entry.sourceId) {
       setEntryDialogStatus({
         tone: 'error',
-        message: 'This entry’s original source is archived. Choose an active source before saving.',
+        message: 'This entry\'s original source is archived. Choose an active source before saving.',
       });
     } else if (entry.categoryId && nextCategoryId !== entry.categoryId) {
       setEntryDialogStatus({
         tone: 'error',
-        message: 'This entry’s saved category is no longer active. You can keep the entry uncategorized or choose a new income category.',
+        message: 'This entry\'s saved category is no longer active. You can keep the entry uncategorized or choose a new income category.',
       });
     } else {
       setEntryDialogStatus(null);

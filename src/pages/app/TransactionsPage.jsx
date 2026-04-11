@@ -178,7 +178,13 @@ export default function TransactionsPage() {
       return undefined;
     }
 
-    return subscribeMoneyDataUpdated(() => {
+    return subscribeMoneyDataUpdated((event) => {
+      const updateSource = event?.detail?.source;
+
+      if (updateSource === 'income') {
+        return;
+      }
+
       setCurrentPage(1);
       void loadTransactionsPage(1);
     });

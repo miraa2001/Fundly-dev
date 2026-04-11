@@ -107,12 +107,18 @@ export default function HomePage() {
     ? [
         {
           label: 'Income this month',
-          value: formatTransactionAmount(dashboard.summary.totalIncome, defaultBaseCurrency),
+          value: formatTransactionAmount(
+            dashboard.summary.totalIncome,
+            dashboard.summary.incomeBaseCurrencyCode || defaultBaseCurrency,
+          ),
           detail: `Recorded income entries for ${dashboard.monthLabel}.`,
         },
         {
           label: 'Expenses this month',
-          value: formatTransactionAmount(dashboard.summary.totalExpenses, defaultBaseCurrency),
+          value: formatTransactionAmount(
+            dashboard.summary.totalExpenses,
+            dashboard.summary.expenseBaseCurrencyCode || defaultBaseCurrency,
+          ),
           detail: 'Calculated from amount_base across this month\'s transactions.',
         },
         {
@@ -128,6 +134,7 @@ export default function HomePage() {
 
   const budgetHighlights = dashboard?.budgetHighlights;
   const recentTransactions = dashboard?.recentTransactions ?? [];
+  const expenseBaseCurrencyCode = dashboard?.summary?.expenseBaseCurrencyCode || defaultBaseCurrency;
 
   return (
     <div className="space-y-5">
@@ -242,8 +249,8 @@ export default function HomePage() {
                           <p className="truncate font-bold text-[var(--fundly-primary)]">{item.name}</p>
                         </div>
                         <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">
-                          {formatTransactionAmount(item.spent, defaultBaseCurrency)} spent of{' '}
-                          {formatTransactionAmount(item.budgetLimit, defaultBaseCurrency)}.
+                          {formatTransactionAmount(item.spent, expenseBaseCurrencyCode)} spent of{' '}
+                          {formatTransactionAmount(item.budgetLimit, expenseBaseCurrencyCode)}.
                         </p>
                       </div>
                       <span
@@ -269,8 +276,8 @@ export default function HomePage() {
                     </div>
                     <p className="mt-3 text-sm font-medium text-[rgba(var(--fundly-primary-rgb),0.72)]">
                       {isOverBudget
-                        ? `Over budget by ${formatTransactionAmount(Math.abs(item.remaining), defaultBaseCurrency)}.`
-                        : `${formatTransactionAmount(item.remaining, defaultBaseCurrency)} remaining.`}
+                        ? `Over budget by ${formatTransactionAmount(Math.abs(item.remaining), expenseBaseCurrencyCode)}.`
+                        : `${formatTransactionAmount(item.remaining, expenseBaseCurrencyCode)} remaining.`}
                     </p>
                   </div>
                 );

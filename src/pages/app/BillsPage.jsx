@@ -205,8 +205,10 @@ export default function BillsPage() {
       setSelectedBill(preserveSelectedBillId ? nextBills.find((bill) => bill.id === preserveSelectedBillId) ?? null : null);
       setHistoryBill(preserveHistoryBillId ? nextBills.find((bill) => bill.id === preserveHistoryBillId) ?? null : null);
       setBillToDelete(billToDeleteId ? nextBills.find((bill) => bill.id === billToDeleteId) ?? null : null);
+      return nextBills;
     } catch (error) {
       setBillsError(getBillErrorMessage(error, 'We could not load your bills right now.'));
+      return [];
     } finally {
       setIsBillsLoading(false);
     }
@@ -244,13 +246,36 @@ export default function BillsPage() {
       return undefined;
     }
 
-    return subscribeMoneyDataUpdated(() => {
-      void loadBillsData({
-        preserveSelectedBillId: selectedBillId,
-        preserveHistoryBillId: historyBillId,
-      });
+    return subscribeMoneyDataUpdated((event) => {
+      const updateSource = event?.detail?.source;
+      const updatedBillId = event?.detail?.billId;
+
+      if (updateSource && updateSource !== 'bill-payment') {
+        return;
+      }
+
+      void (async () => {
+        const nextBills = await loadBillsData({
+          preserveSelectedBillId: selectedBillId,
+          preserveHistoryBillId: historyBillId,
+        });
+
+        if (!isHistoryOpen || !historyBillId) {
+          return;
+        }
+
+        if (updatedBillId && updatedBillId !== historyBillId) {
+          return;
+        }
+
+        const nextHistoryBill = nextBills.find((bill) => bill.id === historyBillId) ?? historyBill;
+
+        if (nextHistoryBill) {
+          await loadHistory(nextHistoryBill);
+        }
+      })();
     });
-  }, [historyBillId, selectedBillId, user?.id]);
+  }, [historyBill, historyBillId, isHistoryOpen, selectedBillId, user?.id]);
 
   useEffect(() => {
     if (billCategories.length === 0) {
@@ -305,7 +330,7 @@ export default function BillsPage() {
       nextCategoryId !== bill.categoryId
         ? {
             tone: 'error',
-            message: 'This bill’s original category is no longer active. Choose a new active category before saving.',
+            message: 'This bill\'s original category is no longer active. Choose a new active category before saving.',
           }
         : null,
     );
@@ -389,7 +414,7 @@ export default function BillsPage() {
       nextCategoryId !== bill.categoryId
         ? {
             tone: 'error',
-            message: 'This bill’s saved category is no longer active. Pick a valid category before confirming payment.',
+            message: 'This bill\'s saved category is no longer active. Pick a valid category before confirming payment.',
           }
         : null,
     );

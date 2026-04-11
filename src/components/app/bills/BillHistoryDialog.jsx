@@ -8,10 +8,10 @@ function HistorySkeleton() {
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
-          className="animate-pulse rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4"
+          className="animate-pulse rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4"
         >
-          <div className="h-5 w-32 rounded-full bg-[rgba(var(--fundly-surface-rgb),0.10)]" />
-          <div className="mt-3 h-4 w-44 rounded-full bg-[rgba(var(--fundly-surface-rgb),0.08)]" />
+          <div className="h-5 w-32 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]" />
+          <div className="mt-3 h-4 w-44 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.08)]" />
         </div>
       ))}
     </div>
@@ -67,8 +67,7 @@ export default function BillHistoryDialog({
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center',
-        background: 'rgba(var(--fundly-deep-rgb),0.78)',
-        backdropFilter: 'blur(6px)',
+        background: 'rgba(var(--fundly-deep-rgb),0.08)',
       }}
       className="sm:items-center sm:p-6"
     >
@@ -86,9 +85,9 @@ export default function BillHistoryDialog({
           width: '100%',
           maxWidth: '600px',
           borderRadius: '28px 28px 0 0',
-          background: 'var(--fundly-deep)',
-          border: '1px solid rgba(var(--fundly-accent-rgb),0.18)',
-          boxShadow: '0 -20px 60px rgba(0,0,0,0.5)',
+          background: 'var(--fundly-surface)',
+          border: '1px solid rgba(var(--fundly-primary-rgb),0.08)',
+          boxShadow: '0 10px 30px rgba(var(--fundly-deep-rgb),0.10)',
           maxHeight: 'calc(100dvh - 1rem)',
           display: 'flex',
           flexDirection: 'column',
@@ -99,7 +98,7 @@ export default function BillHistoryDialog({
         <div
           style={{
             padding: '20px 20px 16px',
-            borderBottom: '1px solid rgba(255,255,255,0.07)',
+            borderBottom: '1px solid rgba(var(--fundly-primary-rgb),0.08)',
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
@@ -112,10 +111,10 @@ export default function BillHistoryDialog({
               style={{
                 margin: 0,
                 fontSize: '0.6rem',
-                fontWeight: 700,
-                letterSpacing: '0.28em',
+                fontWeight: 500,
+                letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: 'var(--fundly-accent)',
+                color: 'rgba(var(--fundly-primary-rgb),0.56)',
               }}
             >
               Bills
@@ -124,8 +123,8 @@ export default function BillHistoryDialog({
               style={{
                 margin: '6px 0 0',
                 fontSize: '1.6rem',
-                fontWeight: 800,
-                color: 'var(--fundly-surface)',
+                fontWeight: 600,
+                color: 'var(--fundly-deep)',
                 letterSpacing: '-0.03em',
                 lineHeight: 1.1,
               }}
@@ -136,11 +135,11 @@ export default function BillHistoryDialog({
               style={{
                 margin: '6px 0 0',
                 fontSize: '0.82rem',
-                color: 'rgba(var(--fundly-surface-rgb),0.66)',
+                color: 'rgba(var(--fundly-primary-rgb),0.66)',
                 lineHeight: 1.5,
               }}
             >
-              Transactions already linked to <strong style={{ color: 'var(--fundly-surface)' }}>{bill.name}</strong>.
+              Transactions already linked to <strong style={{ color: 'var(--fundly-deep)' }}>{bill.name}</strong>.
             </p>
           </div>
 
@@ -155,9 +154,9 @@ export default function BillHistoryDialog({
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              border: '1px solid rgba(var(--fundly-surface-rgb),0.12)',
-              background: 'rgba(var(--fundly-surface-rgb),0.06)',
-              color: 'rgba(var(--fundly-surface-rgb),0.58)',
+              border: '1px solid rgba(var(--fundly-primary-rgb),0.08)',
+              background: 'var(--fundly-canvas)',
+              color: 'rgba(var(--fundly-primary-rgb),0.48)',
               fontSize: '0.8rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -182,9 +181,9 @@ export default function BillHistoryDialog({
           {isLoading ? <HistorySkeleton /> : null}
 
           {!isLoading && !error && historyItems.length === 0 ? (
-            <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-surface)]">No bill payments yet</p>
-              <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-surface-rgb),0.68)]">
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">No bill payments yet</p>
+              <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.68)]">
                 Once you quick-pay this bill, those linked transactions will appear here.
               </p>
             </div>
@@ -193,27 +192,27 @@ export default function BillHistoryDialog({
           {!isLoading && !error && historyItems.length > 0 ? (
             <div className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4">
-                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-accent-rgb),0.76)]">
+                <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4">
+                  <p className="text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
                     Payments
                   </p>
-                  <p className="mt-2 text-lg font-extrabold text-[var(--fundly-surface)]">{totalPayments}</p>
+                  <p className="mt-2 text-lg font-semibold text-[var(--fundly-deep)]">{totalPayments}</p>
                 </div>
 
-                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4">
-                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-accent-rgb),0.76)]">
+                <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4">
+                  <p className="text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
                     Latest date
                   </p>
-                  <p className="mt-2 text-base font-bold text-[var(--fundly-surface)]">
+                  <p className="mt-2 text-base font-medium text-[var(--fundly-deep)]">
                     {latestPaymentDate ? formatBillDate(latestPaymentDate) : 'No payments yet'}
                   </p>
                 </div>
 
-                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4">
-                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-accent-rgb),0.76)]">
+                <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4">
+                  <p className="text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
                     Latest amount
                   </p>
-                  <p className="mt-2 text-base font-bold text-[var(--fundly-surface)]">
+                  <p className="mt-2 text-base font-medium text-[var(--fundly-deep)]">
                     {totalPayments > 0 ? formatBillAmount(latestPaymentAmount, latestPaymentCurrencyCode) : 'No payments yet'}
                   </p>
                 </div>
@@ -222,7 +221,7 @@ export default function BillHistoryDialog({
               {historyItems.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/6 px-4 py-4"
+                  className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -232,22 +231,22 @@ export default function BillHistoryDialog({
                           style={{ backgroundColor: item.categoryColor }}
                           aria-hidden="true"
                         />
-                        <p className="truncate font-bold text-[var(--fundly-surface)]">{item.title}</p>
+                        <p className="truncate font-medium text-[var(--fundly-deep)]">{item.title}</p>
                       </div>
-                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[rgba(var(--fundly-surface-rgb),0.68)]">
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[rgba(var(--fundly-primary-rgb),0.68)]">
                         <span>{item.categoryName}</span>
                         <span>{formatBillDate(item.transaction_date)}</span>
                         {item.merchant_or_source ? <span>{item.merchant_or_source}</span> : null}
                         {item.isFromSavings ? <span>From savings</span> : null}
                       </div>
                     </div>
-                    <span className="shrink-0 text-sm font-bold text-[var(--fundly-accent)]">
+                    <span className="shrink-0 text-sm font-medium text-[var(--fundly-deep)]">
                       {formatBillAmount(item.amountOriginal)}
                     </span>
                   </div>
 
                   {item.note ? (
-                    <p className="mt-3 text-sm leading-6 text-[rgba(var(--fundly-surface-rgb),0.74)]">{item.note}</p>
+                    <p className="mt-3 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.74)]">{item.note}</p>
                   ) : null}
                 </div>
               ))}

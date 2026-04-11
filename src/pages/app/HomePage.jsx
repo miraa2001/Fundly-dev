@@ -50,7 +50,7 @@ function SurfaceSkeleton({ rows = 3 }) {
       {Array.from({ length: rows }).map((_, index) => (
         <div
           key={index}
-          className="animate-pulse rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-4"
+          className="animate-pulse rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4"
         >
           <div className="h-5 w-32 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]" />
           <div className="mt-3 h-4 w-44 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.08)]" />
@@ -111,7 +111,7 @@ export default function HomePage() {
             dashboard.summary.totalIncome,
             dashboard.summary.incomeBaseCurrencyCode || defaultBaseCurrency,
           ),
-          detail: `Recorded income entries for ${dashboard.monthLabel}.`,
+          detail: `Income recorded in ${dashboard.monthLabel}.`,
         },
         {
           label: 'Expenses this month',
@@ -119,7 +119,7 @@ export default function HomePage() {
             dashboard.summary.totalExpenses,
             dashboard.summary.expenseBaseCurrencyCode || defaultBaseCurrency,
           ),
-          detail: 'Calculated from amount_base across this month\'s transactions.',
+          detail: 'Spending recorded this month.',
         },
         {
           label: 'Savings balance',
@@ -127,7 +127,7 @@ export default function HomePage() {
             dashboard.summary.savingsBalance,
             dashboard.summary.savingsBalanceCurrencyCode || defaultBaseCurrency,
           ),
-          detail: 'Pulled directly from your profile savings balance.',
+          detail: 'Current profile balance.',
         },
       ]
     : [];
@@ -137,11 +137,11 @@ export default function HomePage() {
   const expenseBaseCurrencyCode = dashboard?.summary?.expenseBaseCurrencyCode || defaultBaseCurrency;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <AppPageHeader
         eyebrow="Home"
         title={`Welcome back, ${getDisplayName(user?.email)}.`}
-        description="Current-month totals, recent activity, and budget pressure from your real Supabase data."
+        description="This month at a glance."
       />
 
       <StatusMessage tone={error ? 'error' : undefined} message={error} />
@@ -152,9 +152,9 @@ export default function HomePage() {
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
           {summaryCards.map((item) => (
             <AppSurface key={item.label} className="p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--fundly-accent)]">{item.label}</p>
-              <p className="mt-3 text-2xl font-bold tracking-[-0.03em] text-[var(--fundly-primary)]">{item.value}</p>
-              <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">{item.detail}</p>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[rgba(var(--fundly-primary-rgb),0.56)]">{item.label}</p>
+              <p className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-[var(--fundly-deep)]">{item.value}</p>
+              <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.68)]">{item.detail}</p>
             </AppSurface>
           ))}
         </div>
@@ -169,7 +169,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => void loadDashboard()}
-              className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5"
+              className="fundly-button-primary"
             >
               Retry
             </button>
@@ -181,7 +181,7 @@ export default function HomePage() {
         <AppSurface
           eyebrow="Recent Activity"
           title="Latest transactions"
-          description="Newest transactions first from your real transaction feed."
+          description="Newest first."
         >
           {isLoading ? (
             <SurfaceSkeleton rows={5} />
@@ -190,7 +190,7 @@ export default function HomePage() {
               {recentTransactions.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between gap-4 rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-3"
+                  className="flex items-center justify-between gap-4 rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-3"
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -199,22 +199,22 @@ export default function HomePage() {
                         style={{ backgroundColor: item.categoryColor || defaultCategoryColor }}
                         aria-hidden="true"
                       />
-                      <p className="truncate font-bold text-[var(--fundly-primary)]">{item.title}</p>
+                      <p className="truncate font-medium text-[var(--fundly-deep)]">{item.title}</p>
                     </div>
                     <p className="mt-1 text-sm text-[rgba(var(--fundly-primary-rgb),0.7)]">
-                      {item.categoryName} . {formatTransactionDate(item.transactionDate)}
-                      {item.isFromSavings ? ' . From savings' : ''}
+                      {item.categoryName} - {formatTransactionDate(item.transactionDate)}
+                      {item.isFromSavings ? ' - From savings' : ''}
                     </p>
                   </div>
-                  <p className="shrink-0 text-sm font-bold text-[var(--fundly-primary)]">{formatSignedAmount(item)}</p>
+                  <p className="shrink-0 text-sm font-medium text-[var(--fundly-deep)]">{formatSignedAmount(item)}</p>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-primary)]">No transactions yet</p>
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">No transactions yet</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">
-                Once you start recording transactions, your latest activity will appear here.
+                Recent activity will appear here.
               </p>
             </div>
           )}
@@ -222,8 +222,8 @@ export default function HomePage() {
 
         <AppSurface
           eyebrow="Budget Focus"
-          title="What stands out this month"
-          description="Categories nearest their budget limit, plus active spending categories that still have no monthly budget."
+          title="Budget highlights"
+          description="Closest to this month's limits."
         >
           {isLoading ? (
             <SurfaceSkeleton rows={3} />
@@ -236,7 +236,7 @@ export default function HomePage() {
                 return (
                   <div
                     key={item.id}
-                    className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-4"
+                    className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
@@ -246,7 +246,7 @@ export default function HomePage() {
                             style={{ backgroundColor: item.color || defaultCategoryColor }}
                             aria-hidden="true"
                           />
-                          <p className="truncate font-bold text-[var(--fundly-primary)]">{item.name}</p>
+                          <p className="truncate font-medium text-[var(--fundly-deep)]">{item.name}</p>
                         </div>
                         <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">
                           {formatTransactionAmount(item.spent, expenseBaseCurrencyCode)} spent of{' '}
@@ -254,9 +254,9 @@ export default function HomePage() {
                         </p>
                       </div>
                       <span
-                        className="shrink-0 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.16em]"
+                        className="shrink-0 rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.14em]"
                         style={{
-                          backgroundColor: isOverBudget ? 'rgba(var(--fundly-warm-rgb),0.12)' : 'rgba(var(--fundly-accent-rgb),0.12)',
+                          backgroundColor: isOverBudget ? 'rgba(var(--fundly-warm-rgb),0.08)' : 'rgba(var(--fundly-accent-rgb),0.08)',
                           color: isOverBudget ? 'var(--fundly-warm)' : 'var(--fundly-accent)',
                         }}
                       >
@@ -268,13 +268,11 @@ export default function HomePage() {
                         className="h-3 rounded-full"
                         style={{
                           width: progressWidth,
-                          background: isOverBudget
-                            ? 'linear-gradient(90deg, var(--fundly-warm) 0%, var(--fundly-accent) 100%)'
-                            : 'linear-gradient(90deg, var(--fundly-accent) 0%, var(--fundly-primary) 58%, var(--fundly-deep) 100%)',
+                          background: isOverBudget ? 'var(--fundly-warm)' : 'var(--fundly-accent)',
                         }}
                       />
                     </div>
-                    <p className="mt-3 text-sm font-medium text-[rgba(var(--fundly-primary-rgb),0.72)]">
+                    <p className="mt-3 text-sm text-[rgba(var(--fundly-primary-rgb),0.72)]">
                       {isOverBudget
                         ? `Over budget by ${formatTransactionAmount(Math.abs(item.remaining), expenseBaseCurrencyCode)}.`
                         : `${formatTransactionAmount(item.remaining, expenseBaseCurrencyCode)} remaining.`}
@@ -284,8 +282,8 @@ export default function HomePage() {
               })}
 
               {budgetHighlights.categoriesWithoutBudget.length > 0 ? (
-                <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-4">
-                  <p className="font-bold text-[var(--fundly-primary)]">No monthly budget set</p>
+                <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4">
+                  <p className="font-medium text-[var(--fundly-deep)]">No monthly budget set</p>
                   <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">
                     {budgetHighlights.categoriesWithoutBudget
                       .map((item) => item.name)
@@ -299,10 +297,10 @@ export default function HomePage() {
               ) : null}
             </div>
           ) : (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-primary)]">No budget highlights yet</p>
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">No budget highlights yet</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">
-                Add monthly budgets to your active categories to see which ones are closest to the limit.
+                Add monthly budgets to compare spending against limits.
               </p>
             </div>
           )}

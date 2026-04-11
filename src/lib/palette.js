@@ -1,13 +1,14 @@
 export const fundlyPalette = Object.freeze({
+  canvas: '#F2F2F2',
+  surface: '#FFFFFF',
   primary: '#0C2A46',
-  primarySoft: '#062239',
+  primarySoft: '#0C2A46',
   deep: '#011826',
   accent: '#A67A53',
-  accentSoft: '#D0AE8C',
-  accentGlow: '#D5B595',
-  accentTint: '#C9A27D',
+  accentSoft: '#D4B79B',
+  accentGlow: '#DCC4AE',
+  accentTint: '#E7D8CB',
   warm: '#401F14',
-  surface: '#F2F2F2',
 });
 
 function toKebabCase(value) {
@@ -47,13 +48,13 @@ export function alpha(token, opacity) {
 }
 
 export const themeGradients = Object.freeze({
-  appBackground: `linear-gradient(180deg, ${colorVar('deep')} 0%, ${colorVar('primary')} 52%, ${colorVar('deep')} 100%)`,
-  primaryButton: `linear-gradient(180deg, ${colorVar('primary')} 0%, ${colorVar('primarySoft')} 46%, ${colorVar('deep')} 100%)`,
-  accentButton: `linear-gradient(180deg, ${colorVar('accentSoft')} 0%, ${colorVar('accent')} 58%, ${colorVar('warm')} 100%)`,
-  authPanel: `linear-gradient(180deg, ${alpha('deep', 0.86)}, ${alpha('primary', 0.74)})`,
-  appPanel: `linear-gradient(160deg, ${colorVar('deep')} 0%, ${colorVar('primary')} 54%, ${colorVar('warm')} 100%)`,
-  surfacePanel: `linear-gradient(180deg, ${alpha('surface', 0.97)}, ${alpha('surface', 0.91)})`,
-  surfacePanelSoft: `linear-gradient(180deg, ${alpha('surface', 0.97)}, ${alpha('surface', 0.90)})`,
+  appBackground: colorVar('canvas'),
+  primaryButton: colorVar('deep'),
+  accentButton: alpha('accent', 0.12),
+  authPanel: colorVar('surface'),
+  appPanel: colorVar('surface'),
+  surfacePanel: colorVar('surface'),
+  surfacePanelSoft: colorVar('surface'),
 });
 
 export function applyFundlyPalette(root = typeof document !== 'undefined' ? document.documentElement : null, palette = fundlyPalette) {

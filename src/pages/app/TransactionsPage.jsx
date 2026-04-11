@@ -4,7 +4,6 @@ import AppSurface from '../../components/app/AppSurface';
 import TransactionDialog from '../../components/app/transactions/TransactionDialog';
 import TransactionLoader from '../../components/app/transactions/TransactionLoader';
 import TransactionListItem from '../../components/app/transactions/TransactionListItem';
-import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
 import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import { listCategories } from '../../lib/categories';
@@ -286,20 +285,20 @@ export default function TransactionsPage() {
   const hasActiveCategories = activeCategories.length > 0;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <AppPageHeader
         eyebrow="Transactions"
-        title="Track every expense clearly"
-        description="Create real manual transactions, link them to active categories, and review the feed directly from Supabase."
+        title="Transactions"
+        description="Record expenses and review them in one place."
         action={
-          <AuthButton
+          <button
             type="button"
             onClick={handleNewTransactionClick}
             disabled={isCategoriesLoading || !hasActiveCategories}
-            className="w-auto rounded-full px-5 py-3 text-sm"
+            className="fundly-button-primary"
           >
             New transaction
-          </AuthButton>
+          </button>
         }
       />
 
@@ -313,12 +312,12 @@ export default function TransactionsPage() {
             description={categoriesError}
             action={
               <button
-                type="button"
-                onClick={() => void loadCategories()}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
-              >
-                Retry
-              </button>
+              type="button"
+              onClick={() => void loadCategories()}
+              className="fundly-button-danger"
+            >
+              Retry
+            </button>
             }
           />
         ) : null}
@@ -338,12 +337,12 @@ export default function TransactionsPage() {
             description={transactionsError}
             action={
               <button
-                type="button"
-                onClick={() => void loadTransactionsPage(currentPage)}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
-              >
-                Retry
-              </button>
+              type="button"
+              onClick={() => void loadTransactionsPage(currentPage)}
+              className="fundly-button-danger"
+            >
+              Retry
+            </button>
             }
           />
         ) : null}
@@ -358,13 +357,13 @@ export default function TransactionsPage() {
           <AppSurface
             eyebrow="Feed"
             title="No transactions yet"
-            description="Your new manual transactions will appear here once you start recording expenses."
+            description="New expenses will appear here."
             action={
               hasActiveCategories ? (
                 <button
                   type="button"
                   onClick={openDialog}
-                  className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5"
+                  className="fundly-button-primary"
                 >
                   Add first transaction
                 </button>
@@ -377,10 +376,10 @@ export default function TransactionsPage() {
           <AppSurface
             eyebrow="Feed"
             title={`${pagination.count} recorded`}
-            description="Newest transactions first, joined with their category split for a clean real-time feed."
+            description="Newest first."
             action={
               pagination.totalPages > 1 ? (
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--fundly-accent)]">
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
                   Page {pagination.page} of {pagination.totalPages}
                 </p>
               ) : null
@@ -392,7 +391,7 @@ export default function TransactionsPage() {
               ))}
             </div>
 
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-[rgba(var(--fundly-primary-rgb),0.10)] pt-4">
+            <div className="mt-5 flex items-center justify-between gap-3 border-t border-[rgba(var(--fundly-primary-rgb),0.08)] pt-4">
               <p className="text-sm text-[rgba(var(--fundly-primary-rgb),0.7)]">
                 Showing page {pagination.page} of {pagination.totalPages}
               </p>
@@ -402,7 +401,7 @@ export default function TransactionsPage() {
                   type="button"
                   onClick={() => setCurrentPage((current) => Math.max(1, current - 1))}
                   disabled={pagination.page <= 1}
-                  className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-primary)] transition hover:border-[rgba(var(--fundly-accent-rgb),0.40)] hover:text-[var(--fundly-accent)] disabled:cursor-not-allowed disabled:opacity-55"
+                  className="fundly-button-secondary"
                 >
                   Previous
                 </button>
@@ -410,7 +409,7 @@ export default function TransactionsPage() {
                   type="button"
                   onClick={() => setCurrentPage((current) => Math.min(pagination.totalPages, current + 1))}
                   disabled={pagination.page >= pagination.totalPages}
-                  className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55"
+                  className="fundly-button-primary"
                 >
                   Next
                 </button>

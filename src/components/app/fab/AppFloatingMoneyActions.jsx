@@ -206,15 +206,15 @@ function ActionMenuButton({ Icon, title, description, isLoading, onClick }) {
       type="button"
       onClick={onClick}
       disabled={isLoading}
-      className="flex w-full items-start gap-3 rounded-[1.25rem] border border-[rgba(var(--fundly-surface-rgb),0.08)] bg-white/6 px-4 py-3 text-left transition hover:border-[rgba(var(--fundly-accent-rgb),0.24)] hover:bg-white/10 disabled:cursor-wait disabled:opacity-70"
+      className="flex w-full items-start gap-3 rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-3 text-left transition hover:bg-[rgba(var(--fundly-primary-rgb),0.03)] disabled:cursor-wait disabled:opacity-70"
     >
-      <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-[rgba(var(--fundly-accent-rgb),0.22)] bg-[rgba(var(--fundly-accent-rgb),0.10)] text-[var(--fundly-accent)]">
+      <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] bg-[rgba(var(--fundly-primary-rgb),0.05)] text-[var(--fundly-primary)]">
         <Icon />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-bold text-[var(--fundly-surface)]">{title}</span>
-        <span className="mt-1 block text-sm leading-6 text-[rgba(var(--fundly-surface-rgb),0.68)]">
+        <span className="block text-sm font-medium text-[var(--fundly-deep)]">{title}</span>
+        <span className="mt-1 block text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.68)]">
           {isLoading ? 'Loading...' : description}
         </span>
       </span>
@@ -736,7 +736,7 @@ export default function AppFloatingMoneyActions() {
           type="button"
           aria-label="Close money action menu"
           onClick={closeActionOverlays}
-          className="fixed inset-0 z-[32] bg-[rgba(var(--fundly-deep-rgb),0.12)] backdrop-blur-[1px]"
+          className="fixed inset-0 z-[32] bg-[rgba(var(--fundly-deep-rgb),0.08)]"
         />
       )}
 
@@ -749,17 +749,17 @@ export default function AppFloatingMoneyActions() {
                 isMenuOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0 pointer-events-none',
               ].join(' ')}
             >
-              <div className="rounded-[1.75rem] border border-[rgba(var(--fundly-accent-rgb),0.18)] bg-[linear-gradient(180deg,rgba(var(--fundly-deep-rgb),0.98),rgba(var(--fundly-primary-rgb),0.92))] p-4 shadow-[0_28px_70px_rgba(0,0,0,0.34)] backdrop-blur-2xl sm:rounded-[1.5rem]">
+              <div className="rounded-[1.5rem] border border-[rgba(var(--fundly-primary-rgb),0.08)] bg-[var(--fundly-surface)] p-4 shadow-[0_10px_30px_rgba(var(--fundly-deep-rgb),0.10)] sm:rounded-[1.5rem]">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[0.62rem] font-bold uppercase tracking-[0.24em] text-[var(--fundly-accent)]">
+                    <p className="text-[0.62rem] font-medium uppercase tracking-[0.18em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
                       Quick Actions
                     </p>
-                    <h2 className="mt-2 text-lg font-bold tracking-[-0.03em] text-[var(--fundly-surface)]">
-                      Record money in one tap
+                    <h2 className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[var(--fundly-deep)]">
+                      Money actions
                     </h2>
-                    <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-surface-rgb),0.70)]">
-                      Launch the same real expense, income, and bill flows from anywhere in the app.
+                    <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.70)]">
+                      Open an existing flow from anywhere.
                     </p>
                   </div>
 
@@ -767,7 +767,7 @@ export default function AppFloatingMoneyActions() {
                     type="button"
                     onClick={closeActionOverlays}
                     aria-label="Close money action menu"
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(var(--fundly-surface-rgb),0.10)] bg-white/8 text-[rgba(var(--fundly-surface-rgb),0.62)] transition hover:bg-white/12"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(var(--fundly-primary-rgb),0.08)] bg-[var(--fundly-canvas)] text-[rgba(var(--fundly-primary-rgb),0.48)] transition"
                   >
                     X
                   </button>
@@ -817,7 +817,7 @@ export default function AppFloatingMoneyActions() {
               onClick={toggleMenu}
               aria-label="Open quick money actions"
               aria-expanded={isMenuOpen}
-              className="mb-[5.6rem] flex h-16 w-16 items-center justify-center rounded-full border border-[rgba(var(--fundly-accent-rgb),0.36)] bg-[radial-gradient(circle_at_30%_30%,rgba(var(--fundly-accent-rgb),0.55),transparent_34%),linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] text-[var(--fundly-surface)] shadow-[0_0_0_1px_rgba(var(--fundly-accent-rgb),0.12),0_20px_42px_rgba(var(--fundly-deep-rgb),0.34),0_0_28px_rgba(var(--fundly-accent-rgb),0.34)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(var(--fundly-accent-rgb),0.18),0_24px_52px_rgba(var(--fundly-deep-rgb),0.38),0_0_36px_rgba(var(--fundly-accent-rgb),0.42)] lg:mb-6"
+              className="mb-[5.6rem] flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(var(--fundly-primary-rgb),0.08)] bg-[var(--fundly-deep)] text-[var(--fundly-surface)] shadow-[0_8px_20px_rgba(var(--fundly-deep-rgb),0.12)] transition duration-200 hover:bg-[var(--fundly-primary)] lg:mb-6"
             >
               <FabIcon isOpen={isMenuOpen} />
             </button>

@@ -5,7 +5,6 @@ import IncomeEntryDialog from '../../components/app/income/IncomeEntryDialog';
 import IncomeEntryListItem from '../../components/app/income/IncomeEntryListItem';
 import IncomeSourceDialog from '../../components/app/income/IncomeSourceDialog';
 import IncomeSourceListItem from '../../components/app/income/IncomeSourceListItem';
-import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
 import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import { useAuthSession } from '../../lib/auth-context';
@@ -119,7 +118,7 @@ function SurfaceSkeleton({ rows = 3 }) {
       {Array.from({ length: rows }).map((_, index) => (
         <div
           key={index}
-          className="animate-pulse rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-4"
+          className="animate-pulse rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-4"
         >
           <div className="h-5 w-32 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.10)]" />
           <div className="mt-3 h-4 w-44 rounded-full bg-[rgba(var(--fundly-primary-rgb),0.08)]" />
@@ -589,21 +588,21 @@ export default function IncomePage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <AppPageHeader
         eyebrow="Income"
-        title="Record and review income clearly"
-        description="Manage your income sources, add real income entries, and keep totals aligned with your profile base currency."
+        title="Income"
+        description="Sources, entries, and this month's totals."
         action={
           <div className="flex flex-wrap items-center gap-2">
-            <AuthButton type="button" onClick={openCreateSourceDialog} className="w-auto rounded-full px-5 py-3 text-sm">
+            <button type="button" onClick={openCreateSourceDialog} className="fundly-button-secondary">
               New source
-            </AuthButton>
+            </button>
             <button
               type="button"
               onClick={openCreateEntryDialog}
               disabled={!hasActiveSources || isSourcesLoading}
-              className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-5 py-3 text-sm font-bold text-[var(--fundly-surface)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+              className="fundly-button-primary"
             >
               Add income
             </button>
@@ -622,7 +621,7 @@ export default function IncomePage() {
             <button
               type="button"
               onClick={() => void loadSummary()}
-              className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
+              className="fundly-button-danger"
             >
               Retry
             </button>
@@ -636,9 +635,9 @@ export default function IncomePage() {
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
           {summaryCards.map((item) => (
             <AppSurface key={item.label} className="p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--fundly-accent)]">{item.label}</p>
-              <p className="mt-3 text-2xl font-bold tracking-[-0.03em] text-[var(--fundly-primary)]">{item.value}</p>
-              <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">{item.detail}</p>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[rgba(var(--fundly-primary-rgb),0.56)]">{item.label}</p>
+              <p className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-[var(--fundly-deep)]">{item.value}</p>
+              <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.68)]">{item.detail}</p>
             </AppSurface>
           ))}
         </div>
@@ -648,13 +647,13 @@ export default function IncomePage() {
         <AppSurface
           eyebrow="Sources"
           title="Income sources"
-          description="Create reusable sources first, then log entries against them. Archived sources stay hidden unless you choose to view them."
+          description="Create sources first, then record entries."
           action={
             hasArchivedSources ? (
               <button
                 type="button"
                 onClick={() => setShowArchivedSources((current) => !current)}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-primary-rgb),0.16)] bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-primary)] transition hover:border-[rgba(var(--fundly-accent-rgb),0.40)] hover:text-[var(--fundly-accent)]"
+                className="fundly-button-secondary"
               >
                 {showArchivedSources ? 'Hide archived' : 'Show archived'}
               </button>
@@ -662,13 +661,13 @@ export default function IncomePage() {
           }
         >
           {sourcesError ? (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-warm-rgb),0.18)] bg-[rgba(var(--fundly-warm-rgb),0.08)] px-4 py-4">
-              <p className="font-bold text-[var(--fundly-primary)]">We could not load income sources</p>
+            <div className="rounded-[1.1rem] bg-[rgba(var(--fundly-warm-rgb),0.06)] px-4 py-4">
+              <p className="font-medium text-[var(--fundly-deep)]">We could not load income sources</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">{sourcesError}</p>
               <button
                 type="button"
                 onClick={() => void loadSources()}
-                className="mt-4 inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
+                className="fundly-button-danger mt-4"
               >
                 Retry
               </button>
@@ -676,22 +675,22 @@ export default function IncomePage() {
           ) : isSourcesLoading ? (
             <SurfaceSkeleton rows={3} />
           ) : !hasIncomeSources ? (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-primary)]">No income sources yet</p>
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">No income sources yet</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">
-                Add your first income source so new entries can be recorded cleanly from the same page.
+                Add a source to start recording income.
               </p>
               <button
                 type="button"
                 onClick={openCreateSourceDialog}
-                className="mt-4 inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5"
+                className="fundly-button-primary mt-4"
               >
                 Add first source
               </button>
             </div>
           ) : visibleIncomeSources.length === 0 ? (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-primary)]">All sources are archived</p>
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">All sources are archived</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">
                 Restore a source or show archived sources to manage them again.
               </p>
@@ -714,13 +713,13 @@ export default function IncomePage() {
         <AppSurface
           eyebrow="Entries"
           title="Income entries"
-          description="Newest income entries first, with source, base-currency conversion, and optional income category context."
+          description="Newest first."
           action={
             hasActiveSources ? (
               <button
                 type="button"
                 onClick={openCreateEntryDialog}
-                className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5"
+                className="fundly-button-primary"
               >
                 Add income
               </button>
@@ -728,15 +727,15 @@ export default function IncomePage() {
           }
         >
           {categoriesError ? (
-            <div className="mb-4 rounded-[1.2rem] border border-[rgba(var(--fundly-warm-rgb),0.18)] bg-[rgba(var(--fundly-warm-rgb),0.08)] px-4 py-4">
-              <p className="font-bold text-[var(--fundly-primary)]">Income categories are unavailable</p>
+            <div className="mb-4 rounded-[1.1rem] bg-[rgba(var(--fundly-warm-rgb),0.06)] px-4 py-4">
+              <p className="font-medium text-[var(--fundly-deep)]">Income categories are unavailable</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">
                 Entries can still be recorded without a category. {categoriesError}
               </p>
               <button
                 type="button"
                 onClick={() => void loadIncomeCategories()}
-                className="mt-4 inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
+                className="fundly-button-danger mt-4"
               >
                 Retry
               </button>
@@ -744,13 +743,13 @@ export default function IncomePage() {
           ) : null}
 
           {entriesError ? (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-warm-rgb),0.18)] bg-[rgba(var(--fundly-warm-rgb),0.08)] px-4 py-4">
-              <p className="font-bold text-[var(--fundly-primary)]">We could not load income entries</p>
+            <div className="rounded-[1.1rem] bg-[rgba(var(--fundly-warm-rgb),0.06)] px-4 py-4">
+              <p className="font-medium text-[var(--fundly-deep)]">We could not load income entries</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">{entriesError}</p>
               <button
                 type="button"
                 onClick={() => void loadEntries()}
-                className="mt-4 inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
+                className="fundly-button-danger mt-4"
               >
                 Retry
               </button>
@@ -758,17 +757,17 @@ export default function IncomePage() {
           ) : isEntriesLoading ? (
             <SurfaceSkeleton rows={4} />
           ) : !hasActiveSources ? (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-primary)]">Create an income source first</p>
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">Create an income source first</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">
-                New income entries need one active source. Add one from the Income sources panel, then come back here.
+                Income entries need one active source.
               </p>
             </div>
           ) : !hasIncomeEntries ? (
-            <div className="rounded-[1.3rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/70 px-4 py-5">
-              <p className="font-bold text-[var(--fundly-primary)]">No income entries yet</p>
+            <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+              <p className="font-medium text-[var(--fundly-deep)]">No income entries yet</p>
               <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.7)]">
-                Record your first real income entry to start tracking current-month totals here and on Home.
+                Your entries will appear here.
               </p>
             </div>
           ) : (

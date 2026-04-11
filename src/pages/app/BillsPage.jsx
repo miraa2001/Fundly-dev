@@ -6,7 +6,6 @@ import BillDialog from '../../components/app/bills/BillDialog';
 import BillHistoryDialog from '../../components/app/bills/BillHistoryDialog';
 import BillListItem from '../../components/app/bills/BillListItem';
 import BillPayDialog from '../../components/app/bills/BillPayDialog';
-import AuthButton from '../../components/auth/AuthButton';
 import StatusMessage from '../../components/auth/StatusMessage';
 import { subscribeMoneyDataUpdated } from '../../lib/app-events';
 import {
@@ -557,20 +556,20 @@ export default function BillsPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <AppPageHeader
         eyebrow="Bills"
-        title="Quick pay your repeat expenses"
-        description="Save reusable bill templates, process them into real transactions when they are due, and review each bill's payment history."
+        title="Bills"
+        description="Save bill templates and pay them when needed."
         action={
-          <AuthButton
+          <button
             type="button"
             onClick={openCreateDialog}
             disabled={isCategoriesLoading || !hasBillCategories}
-            className="w-auto rounded-full px-5 py-3 text-sm"
+            className="fundly-button-primary"
           >
             New bill
-          </AuthButton>
+          </button>
         }
       />
 
@@ -584,12 +583,12 @@ export default function BillsPage() {
             description={categoriesError}
             action={
               <button
-                type="button"
-                onClick={() => void loadCategories()}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
-              >
-                Retry
-              </button>
+              type="button"
+              onClick={() => void loadCategories()}
+              className="fundly-button-danger"
+            >
+              Retry
+            </button>
             }
           />
         ) : null}
@@ -609,12 +608,12 @@ export default function BillsPage() {
             description={billsError}
             action={
               <button
-                type="button"
-                onClick={() => void loadBillsData()}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
-              >
-                Retry
-              </button>
+              type="button"
+              onClick={() => void loadBillsData()}
+              className="fundly-button-danger"
+            >
+              Retry
+            </button>
             }
           />
         ) : null}
@@ -633,13 +632,13 @@ export default function BillsPage() {
           <AppSurface
             eyebrow="Bills"
             title="No bills yet"
-            description="Add reusable bills here so common payments can be turned into real transactions in a few taps."
+            description="Saved bills will appear here."
             action={
               hasBillCategories ? (
                 <button
                   type="button"
                   onClick={openCreateDialog}
-                  className="inline-flex items-center justify-center rounded-full border border-[var(--fundly-accent)] bg-[linear-gradient(180deg,var(--fundly-primary)_0%,var(--fundly-primary-soft)_46%,var(--fundly-deep)_100%)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-surface)] transition hover:-translate-y-0.5"
+                  className="fundly-button-primary"
                 >
                   Add first bill
                 </button>
@@ -652,7 +651,7 @@ export default function BillsPage() {
           <AppSurface
             eyebrow="Bills"
             title={`${bills.length} saved`}
-            description="Each bill is a reusable payment template. Quick pay opens a confirmation step, then records a real transaction immediately."
+            description="Reusable payment templates."
           >
             <div className="space-y-3">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -663,18 +662,18 @@ export default function BillsPage() {
                     value={searchQuery}
                     onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder="Search bills"
-                    className="w-full rounded-full border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/80 px-4 py-2.5 text-sm text-[var(--fundly-primary)] outline-none transition placeholder:text-[rgba(var(--fundly-primary-rgb),0.42)] focus:border-[rgba(var(--fundly-accent-rgb),0.35)] focus:ring-2 focus:ring-[rgba(var(--fundly-accent-rgb),0.12)]"
+                    className="fundly-input"
                   />
                 </label>
 
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-[rgba(var(--fundly-primary-rgb),0.56)]">
                   {filteredBills.length} visible
                 </p>
               </div>
 
               {!hasFilteredBills ? (
-                <div className="rounded-[1.2rem] border border-[rgba(var(--fundly-primary-rgb),0.12)] bg-white/55 px-4 py-5">
-                  <p className="font-bold text-[var(--fundly-primary)]">No bills match that search</p>
+                <div className="rounded-[1.1rem] bg-[var(--fundly-canvas)] px-4 py-5">
+                  <p className="font-medium text-[var(--fundly-deep)]">No bills match that search</p>
                   <p className="mt-2 text-sm leading-6 text-[rgba(var(--fundly-primary-rgb),0.72)]">
                     Try a different bill name or clear the search field.
                   </p>

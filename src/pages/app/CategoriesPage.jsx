@@ -291,11 +291,11 @@ export default function CategoriesPage() {
   const hasNoVisibleCategories = !isLoading && activeCategories.length === 0 && (!showArchived || archivedCategories.length === 0);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <AppPageHeader
         eyebrow="Categories"
-        title="Your categories, connected"
-        description="Manage your categories in one place"
+        title="Categories"
+        description="Organize spending and monthly budgets."
         action={
           <div className="flex flex-wrap items-center gap-2">
             <button
@@ -311,7 +311,7 @@ export default function CategoriesPage() {
             <button
               type="button"
               onClick={() => setShowArchived((current) => !current)}
-              className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-accent-rgb),0.35)] bg-[rgba(var(--fundly-accent-rgb),0.12)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-accent)] transition hover:border-[rgba(var(--fundly-accent-rgb),0.55)] hover:text-[var(--fundly-warm)]"
+              className="fundly-button-secondary"
             >
               {showArchived ? 'Hide archived' : 'Show archived'}
             </button>
@@ -329,12 +329,12 @@ export default function CategoriesPage() {
             description={fetchError}
             action={
               <button
-                type="button"
-                onClick={() => void loadCategories(showArchived)}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(var(--fundly-warm-rgb),0.25)] bg-[rgba(var(--fundly-warm-rgb),0.10)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--fundly-warm)] transition hover:border-[rgba(var(--fundly-warm-rgb),0.40)]"
-              >
-                Retry
-              </button>
+              type="button"
+              onClick={() => void loadCategories(showArchived)}
+              className="fundly-button-danger"
+            >
+              Retry
+            </button>
             }
           />
         ) : null}
@@ -345,7 +345,7 @@ export default function CategoriesPage() {
           <AppSurface
             eyebrow="Empty State"
             title="No categories yet"
-            description="Create your first category to start organizing transactions and budgets."
+            description="Create one to start grouping your spending."
             action={
               <button
                 type="button"
@@ -387,7 +387,7 @@ export default function CategoriesPage() {
           <AppSurface
             eyebrow="Archived Categories"
             title={`${archivedCategories.length} archived`}
-            description="Archived categories stay out of the default view but remain available for reference."
+            description="Hidden from the default view."
           >
             <div className="grid gap-4 sm:grid-cols-2">
               {archivedCategories.map((category) => (

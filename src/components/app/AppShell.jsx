@@ -1,8 +1,10 @@
+import { Suspense, lazy } from 'react';
 import { Outlet } from 'react-router-dom';
 import fundlyLogo from '../../../fundly-logo.png';
 import { useAuthSession } from '../../lib/auth-context';
 import AppNavigation from './AppNavigation';
-import AppFloatingMoneyActions from './fab/AppFloatingMoneyActions';
+
+const AppFloatingMoneyActions = lazy(() => import('./fab/AppFloatingMoneyActions'));
 
 export default function AppShell() {
   const { user } = useAuthSession();
@@ -85,7 +87,9 @@ export default function AppShell() {
         </div>
       </div>
 
-      <AppFloatingMoneyActions />
+      <Suspense fallback={null}>
+        <AppFloatingMoneyActions />
+      </Suspense>
     </main>
   );
 }

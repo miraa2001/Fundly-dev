@@ -1,7 +1,7 @@
+import { getProfileBaseCurrencyCode, loadUserProfile } from './profiles';
 import { ensureSupabase } from './supabase';
 
 const fallbackSavingsCurrencyCode = 'NIS';
-const savingsProfileColumns = 'id, savings_balance, base_currency_code, base_currency';
 
 export const savingsErrorCodes = {
   profileMissing: 'SAVINGS_PROFILE_MISSING',
@@ -40,23 +40,13 @@ function mapSavingsProfile(profile, { userId } = {}) {
   return {
     id: profile?.id ?? userId ?? '',
     savingsBalance: toMoneyNumber(profile?.savings_balance),
-    baseCurrencyCode: normalizeCurrencyCode(profile?.base_currency_code ?? profile?.base_currency),
+    baseCurrencyCode: getProfileBaseCurrencyCode(profile, fallbackSavingsCurrencyCode),
     exists: Boolean(profile?.id),
   };
 }
 
 export async function loadSavingsProfile({ userId }) {
-  const client = ensureSupabase();
-  const { data, error } = await client
-    .from('profiles')
-    .select(savingsProfileColumns)
-    .eq('id', userId)
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
+  const data = await loadUserProfile({ userId });
 
   return mapSavingsProfile(data, { userId });
 }
@@ -110,7 +100,7 @@ export async function saveSavingsBalance({ userId, nextSavingsBalance }) {
       savings_balance: formatMoneyValue(nextSavingsBalance),
     })
     .eq('id', userId)
-    .select(savingsProfileColumns)
+    .select('*')
     .single();
 
   if (error) {

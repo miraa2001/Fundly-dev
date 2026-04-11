@@ -1,4 +1,5 @@
 import { listCategories } from './categories';
+import { getProfileBaseCurrencyCode, loadUserProfile } from './profiles';
 import { ensureSupabase } from './supabase';
 import { defaultBaseCurrency } from './transactions';
 
@@ -7,7 +8,6 @@ const recentTransactionColumns =
 const monthlyExpenseColumns =
   'id, amount_base, base_currency_code, transaction_date, transaction_splits(id, amount_base, category:categories(id, name, color, is_archived))';
 const incomeEntryColumns = 'id, amount_base, base_currency_code, entry_date';
-const profileColumns = 'id, savings_balance, base_currency_code, base_currency';
 
 function formatDateOnly(date) {
   const year = date.getFullYear();
@@ -154,7 +154,7 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
     { data: monthlyExpenseTransactions, error: monthlyExpenseError },
     { data: incomeEntries, error: incomeError },
     { data: recentTransactions, error: recentError },
-    { data: profile, error: profileError },
+    profile,
     categories,
   ] = await Promise.all([
     client
@@ -174,12 +174,7 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
       .order('transaction_date', { ascending: false })
       .order('created_at', { ascending: false })
       .limit(recentLimit),
-    client
-      .from('profiles')
-      .select(profileColumns)
-      .eq('id', userId)
-      .limit(1)
-      .maybeSingle(),
+    loadUserProfile({ userId }),
     listCategories({ includeArchived: false }),
   ]);
 
@@ -195,14 +190,10 @@ export async function loadHomeDashboard({ userId, recentLimit = 5, date = new Da
     throw recentError;
   }
 
-  if (profileError) {
-    throw profileError;
-  }
-
   const totalIncome = (incomeEntries ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
   const totalExpenses = (monthlyExpenseTransactions ?? []).reduce((sum, item) => sum + toNumber(item.amount_base), 0);
   const savingsBalance = toNumber(profile?.savings_balance);
-  const savingsBalanceCurrencyCode = normalizeCurrencyCode(profile?.base_currency_code ?? profile?.base_currency);
+  const savingsBalanceCurrencyCode = getProfileBaseCurrencyCode(profile, defaultBaseCurrency);
   const incomeBaseCurrencyCode = getSummaryCurrencyCode(
     incomeEntries,
     'base_currency_code',

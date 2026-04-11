@@ -1,5 +1,6 @@
 import { defaultCategoryColor } from './categories';
 import { getCurrentMonthRange } from './home';
+import { getProfileBaseCurrencyCode, loadUserProfile } from './profiles';
 import { ensureSupabase } from './supabase';
 import {
   defaultBaseCurrency,
@@ -12,7 +13,6 @@ const incomeSourceColumns = 'id, user_id, name, description, is_archived, create
 const incomeEntryColumns =
   'id, user_id, income_source_id, amount_original, currency_code, conversion_rate, amount_base, base_currency_code, entry_date, note, merchant_or_source, category_id, created_at, updated_at, source:income_sources(id, name, is_archived), category:categories(id, name, color, kind, is_archived)';
 const monthlyIncomeEntryColumns = 'id, amount_base, entry_date';
-const profileCurrencyColumns = 'id, base_currency_code';
 
 function normalizeOptionalText(value) {
   const trimmedValue = value?.trim() ?? '';
@@ -169,19 +169,9 @@ export function formatIncomeDate(value) {
 }
 
 export async function getUserBaseCurrencyCode({ userId }) {
-  const client = ensureSupabase();
-  const { data, error } = await client
-    .from('profiles')
-    .select(profileCurrencyColumns)
-    .eq('id', userId)
-    .limit(1)
-    .maybeSingle();
+  const data = await loadUserProfile({ userId });
 
-  if (error) {
-    throw error;
-  }
-
-  return normalizeCurrencyCode(data?.base_currency_code, defaultBaseCurrency);
+  return getProfileBaseCurrencyCode(data, defaultBaseCurrency);
 }
 
 export async function listIncomeSources({ includeArchived = true } = {}) {

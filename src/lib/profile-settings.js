@@ -1,7 +1,5 @@
 import { defaultBaseCurrency } from './transactions';
-import { ensureSupabase } from './supabase';
-
-const profileSettingsColumns = '*';
+import { getProfileBaseCurrencyCode, loadUserProfile, saveUserProfile } from './profiles';
 
 export const themeSuggestions = ['system', 'light', 'dark'];
 export const budgetAlertModeSuggestions = ['off', 'warn_80', 'warn_100'];
@@ -37,7 +35,7 @@ function normalizeMonthlySavingsGoal(value) {
 function mapProfileSettings(profile, { userId } = {}) {
   return {
     id: profile?.id ?? userId ?? '',
-    baseCurrencyCode: normalizeCurrencyCode(profile?.base_currency_code ?? profile?.base_currency, defaultBaseCurrency),
+    baseCurrencyCode: getProfileBaseCurrencyCode(profile, defaultBaseCurrency),
     theme: normalizeOptionalText(profile?.theme, 'system'),
     budgetAlertMode: normalizeOptionalText(profile?.budget_alert_mode, 'warn_80'),
     pushNotificationsEnabled: normalizeBoolean(profile?.push_notifications_enabled, false),
@@ -64,41 +62,22 @@ export function createInitialProfileSettingsFormState(profileSettings = {}) {
 }
 
 export async function loadProfileSettings({ userId }) {
-  const client = ensureSupabase();
-  const { data, error } = await client
-    .from('profiles')
-    .select(profileSettingsColumns)
-    .eq('id', userId)
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
+  const data = await loadUserProfile({ userId });
 
   return mapProfileSettings(data, { userId });
 }
 
 export async function saveProfileSettings({ userId, values }) {
-  const client = ensureSupabase();
-  const payload = {
-    id: userId,
-    base_currency_code: normalizeCurrencyCode(values.baseCurrencyCode, defaultBaseCurrency),
-    theme: normalizeOptionalText(values.theme, 'system'),
-    budget_alert_mode: normalizeOptionalText(values.budgetAlertMode, 'warn_80'),
-    push_notifications_enabled: Boolean(values.pushNotificationsEnabled),
-    monthly_savings_goal: normalizeMonthlySavingsGoal(values.monthlySavingsGoal),
-  };
-
-  const { data, error } = await client
-    .from('profiles')
-    .upsert(payload, { onConflict: 'id' })
-    .select(profileSettingsColumns)
-    .single();
-
-  if (error) {
-    throw error;
-  }
+  const data = await saveUserProfile({
+    userId,
+    values: {
+      baseCurrencyCode: normalizeCurrencyCode(values.baseCurrencyCode, defaultBaseCurrency),
+      theme: normalizeOptionalText(values.theme, 'system'),
+      budgetAlertMode: normalizeOptionalText(values.budgetAlertMode, 'warn_80'),
+      pushNotificationsEnabled: Boolean(values.pushNotificationsEnabled),
+      monthlySavingsGoal: normalizeMonthlySavingsGoal(values.monthlySavingsGoal),
+    },
+  });
 
   return mapProfileSettings(data, { userId });
 }

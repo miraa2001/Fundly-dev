@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #011826;
+  background-color: #f2f2f2;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f2f2f2;
+  color: #011826;
+}
+
+::selection {
+  background: rgba(166, 122, 83, 0.2);
+}
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  a {
+    @apply text-cedar transition-colors duration-200;
+  }
+
+  a:hover {
+    @apply text-ocean;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .page-wrap {
+    @apply mx-auto w-full max-w-5xl px-5 py-7 sm:px-8 sm:py-10;
+  }
+
+  .journal-wrap {
+    @apply mx-auto w-full max-w-3xl px-5 py-7 sm:px-8 sm:py-10;
+  }
+
+  .page-panel {
+    @apply rounded-lg border border-ink/10 bg-surface p-5 sm:p-6;
+  }
+
+  .journal-section {
+    @apply border-t border-ink/10 py-10 first:border-t-0 first:pt-0;
+  }
+
+  .section-kicker {
+    @apply font-ui text-xs text-ocean/60;
+  }
+
+  .section-title {
+    @apply mt-2 text-3xl leading-tight text-ink sm:text-4xl;
+  }
+
+  .section-copy {
+    @apply mt-3 max-w-2xl text-base leading-7 text-ocean/70;
+  }
+
+  .field-stack {
+    @apply space-y-1.5;
+  }
+
+  .field-label {
+    @apply font-ui text-xs text-ocean/70;
+  }
+
+  .field-input {
+    @apply w-full rounded-none border-0 border-b border-ink/20 bg-transparent px-0 py-2.5 text-[1rem] text-ink outline-none transition duration-200 placeholder:text-ocean/40 focus:border-clay;
+  }
+
+  .field-textarea {
+    @apply field-input min-h-20 resize-y;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-ink px-4 py-2.5 font-ui text-sm text-paper transition duration-200 hover:bg-ocean focus:outline-none focus:ring-2 focus:ring-clay/40 disabled:cursor-not-allowed disabled:bg-ink/40;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-ink/10 bg-transparent px-4 py-2.5 font-ui text-sm text-ocean transition duration-200 hover:border-clay/40 hover:text-ink focus:outline-none focus:ring-2 focus:ring-clay/30 disabled:cursor-not-allowed disabled:text-ocean/40;
+  }
+
+  .button-ghost {
+    @apply inline-flex items-center justify-center rounded-md px-2.5 py-2 font-ui text-sm text-ocean transition duration-200 hover:bg-surface hover:text-ink focus:outline-none focus:ring-2 focus:ring-clay/30;
+  }
+
+  .button-danger {
+    @apply inline-flex items-center justify-center rounded-md border border-cedar/10 bg-transparent px-4 py-2.5 font-ui text-sm text-cedar transition duration-200 hover:border-cedar/30 hover:bg-cedar/5 focus:outline-none focus:ring-2 focus:ring-cedar/20;
+  }
+
+  .message {
+    @apply rounded-md border px-4 py-3 text-sm;
+  }
+
+  .message-error {
+    @apply message border-cedar/10 bg-cedar/5 text-cedar;
+  }
+
+  .message-success {
+    @apply message border-clay/20 bg-clay/10 text-ocean;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-2 font-ui text-xs text-ocean/70;
+  }
+
+  .list-divider {
+    @apply border-b border-ink/10 last:border-b-0;
+  }
+}

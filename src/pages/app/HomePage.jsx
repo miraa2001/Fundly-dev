@@ -45,35 +45,33 @@ function ExpenseForm({
   submitLabel,
 }) {
   return (
-    <form className="space-y-8" onSubmit={onSubmit}>
-      <div className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_11rem]">
-        <label className="field-stack">
-          <span className="field-label">Amount</span>
-          <input
-            required
-            min="0"
-            step="0.01"
-            type="number"
-            name="amount"
-            value={form.amount}
-            onChange={onChange}
-            className="field-input"
-            placeholder={`0.00 ${currency}`}
-          />
-        </label>
+    <form className="space-y-6" onSubmit={onSubmit}>
+      <label className="field-stack">
+        <span className="field-label">Amount</span>
+        <input
+          required
+          min="0"
+          step="0.01"
+          type="number"
+          name="amount"
+          value={form.amount}
+          onChange={onChange}
+          className="field-input"
+          placeholder={`0.00 ${currency}`}
+        />
+      </label>
 
-        <label className="field-stack">
-          <span className="field-label">Date</span>
-          <input
-            required
-            type="date"
-            name="expenseDate"
-            value={form.expenseDate}
-            onChange={onChange}
-            className="field-input"
-          />
-        </label>
-      </div>
+      <label className="field-stack">
+        <span className="field-label">Date</span>
+        <input
+          required
+          type="date"
+          name="expenseDate"
+          value={form.expenseDate}
+          onChange={onChange}
+          className="field-input"
+        />
+      </label>
 
       <label className="field-stack">
         <span className="field-label">Category</span>
@@ -103,7 +101,7 @@ function ExpenseForm({
         />
       </label>
 
-      <button type="submit" className="button-primary w-full sm:w-auto" disabled={submitting}>
+      <button type="submit" className="button-primary min-h-11 w-full" disabled={submitting}>
         {submitting ? 'Saving...' : submitLabel}
       </button>
     </form>
@@ -251,23 +249,23 @@ export default function HomePage() {
   return (
     <div>
       <section className="journal-section">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-4">
           <div>
             <p className="section-kicker">{editingExpense ? 'Editing' : 'Today'}</p>
-            <h2 className="mt-2 text-3xl leading-tight text-ink">
+            <h2 className="mt-1.5 text-2xl leading-tight text-ink sm:text-3xl">
               {editingExpense ? 'Edit expense' : 'Write an expense'}
             </h2>
           </div>
 
-          <div className="sm:text-right">
+          <div>
             <p className="section-kicker">Spent today</p>
-            <p className="mt-2 text-2xl leading-tight text-ink">
+            <p className="mt-1 text-xl leading-tight text-ink">
               {formatCurrency(dailyTotal, currency)}
             </p>
           </div>
         </div>
 
-        <div className="mt-10 space-y-6">
+        <div className="mt-7 space-y-5">
           <StatusMessage>{error}</StatusMessage>
           <ExpenseForm
             categories={categories}
@@ -287,11 +285,9 @@ export default function HomePage() {
       </section>
 
       <section className="journal-section">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="section-kicker">Recent</p>
-            <h2 className="mt-2 text-3xl leading-tight text-ink">Expenses</h2>
-          </div>
+        <div>
+          <p className="section-kicker">Recent</p>
+          <h2 className="mt-1.5 text-2xl leading-tight text-ink sm:text-3xl">Expenses</h2>
           {loading ? <p className="font-ui text-sm text-ocean/60">Loading entries...</p> : null}
         </div>
 
@@ -299,10 +295,10 @@ export default function HomePage() {
           <p className="mt-8 text-base leading-7 text-ocean/70">No expenses yet.</p>
         ) : null}
 
-        <div className="mt-10 space-y-12">
+        <div className="mt-7 space-y-9">
           {groupedExpenses.map((group) => (
-            <section key={group.date} className="space-y-5">
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+            <section key={group.date} className="space-y-3">
+              <div className="space-y-1">
                 <h3 className="text-xl leading-tight text-ink">{formatDisplayDate(group.date)}</h3>
                 <p className="font-ui text-sm text-ocean/60">
                   {formatCurrency(group.total, currency)}
@@ -313,13 +309,12 @@ export default function HomePage() {
                 {group.items.map((expense) => (
                   <article
                     key={expense.id}
-                    className="list-divider grid gap-3 py-5 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-start"
+                    className="list-divider py-4"
                   >
-                    <p className="text-lg leading-tight text-ink">
-                      {formatCurrency(expense.amount, currency)}
-                    </p>
-
                     <div className="space-y-1">
+                      <p className="text-lg leading-tight text-ink">
+                        {formatCurrency(expense.amount, currency)}
+                      </p>
                       <span className="pill">
                         <span
                           className="h-2 w-2 rounded-full"
@@ -327,12 +322,13 @@ export default function HomePage() {
                         />
                         {expense.category?.name || 'Uncategorized'}
                       </span>
-                      {expense.note ? (
-                        <p className="max-w-2xl text-sm leading-6 text-ocean/70">{expense.note}</p>
-                      ) : null}
                     </div>
 
-                    <div className="flex shrink-0 items-center gap-2 sm:justify-end">
+                    {expense.note ? (
+                      <p className="mt-2 max-w-2xl text-sm leading-6 text-ocean/70">{expense.note}</p>
+                    ) : null}
+
+                    <div className="mt-3 flex gap-2">
                       <button type="button" className="button-ghost" onClick={() => startEdit(expense)}>
                         Edit
                       </button>

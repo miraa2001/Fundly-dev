@@ -20,6 +20,34 @@ function sortCategories(items) {
   });
 }
 
+function CategoryRow({ category, onEdit, onToggleHidden }) {
+  return (
+    <article className="list-divider py-4">
+      <div className="flex items-start gap-3">
+        <span
+          className="mt-1 h-3 w-3 shrink-0 rounded-full"
+          style={{ backgroundColor: category.color || '#A67a53' }}
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-lg leading-tight text-ink">{category.name}</p>
+          <p className="mt-1 font-ui text-xs text-ocean/60">
+            {category.is_hidden ? 'Hidden' : 'Visible'}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 flex gap-2">
+        <button type="button" className="button-ghost" onClick={() => onEdit(category)}>
+          Edit
+        </button>
+        <button type="button" className="button-ghost" onClick={() => onToggleHidden(category)}>
+          {category.is_hidden ? 'Unhide' : 'Hide'}
+        </button>
+      </div>
+    </article>
+  );
+}
+
 export default function CategoriesPage() {
   const { user } = useAuth();
   const [categories, setCategories] = useState([]);
@@ -126,21 +154,17 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="grid gap-8 xl:grid-cols-[0.9fr_1.1fr]">
-      <section className="page-panel h-fit">
-        <p className="section-kicker">{editingId ? 'Edit category' : 'New category'}</p>
-        <h2 className="mt-3 text-2xl text-ink">
-          {editingId ? 'Refine a category name.' : 'Keep categories simple.'}
+    <div>
+      <section className="journal-section">
+        <p className="section-kicker">{editingId ? 'Editing' : 'New category'}</p>
+        <h2 className="mt-1.5 text-2xl leading-tight text-ink sm:text-3xl">
+          {editingId ? 'Edit category' : 'Add category'}
         </h2>
-        <p className="mt-3 text-base leading-7 text-ocean/70">
-          A small list is enough. Hidden categories stay out of the expense form until you bring
-          them back.
-        </p>
 
-        <div className="mt-8 space-y-5">
+        <div className="mt-7 space-y-5">
           <StatusMessage>{error}</StatusMessage>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <label className="field-stack">
               <span className="field-label">Name</span>
               <input
@@ -152,18 +176,18 @@ export default function CategoriesPage() {
                 value={form.name}
                 onChange={updateField}
                 className="field-input"
-                placeholder="Groceries, coffee, books..."
+                placeholder="Groceries, coffee, books"
               />
             </label>
 
             <fieldset className="field-stack">
               <legend className="field-label">Color</legend>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 pt-1">
                 {categoryColors.map((color) => (
                   <label
                     key={color}
-                    className={`flex cursor-pointer items-center justify-center rounded-full border p-1.5 transition ${
-                      form.color === color ? 'border-ink/30 bg-paper' : 'border-ink/10 bg-surface'
+                    className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-md transition ${
+                      form.color === color ? 'bg-surface' : 'bg-transparent'
                     }`}
                   >
                     <input
@@ -175,7 +199,9 @@ export default function CategoriesPage() {
                       className="sr-only"
                     />
                     <span
-                      className="h-8 w-8 rounded-full border border-white/80"
+                      className={`h-7 w-7 rounded-full ${
+                        form.color === color ? 'ring-2 ring-clay ring-offset-2 ring-offset-paper' : ''
+                      }`}
                       style={{ backgroundColor: color }}
                     />
                   </label>
@@ -183,97 +209,59 @@ export default function CategoriesPage() {
               </div>
             </fieldset>
 
-            <div className="flex flex-wrap gap-3">
-              <button type="submit" disabled={saving} className="button-primary">
-                {saving ? 'Saving...' : editingId ? 'Save category' : 'Create category'}
+            <button type="submit" disabled={saving} className="button-primary min-h-11 w-full">
+              {saving ? 'Saving...' : editingId ? 'Save category' : 'Create category'}
+            </button>
+
+            {editingId ? (
+              <button type="button" className="button-secondary min-h-11 w-full" onClick={resetForm}>
+                Cancel
               </button>
-              {editingId ? (
-                <button type="button" className="button-secondary" onClick={resetForm}>
-                  Cancel
-                </button>
-              ) : null}
-            </div>
+            ) : null}
           </form>
         </div>
       </section>
 
-      <section className="space-y-6">
-        <div className="page-panel">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="section-kicker">Active</p>
-              <h2 className="mt-3 text-2xl text-ink">Visible categories.</h2>
-            </div>
-            {loading ? <p className="font-ui text-sm text-ocean/60">Loading...</p> : null}
-          </div>
-
-          <div className="mt-8 rounded-[1.75rem] border border-ink/10 bg-paper/70">
-            {visibleCategories.length === 0 && !loading ? (
-              <p className="px-5 py-5 text-sm leading-7 text-ocean/70">
-                Add a few categories that feel useful and leave the rest out.
-              </p>
-            ) : null}
-
-            {visibleCategories.map((category) => (
-              <article
-                key={category.id}
-                className="list-divider flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="flex items-center gap-4">
-                  <span
-                    className="h-3.5 w-3.5 rounded-full"
-                    style={{ backgroundColor: category.color || '#A67a53' }}
-                  />
-                  <div>
-                    <p className="text-lg text-ink">{category.name}</p>
-                    <p className="text-sm text-ocean/60">Shows up in the expense form.</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button type="button" className="button-ghost" onClick={() => startEdit(category)}>
-                    Edit
-                  </button>
-                  <button type="button" className="button-ghost" onClick={() => toggleHidden(category)}>
-                    Hide
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+      <section className="journal-section">
+        <div>
+          <p className="section-kicker">Visible</p>
+          <h2 className="mt-1.5 text-2xl leading-tight text-ink sm:text-3xl">Categories</h2>
+          {loading ? <p className="mt-2 font-ui text-sm text-ocean/60">Loading...</p> : null}
         </div>
 
-        <div className="page-panel">
-          <p className="section-kicker">Hidden</p>
-          <h2 className="mt-3 text-2xl text-ink">Tucked away for now.</h2>
+        <div className="mt-5 border-t border-ink/10">
+          {visibleCategories.length === 0 && !loading ? (
+            <p className="py-4 text-sm leading-6 text-ocean/70">No visible categories yet.</p>
+          ) : null}
 
-          <div className="mt-8 rounded-[1.75rem] border border-ink/10 bg-paper/70">
-            {hiddenCategories.length === 0 ? (
-              <p className="px-5 py-5 text-sm leading-7 text-ocean/70">
-                Hidden categories will wait here quietly when you need fewer choices.
-              </p>
-            ) : null}
+          {visibleCategories.map((category) => (
+            <CategoryRow
+              key={category.id}
+              category={category}
+              onEdit={startEdit}
+              onToggleHidden={toggleHidden}
+            />
+          ))}
+        </div>
+      </section>
 
-            {hiddenCategories.map((category) => (
-              <article
-                key={category.id}
-                className="list-divider flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="flex items-center gap-4">
-                  <span
-                    className="h-3.5 w-3.5 rounded-full"
-                    style={{ backgroundColor: category.color || '#A67a53' }}
-                  />
-                  <div>
-                    <p className="text-lg text-ink">{category.name}</p>
-                    <p className="text-sm text-ocean/60">Hidden from expense selection.</p>
-                  </div>
-                </div>
-                <button type="button" className="button-ghost" onClick={() => toggleHidden(category)}>
-                  Unhide
-                </button>
-              </article>
-            ))}
-          </div>
+      <section className="journal-section">
+        <p className="section-kicker">Hidden</p>
+        <h2 className="mt-1.5 text-2xl leading-tight text-ink sm:text-3xl">Out of view</h2>
+
+        <div className="mt-5 border-t border-ink/10">
+          {hiddenCategories.length === 0 ? (
+            <p className="py-4 text-sm leading-6 text-ocean/70">No hidden categories.</p>
+          ) : null}
+
+          {hiddenCategories.map((category) => (
+            <CategoryRow
+              key={category.id}
+              category={category}
+              onEdit={startEdit}
+              onToggleHidden={toggleHidden}
+            />
+          ))}
         </div>
       </section>
     </div>

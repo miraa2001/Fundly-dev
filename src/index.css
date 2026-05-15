@@ -54,19 +54,19 @@ body {
 
 @layer components {
   .page-wrap {
-    @apply mx-auto w-full max-w-5xl px-5 py-7 sm:px-8 sm:py-10;
+    @apply mx-auto w-full max-w-2xl px-4 py-5 sm:px-6 sm:py-8;
   }
 
   .journal-wrap {
-    @apply mx-auto w-full max-w-3xl px-5 py-7 sm:px-8 sm:py-10;
+    @apply mx-auto w-full max-w-xl px-4 pb-28 pt-5 sm:px-6 sm:pb-10 sm:pt-8;
   }
 
   .page-panel {
-    @apply rounded-lg border border-ink/10 bg-surface p-5 sm:p-6;
+    @apply rounded-md border border-ink/10 bg-surface p-4 sm:p-5;
   }
 
   .journal-section {
-    @apply border-t border-ink/10 py-10 first:border-t-0 first:pt-0;
+    @apply border-t border-ink/10 py-7 first:border-t-0 first:pt-0 sm:py-8;
   }
 
   .section-kicker {
@@ -74,11 +74,11 @@ body {
   }
 
   .section-title {
-    @apply mt-2 text-3xl leading-tight text-ink sm:text-4xl;
+    @apply mt-1.5 text-2xl leading-tight text-ink sm:text-3xl;
   }
 
   .section-copy {
-    @apply mt-3 max-w-2xl text-base leading-7 text-ocean/70;
+    @apply mt-2 max-w-2xl text-sm leading-6 text-ocean/70;
   }
 
   .field-stack {
@@ -90,11 +90,11 @@ body {
   }
 
   .field-input {
-    @apply w-full rounded-none border-0 border-b border-ink/20 bg-transparent px-0 py-2.5 text-[1rem] text-ink outline-none transition duration-200 placeholder:text-ocean/40 focus:border-clay;
+    @apply w-full rounded-none border-0 border-b border-ink/20 bg-transparent px-0 py-3 text-[1rem] text-ink outline-none transition duration-200 placeholder:text-ocean/40 focus:border-clay;
   }
 
   .field-textarea {
-    @apply field-input min-h-20 resize-y;
+    @apply field-input min-h-16 resize-y;
   }
 
   .button-primary {
